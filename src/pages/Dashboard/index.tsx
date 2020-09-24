@@ -27,7 +27,7 @@ const Dashboard: React.FC = () => {
       },
     ];
 
-    function renderImages({item}) {
+    function renderImages({item}: any) {
       return (
         <View style={styles.carouselContainer}>
           <Text style={styles.carouselTitle}>{item.title}</Text>
