@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -21,13 +21,42 @@ import {
 } from './styles';
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigation();
+
+  const handleNavConsult = useCallback(() => {
+    navigate.navigate('');
+  }, [navigate]);
+
+  const handleNavMedicalRecords = useCallback(() => {
+    navigate.navigate('BottomTabsMedicalRecords');
+  }, [navigate]);
+
+  const handleNavNotes = useCallback(() => {
+    navigate.navigate('Notes');
+  }, [navigate]);
+
+  const handleNavAlbum = useCallback(() => {
+    navigate.navigate('Album');
+  }, [navigate]);
+
+  const handleNavProfileUpdate = useCallback(() => {
+    navigate.navigate('ProfileUpdate');
+  }, [navigate]);
+
+  const handleNavLogOff = useCallback(() => {
+    navigate.reset({
+      routes: [{ name: 'SignIn' }],
+      index: 0,
+    });
+  }, [navigate]);
+
   return (
     <Container>
-      <LogoutContainer>
+      <LogoutContainer onPress={handleNavLogOff}>
         <FontAwesome5 name="power-off" size={25} color="#503d77" />
       </LogoutContainer>
       <Header>
-        <UserNameButton onPress={() => {}}>
+        <UserNameButton onPress={handleNavProfileUpdate}>
           <UserAvatar
             source={{
               uri:
@@ -65,14 +94,20 @@ const Dashboard: React.FC = () => {
           <MenuText>Consultas</MenuText>
         </MenuItem>
 
-        <MenuItem style={{ backgroundColor: '#F1D99A' }}>
+        <MenuItem
+          style={{ backgroundColor: '#F1D99A' }}
+          onPress={handleNavMedicalRecords}
+        >
           <FontAwesome5 name="file-medical" size={50} color="#503d77" />
           <MenuText>Prontuários</MenuText>
         </MenuItem>
       </MenuContainer>
 
       <MenuContainer>
-        <MenuItem style={{ backgroundColor: '#F98996' }}>
+        <MenuItem
+          style={{ backgroundColor: '#F98996' }}
+          onPress={handleNavNotes}
+        >
           <FontAwesome5 name="sticky-note" size={50} color="#503d77" />
           <MenuText>Anotações</MenuText>
         </MenuItem>
