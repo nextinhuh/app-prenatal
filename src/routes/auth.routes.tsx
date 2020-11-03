@@ -6,6 +6,7 @@ import SignUp from '../pages/SignUp';
 import Dashboard from '../pages/Dashboard';
 import ProfileUpdate from '../pages/ProfileUpdate';
 import Notes from '../pages/Notes';
+import Album from '../pages/Album';
 
 import BottomTabs from './bottom.tabs.routes';
 
@@ -17,10 +18,12 @@ const AuthRoutes: React.FC = () => (
       headerShown: false,
     }}
   >
+    <Auth.Screen name="Album" component={Album} />
+    <Auth.Screen name="Dashboard" component={Dashboard} />
+
     <Auth.Screen name="SignIn" component={SignIn} />
     <Auth.Screen name="SignUp" component={SignUp} />
 
-    <Auth.Screen name="Dashboard" component={Dashboard} />
     <Auth.Screen name="Notes" component={Notes} />
     <Auth.Screen name="ProfileUpdate" component={ProfileUpdate} />
 
