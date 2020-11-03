@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { FlatList } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
