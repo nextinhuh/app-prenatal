@@ -1,7 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ImageView from 'react-native-image-viewing';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { Menu, Divider } from 'react-native-paper';
+import * as ImagePicker from 'expo-image-picker';
+import { Alert, Platform } from 'react-native';
 
 import {
   Container,
@@ -18,8 +21,62 @@ const Album: React.FC = () => {
   const navigation = useNavigation();
   const [visible, setIsVisible] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const [visibleMenu, setVisibleMenu] = React.useState(false);
 
-  const handleNavBack = React.useCallback(() => {
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const {
+          status,
+        } = await ImagePicker.requestCameraRollPermissionsAsync();
+        if (status !== 'granted') {
+          alert(
+            'Desculpe, nós precisamos da permissão de câmera para isto funcionar!',
+          );
+        }
+      }
+    })();
+  }, []);
+
+  const handleAddPhoto = useCallback(() => {
+    Alert.alert(
+      'Usuário / Senha Incorreto(s)!',
+      'Favor verificar e tentar novamente.',
+      [
+        { text: 'Tirar uma foto agora', onPress: handleTakePhoto },
+        {
+          text: 'Escolher uma foto da galeria',
+          onPress: handleGaleryPhotoPicker,
+        },
+      ],
+    );
+  }, []);
+
+  const handleGaleryPhotoPicker = useCallback(async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    console.log(result);
+  }, []);
+
+  const handleTakePhoto = useCallback(async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    console.log(result);
+  }, []);
+
+  const handleToggleMenu = useCallback(() => {
+    setVisibleMenu(!visibleMenu);
+  }, [visibleMenu]);
+
+  const handleNavBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
 
@@ -156,9 +213,24 @@ const Album: React.FC = () => {
 
         <Title>Album</Title>
 
-        <OptionButton>
-          <FontAwesome5 name="ellipsis-v" size={25} color="#503d77" />
-        </OptionButton>
+        <Menu
+          visible={visibleMenu}
+          onDismiss={handleToggleMenu}
+          anchor={
+            <OptionButton onPress={handleToggleMenu}>
+              <FontAwesome5 name="ellipsis-v" size={25} color="#503d77" />
+            </OptionButton>
+          }
+        >
+          <Menu.Item onPress={() => {}} title="Apagar foto(s)" />
+          <Divider />
+          <Menu.Item
+            onPress={() => {
+              handleAddPhoto();
+            }}
+            title="Adicionar uma foto"
+          />
+        </Menu>
       </Header>
 
       <AlbumList
