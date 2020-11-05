@@ -35,7 +35,7 @@ const MedicalRecords: React.FC = () => {
 
         <Title>Prontuários</Title>
 
-        <OptionButton onPress={handleNavToBack}>
+        <OptionButton>
           <FontAwesome5 name="ellipsis-v" size={25} color="#503d77" />
         </OptionButton>
       </Header>

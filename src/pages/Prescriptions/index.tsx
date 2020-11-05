@@ -27,7 +27,7 @@ const Prescription: React.FC = () => {
       <Header>
         <Title>Prescrições</Title>
 
-        <OptionButton onPress={handleNavToBack}>
+        <OptionButton>
           <FontAwesome5 name="ellipsis-v" size={25} color="#503d77" />
         </OptionButton>
       </Header>

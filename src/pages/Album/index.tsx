@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React, { useCallback, useEffect, useState } from 'react';
 import ImageView from 'react-native-image-viewing';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -6,6 +7,7 @@ import { Menu, Divider } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert, Platform } from 'react-native';
 
+import { number } from 'yup';
 import {
   Container,
   Title,
@@ -15,13 +17,24 @@ import {
   AlbumList,
   Image,
   ImageButton,
+  ImageButtonDelete,
+  CancelDeleteButton,
+  CancelDeleteButtonText,
 } from './styles';
+
+type Images = Array<{
+  id: number;
+  uri: string;
+}>;
 
 const Album: React.FC = () => {
   const navigation = useNavigation();
   const [visible, setIsVisible] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
-  const [visibleMenu, setVisibleMenu] = React.useState(false);
+  const [visibleMenu, setVisibleMenu] = useState(false);
+  const [selectionDelete, setSelectionDelete] = useState(false);
+  const [buttonDeleteActive, setButtonDeleteActive] = useState(true);
+  const [selectedImages, setSelectedIamges] = useState<number[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -39,17 +52,16 @@ const Album: React.FC = () => {
   }, []);
 
   const handleAddPhoto = useCallback(() => {
-    Alert.alert(
-      'Usuário / Senha Incorreto(s)!',
-      'Favor verificar e tentar novamente.',
-      [
-        { text: 'Tirar uma foto agora', onPress: handleTakePhoto },
-        {
-          text: 'Escolher uma foto da galeria',
-          onPress: handleGaleryPhotoPicker,
-        },
-      ],
-    );
+    Alert.alert('', 'Favor escolha alguma das opções abaixo:', [
+      {
+        text: 'Cancelar',
+      },
+      { text: 'Tirar uma foto agora', onPress: handleTakePhoto },
+      {
+        text: 'Escolher uma foto da galeria',
+        onPress: handleGaleryPhotoPicker,
+      },
+    ]);
   }, []);
 
   const handleGaleryPhotoPicker = useCallback(async () => {
@@ -194,7 +206,7 @@ const Album: React.FC = () => {
       uri:
         'https://images.pexels.com/photos/258644/pexels-photo-258644.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
     },
-  ];
+  ] as Images;
 
   const handleToggleImageView = useCallback(
     index => {
@@ -202,6 +214,28 @@ const Album: React.FC = () => {
       setIsVisible(!visible);
     },
     [visible],
+  );
+
+  const handleToggleSelectionDelete = useCallback(() => {
+    setSelectionDelete(!selectionDelete);
+    setButtonDeleteActive(!buttonDeleteActive);
+    setSelectedIamges([]);
+  }, [selectionDelete, buttonDeleteActive]);
+
+  const handleSelectPicture = useCallback(
+    (id: number) => {
+      if (selectedImages.indexOf(id) > -1) {
+        const selectedImagesUpdate = selectedImages.filter(imageId => {
+          return imageId !== id;
+        });
+        setSelectedIamges([...selectedImagesUpdate]);
+        return;
+      }
+
+      selectedImages.push(id);
+      setSelectedIamges([...selectedImages]);
+    },
+    [selectedImages],
   );
 
   return (
@@ -222,7 +256,10 @@ const Album: React.FC = () => {
             </OptionButton>
           }
         >
-          <Menu.Item onPress={() => {}} title="Apagar foto(s)" />
+          <Menu.Item
+            onPress={handleToggleSelectionDelete}
+            title="Apagar foto(s)"
+          />
           <Divider />
           <Menu.Item
             onPress={() => {
@@ -233,15 +270,34 @@ const Album: React.FC = () => {
         </Menu>
       </Header>
 
+      {selectionDelete ? (
+        <CancelDeleteButton onPress={handleToggleSelectionDelete}>
+          <CancelDeleteButtonText>Cancelar seleção</CancelDeleteButtonText>
+          <FontAwesome5 name="times" size={22} color="#503d77" />
+        </CancelDeleteButton>
+      ) : null}
+
       <AlbumList
         data={images}
         showsVerticalScrollIndicator={false}
         numColumns={3}
+        extraData={selectedImages}
         keyExtractor={image => image.uri}
         renderItem={({ item: image, index }) => (
-          <ImageButton onPress={() => handleToggleImageView(index)}>
-            <Image source={{ uri: image.uri }} />
-          </ImageButton>
+          <ImageButtonDelete
+            disabled={buttonDeleteActive}
+            onPress={() => handleSelectPicture(image.id)}
+          >
+            <ImageButton
+              disabled={selectionDelete}
+              onPress={() => handleToggleImageView(index)}
+            >
+              <Image
+                isSelected={selectedImages.indexOf(image.id) > -1}
+                source={{ uri: image.uri }}
+              />
+            </ImageButton>
+          </ImageButtonDelete>
         )}
       />
 

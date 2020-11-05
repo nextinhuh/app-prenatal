@@ -112,7 +112,10 @@ const Dashboard: React.FC = () => {
           <MenuText>Anotações</MenuText>
         </MenuItem>
 
-        <MenuItem style={{ backgroundColor: '#859DF2' }}>
+        <MenuItem
+          style={{ backgroundColor: '#859DF2' }}
+          onPress={handleNavAlbum}
+        >
           <FontAwesome5 name="images" size={50} color="#503d77" />
           <MenuText>Álbum de fotos</MenuText>
         </MenuItem>
