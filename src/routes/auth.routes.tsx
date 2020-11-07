@@ -18,12 +18,13 @@ const AuthRoutes: React.FC = () => (
       headerShown: false,
     }}
   >
+    <Auth.Screen name="Album" component={Album} />
+
     <Auth.Screen name="SignIn" component={SignIn} />
     <Auth.Screen name="SignUp" component={SignUp} />
 
     <Auth.Screen name="Dashboard" component={Dashboard} />
 
-    <Auth.Screen name="Album" component={Album} />
     <Auth.Screen name="Notes" component={Notes} />
     <Auth.Screen name="ProfileUpdate" component={ProfileUpdate} />
 

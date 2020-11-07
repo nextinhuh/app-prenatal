@@ -67,7 +67,7 @@ const Dashboard: React.FC = () => {
 
         <ContainerMessage>
           <WelcomeText>Bem vinda, </WelcomeText>
-          <UserNameText>Anne Alves</UserNameText>
+          <UserNameText>Nome do usuário</UserNameText>
         </ContainerMessage>
       </Header>
 

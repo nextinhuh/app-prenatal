@@ -7,7 +7,6 @@ import { Menu, Divider } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert, Platform } from 'react-native';
 
-import { number } from 'yup';
 import {
   Container,
   Title,
@@ -20,6 +19,10 @@ import {
   ImageButtonDelete,
   CancelDeleteButton,
   CancelDeleteButtonText,
+  DeleteContainer,
+  ConfirmDeleteButton,
+  ConfirmDeleteButtonText,
+  ImageContainer,
 } from './styles';
 
 type Images = Array<{
@@ -271,10 +274,17 @@ const Album: React.FC = () => {
       </Header>
 
       {selectionDelete ? (
-        <CancelDeleteButton onPress={handleToggleSelectionDelete}>
-          <CancelDeleteButtonText>Cancelar seleção</CancelDeleteButtonText>
-          <FontAwesome5 name="times" size={22} color="#503d77" />
-        </CancelDeleteButton>
+        <DeleteContainer>
+          <ConfirmDeleteButton onPress={handleToggleSelectionDelete}>
+            <ConfirmDeleteButtonText>Apagar</ConfirmDeleteButtonText>
+            <FontAwesome5 name="check" size={22} color="#503d77" />
+          </ConfirmDeleteButton>
+
+          <CancelDeleteButton onPress={handleToggleSelectionDelete}>
+            <CancelDeleteButtonText>Cancelar</CancelDeleteButtonText>
+            <FontAwesome5 name="times" size={22} color="#503d77" />
+          </CancelDeleteButton>
+        </DeleteContainer>
       ) : null}
 
       <AlbumList
@@ -284,10 +294,7 @@ const Album: React.FC = () => {
         extraData={selectedImages}
         keyExtractor={image => image.uri}
         renderItem={({ item: image, index }) => (
-          <ImageButtonDelete
-            disabled={buttonDeleteActive}
-            onPress={() => handleSelectPicture(image.id)}
-          >
+          <ImageContainer>
             <ImageButton
               disabled={selectionDelete}
               onPress={() => handleToggleImageView(index)}
@@ -296,8 +303,25 @@ const Album: React.FC = () => {
                 isSelected={selectedImages.indexOf(image.id) > -1}
                 source={{ uri: image.uri }}
               />
+
+              <ImageButtonDelete
+                disabled={buttonDeleteActive}
+                onPress={() => handleSelectPicture(image.id)}
+              >
+                {!buttonDeleteActive ? (
+                  selectedImages.indexOf(image.id) < 0 ? (
+                    <FontAwesome5 name="square" size={30} color="#E03CFB" />
+                  ) : (
+                    <FontAwesome5
+                      name="check-square"
+                      size={30}
+                      color="#E03CFB"
+                    />
+                  )
+                ) : null}
+              </ImageButtonDelete>
             </ImageButton>
-          </ImageButtonDelete>
+          </ImageContainer>
         )}
       />
 
