@@ -1,6 +1,5 @@
 import styled from 'styled-components/native';
 import { FlatList } from 'react-native';
-import iconCheckBox from '../../assets/checkbox.svg';
 
 interface ImageProps {
   isSelected?: boolean;
