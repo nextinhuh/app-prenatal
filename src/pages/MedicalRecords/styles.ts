@@ -5,14 +5,13 @@ export const Container = styled.View`
 `;
 
 export const Header = styled.View`
-  margin-top: 10px;
+  margin-top: 80px;
   width: 100%;
   padding: 0px 40px;
-  height: 150px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
 export const Title = styled.Text`
@@ -23,56 +22,30 @@ export const Title = styled.Text`
   border-color: #503d77;
 `;
 
-export const OptionButton = styled.TouchableOpacity``;
-export const BackButton = styled.TouchableOpacity``;
-
-export const IndicatorContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-  padding: 10px 40px;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+export const BackButton = styled.TouchableOpacity`
+  position: absolute;
+  left: 30px;
 `;
 
-export const IndicatorCard = styled.View`
+export const ConsultCard = styled.View`
+  width: 85%;
+  background-color: #b2dcea;
+  margin: 40px 30px;
   display: flex;
   flex-direction: column;
-  width: 120px;
-  height: 57px;
-  align-items: center;
-  justify-content: center;
-  background-color: #b2dcea;
-  border-radius: 8px;
-`;
-
-export const IndicatorTextNumber = styled.Text`
-  font-size: 22px;
-  font-family: Lato_700Bold;
-  color: #503d77;
-`;
-
-export const IndicatorText = styled.Text`
-  font-size: 14px;
-  font-family: Trocchi_400Regular;
-  color: #a884f4;
-`;
-
-export const ConsultCard = styled.TouchableOpacity`
-  height: 90px;
-  width: 320px;
-  background-color: #b2dcea;
-  margin: 20px 30px;
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
   border-radius: 10px;
+  padding: 15px;
 `;
 
-export const ConsultText = styled.Text`
+export const ConsultCardTitle = styled.Text`
   font-family: Sofia_400Regular;
-  font-size: 16px;
-  color: black;
-  width: 150px;
+  font-size: 22px;
+  color: #a884f4;
+  width: 100%;
+  text-align: center;
+`;
+
+export const ConsultCardText = styled.Text`
+  font-family: Sofia_400Regular;
+  font-size: 18px;
 `;

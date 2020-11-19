@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlatList } from 'react-native';
-import { Button, Card } from 'react-native-paper';
+import { Button, Card, Menu, Divider } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -22,6 +22,7 @@ type Notes = Array<{
 
 const Notes: React.FC = () => {
   const navigation = useNavigation();
+  const [visibleMenu, setVisibleMenu] = useState(false);
 
   const notesList: Notes = [
     {
@@ -46,9 +47,15 @@ const Notes: React.FC = () => {
     },
   ];
 
-  const handleNavBack = React.useCallback(() => {
+  const handleNavBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
+
+  const handleToggleMenu = useCallback(() => {
+    setVisibleMenu(!visibleMenu);
+  }, [visibleMenu]);
+
+  const handleToggleSelectionDelete = useCallback(() => {}, []);
 
   return (
     <Container>
@@ -59,9 +66,21 @@ const Notes: React.FC = () => {
 
         <Title>Anotações</Title>
 
-        <OptionButton>
-          <FontAwesome5 name="ellipsis-v" size={25} color="#503d77" />
-        </OptionButton>
+        <Menu
+          visible={visibleMenu}
+          onDismiss={handleToggleMenu}
+          anchor={
+            <OptionButton onPress={handleToggleMenu}>
+              <FontAwesome5 name="ellipsis-v" size={25} color="#503d77" />
+            </OptionButton>
+          }
+        >
+          <Menu.Item title="Adicionar nota" />
+
+          <Divider />
+
+          <Menu.Item title="Apagar nota(s)" />
+        </Menu>
       </Header>
 
       <FlatList
@@ -76,7 +95,6 @@ const Notes: React.FC = () => {
             </Card.Content>
             <Card.Actions>
               <Button labelStyle={{ color: '#503d77' }}>Editar</Button>
-              <Button labelStyle={{ color: '#503d77' }}>Apagar</Button>
             </Card.Actions>
           </Card>
         )}

@@ -1,14 +1,12 @@
 import styled from 'styled-components/native';
-import { RectButton } from 'react-native-gesture-handler';
 
 export const Container = styled.View`
   flex: 1;
   align-items: center;
-  padding: 20px 30px;
-  margin-top: 20px;
+  padding: 40px 30px;
 `;
 
-export const Header = styled.TouchableOpacity`
+export const Header = styled.View`
   display: flex;
   width: 100%;
   flex-direction: row;
@@ -23,7 +21,10 @@ export const Title = styled.Text`
   font-family: 'Trocchi_400Regular';
 `;
 
-export const BackButton = styled.TouchableOpacity``;
+export const BackButton = styled.TouchableOpacity`
+  width: 35px;
+  height: 35px;
+`;
 
 export const LogOffButton = styled.TouchableOpacity``;
 

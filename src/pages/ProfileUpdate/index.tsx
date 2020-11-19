@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Alert } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -31,6 +32,39 @@ const ProfileUpdate: React.FC = () => {
     });
   }, [navigation]);
 
+  const handleAddPhoto = useCallback(() => {
+    Alert.alert('', 'Favor escolha alguma das opções abaixo:', [
+      {
+        text: 'Cancelar',
+      },
+      { text: 'Tirar uma foto agora', onPress: handleTakePhoto },
+      {
+        text: 'Escolher uma foto da galeria',
+        onPress: handleGaleryPhotoPicker,
+      },
+    ]);
+  }, []);
+
+  const handleTakePhoto = useCallback(async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    console.log(result);
+  }, []);
+
+  const handleGaleryPhotoPicker = useCallback(async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    console.log(result);
+  }, []);
+
   return (
     <Container>
       <Header>
@@ -51,7 +85,7 @@ const ProfileUpdate: React.FC = () => {
         }}
       />
 
-      <ButtonEditAvatar>
+      <ButtonEditAvatar onPress={handleAddPhoto}>
         <ButtonEditAvatarText>Editar Foto</ButtonEditAvatarText>
       </ButtonEditAvatar>
       <ScrollView style={{ width: '100%' }}>

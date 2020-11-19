@@ -17,18 +17,14 @@ import {
   MenuItem,
   MenuText,
   UserNameButton,
-  LogoutContainer,
+  LogoutButton,
 } from './styles';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigation();
 
   const handleNavConsult = useCallback(() => {
-    navigate.navigate('');
-  }, [navigate]);
-
-  const handleNavMedicalRecords = useCallback(() => {
-    navigate.navigate('BottomTabsMedicalRecords');
+    navigate.navigate('Consults');
   }, [navigate]);
 
   const handleNavNotes = useCallback(() => {
@@ -52,9 +48,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container>
-      <LogoutContainer onPress={handleNavLogOff}>
-        <FontAwesome5 name="power-off" size={25} color="#503d77" />
-      </LogoutContainer>
       <Header>
         <UserNameButton onPress={handleNavProfileUpdate}>
           <UserAvatar
@@ -66,9 +59,16 @@ const Dashboard: React.FC = () => {
         </UserNameButton>
 
         <ContainerMessage>
-          <WelcomeText>Bem vinda, </WelcomeText>
+          <WelcomeText>
+            Bem vinda,
+            {'\n'}
+          </WelcomeText>
           <UserNameText>Nome do usuário</UserNameText>
         </ContainerMessage>
+
+        <LogoutButton onPress={handleNavLogOff}>
+          <FontAwesome5 name="power-off" size={25} color="#503d77" />
+        </LogoutButton>
       </Header>
 
       <IndicatorContainer>
@@ -89,17 +89,20 @@ const Dashboard: React.FC = () => {
       </IndicatorContainer>
 
       <MenuContainer>
-        <MenuItem style={{ backgroundColor: '#4CEC9F' }}>
+        <MenuItem
+          style={{ backgroundColor: '#4CEC9F' }}
+          onPress={handleNavConsult}
+        >
           <FontAwesome5 name="user-md" size={50} color="#503d77" />
           <MenuText>Consultas</MenuText>
         </MenuItem>
 
         <MenuItem
           style={{ backgroundColor: '#F1D99A' }}
-          onPress={handleNavMedicalRecords}
+          onPress={handleNavAlbum}
         >
-          <FontAwesome5 name="file-medical" size={50} color="#503d77" />
-          <MenuText>Prontuários</MenuText>
+          <FontAwesome5 name="images" size={50} color="#503d77" />
+          <MenuText>Álbum de fotos</MenuText>
         </MenuItem>
       </MenuContainer>
 
@@ -110,14 +113,6 @@ const Dashboard: React.FC = () => {
         >
           <FontAwesome5 name="sticky-note" size={50} color="#503d77" />
           <MenuText>Anotações</MenuText>
-        </MenuItem>
-
-        <MenuItem
-          style={{ backgroundColor: '#859DF2' }}
-          onPress={handleNavAlbum}
-        >
-          <FontAwesome5 name="images" size={50} color="#503d77" />
-          <MenuText>Álbum de fotos</MenuText>
         </MenuItem>
       </MenuContainer>
     </Container>

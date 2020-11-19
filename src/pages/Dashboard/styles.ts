@@ -5,12 +5,14 @@ export const Container = styled.View`
 `;
 
 export const Header = styled.View`
-  margin-top: -35px;
-  width: 100%;
+  margin: 40px 20px 0 20px;
+  width: 90%;
   height: 150px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  background-color: #e5f2eb;
+  border-radius: 50px;
 `;
 
 export const UserAvatar = styled.Image`
@@ -24,7 +26,7 @@ export const ContainerMessage = styled.Text`
   margin-left: 20px;
   display: flex;
   flex-direction: column;
-  max-width: 130px;
+  width: 45%;
 `;
 
 export const UserNameButton = styled.TouchableOpacity``;
@@ -60,13 +62,13 @@ export const IndicatorCard = styled.View`
 `;
 
 export const IndicatorTextNumber = styled.Text`
-  font-size: 22px;
+  font-size: 20px;
   font-family: Lato_700Bold;
   color: #503d77;
 `;
 
 export const IndicatorText = styled.Text`
-  font-size: 14px;
+  font-size: 12px;
   font-family: Trocchi_400Regular;
   color: #a884f4;
 `;
@@ -97,10 +99,7 @@ export const MenuText = styled.Text`
   margin-top: 20px;
 `;
 
-export const LogoutContainer = styled.TouchableOpacity`
-  width: 100%;
-  height: 30px;
-  display: flex;
-  margin-top: 50px;
-  margin-left: 90%;
+export const LogoutButton = styled.TouchableOpacity`
+  margin-left: 0px;
+  margin-bottom: 80px;
 `;

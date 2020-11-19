@@ -10,6 +10,7 @@ const BottomTabs = createBottomTabNavigator();
 const AuthRoutes: React.FC = () => (
   <BottomTabs.Navigator
     tabBarOptions={{
+      activeBackgroundColor: '#b2dcea',
       activeTintColor: '#E03CFB',
       inactiveTintColor: '#503D77',
     }}
@@ -18,7 +19,7 @@ const AuthRoutes: React.FC = () => (
       name="ProfileUpdate"
       component={MedicalRecords}
       options={{
-        tabBarLabel: 'Prontuários',
+        tabBarLabel: 'Prontuário',
         tabBarIcon: ({ color }) => (
           <FontAwesome5 name="notes-medical" size={25} color={color} />
         ),
@@ -28,7 +29,7 @@ const AuthRoutes: React.FC = () => (
       name="Prescriptions"
       component={Prescriptions}
       options={{
-        tabBarLabel: 'Prescrições',
+        tabBarLabel: 'Prescrição',
         tabBarIcon: ({ color }) => (
           <FontAwesome5 name="signature" size={25} color={color} />
         ),

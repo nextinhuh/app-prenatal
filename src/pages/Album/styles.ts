@@ -8,10 +8,10 @@ interface ImageProps {
 export const Container = styled.View`
   flex: 1;
   align-items: center;
+  justify-content: center;
 `;
 
 export const Header = styled.View`
-  margin-top: 10px;
   width: 100%;
   padding: 0px 40px;
   height: 150px;
@@ -68,10 +68,9 @@ export const Title = styled.Text`
 `;
 
 export const AlbumList = styled(FlatList as new () => FlatList)`
-  width: 90%;
+  flex: 1;
   height: 50%;
-  padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 `;
 
 export const ImageContainer = styled.View`
