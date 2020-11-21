@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import firebase from 'firebase';
+import 'firebase/firestore';
 
 import { useNavigation } from '@react-navigation/native';
 import Input from '../../components/Input';
@@ -26,18 +28,41 @@ interface UserData {
 
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
+  const dbFirestore = firebase.firestore();
+  const [loading, setLoading] = useState(false);
 
   async function handleLogon(user: UserData) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    if (user.email === 'teste@teste.com' && user.password === '1234') {
-      navigation.navigate('Dashboard');
-    } else {
-      Alert.alert(
-        'Usuário / Senha Incorreto(s)!',
-        'Favor verificar e tentar novamente.',
-        [{ text: 'OK' }],
-      );
-    }
+    setLoading(!loading);
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(user.email, user.password)
+      .then(async logedUser => {
+        if (logedUser.user?.displayName === null) {
+          let userName: any;
+          await dbFirestore
+            .collection('users')
+            .doc(logedUser.user?.uid)
+            .get()
+            .then(result => {
+              if (result.exists) {
+                userName = result.data();
+              }
+            });
+          await firebase.auth().currentUser?.updateProfile({
+            displayName: userName.name,
+          });
+        }
+        setLoading(!loading);
+      })
+      .catch(err => {
+        setLoading(false);
+
+        Alert.alert(
+          'Usuário / Senha Incorreto(s)!',
+          'Favor verificar e tentar novamente.',
+          [{ text: 'OK' }],
+        );
+      });
   }
 
   return (
@@ -89,11 +114,9 @@ const SignIn: React.FC = () => {
             />
             {touched.password && <ErrorText>{errors.password}</ErrorText>}
 
-            {isSubmitting && <ActivityIndicator />}
+            {loading && <ActivityIndicator />}
 
-            {!isSubmitting && (
-              <Button onPress={() => handleSubmit()}>Entrar</Button>
-            )}
+            {!loading && <Button onPress={() => handleSubmit()}>Entrar</Button>}
           </>
         )}
       </Formik>

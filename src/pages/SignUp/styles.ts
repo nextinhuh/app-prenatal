@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
+  display: flex;
   flex: 1;
   align-items: center;
   justify-content: center;
@@ -22,6 +23,14 @@ export const BackToSignIn = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  padding-bottom: 10px;
+`;
+
+export const ErrorText = styled.Text`
+  color: red;
+  font-size: 16px;
+  font-weight: bold;
+  align-self: flex-end;
 `;
 
 export const BackToSignInText = styled.Text`

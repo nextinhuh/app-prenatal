@@ -19,9 +19,6 @@ const AuthRoutes: React.FC = () => (
       headerShown: false,
     }}
   >
-    <Auth.Screen name="SignIn" component={SignIn} />
-    <Auth.Screen name="SignUp" component={SignUp} />
-
     <Auth.Screen name="Dashboard" component={Dashboard} />
 
     <Auth.Screen name="Consults" component={Consults} />

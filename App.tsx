@@ -5,9 +5,13 @@ import { Trocchi_400Regular } from '@expo-google-fonts/trocchi';
 import { Lato_700Bold } from '@expo-google-fonts/lato';
 import { Underdog_400Regular } from '@expo-google-fonts/underdog';
 import { Provider as PaperProvider } from 'react-native-paper';
-
+import firebase from 'firebase';
 import { NavigationContainer } from '@react-navigation/native';
+
+import firebaseConfig from './src/config/FirebaseConfig';
 import Routes from './src/routes';
+
+firebase.initializeApp(firebaseConfig);
 
 const App: React.FC = () => {
   const [fontsLoaded] = useFonts({
@@ -18,6 +22,7 @@ const App: React.FC = () => {
   });
   if (!fontsLoaded)
     return <Text>Carregando - trocar por outra tela depois</Text>;
+
   return (
     <NavigationContainer>
       <StatusBar barStyle="light-content" translucent />

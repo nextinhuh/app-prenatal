@@ -21,6 +21,13 @@ export const Title = styled.Text`
   font-family: 'Trocchi_400Regular';
 `;
 
+export const ErrorText = styled.Text`
+  color: red;
+  font-size: 16px;
+  font-weight: bold;
+  align-self: flex-end;
+`;
+
 export const BackButton = styled.TouchableOpacity`
   width: 35px;
   height: 35px;

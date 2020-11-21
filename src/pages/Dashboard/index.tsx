@@ -1,6 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import firebase from 'firebase';
+import 'firebase/firestore';
+
+import imgUserIcon from '../../assets/user.png';
 
 import {
   Container,
@@ -20,8 +25,23 @@ import {
   LogoutButton,
 } from './styles';
 
+interface User {
+  name: string | undefined | null;
+  photoUrl: string | undefined | null;
+}
+
 const Dashboard: React.FC = () => {
   const navigate = useNavigation();
+  const dbFirestore = firebase.firestore();
+  const [userInfo, setUserInfo] = useState<User>({} as User);
+
+  useEffect(() => {
+    const user = {
+      name: firebase.auth().currentUser?.displayName,
+      photoUrl: firebase.auth().currentUser?.photoURL,
+    };
+    setUserInfo(user);
+  }, []);
 
   const handleNavConsult = useCallback(() => {
     navigate.navigate('Consults');
@@ -40,22 +60,22 @@ const Dashboard: React.FC = () => {
   }, [navigate]);
 
   const handleNavLogOff = useCallback(() => {
-    navigate.reset({
-      routes: [{ name: 'SignIn' }],
-      index: 0,
-    });
-  }, [navigate]);
+    firebase.auth().signOut();
+  }, []);
 
   return (
     <Container>
       <Header>
         <UserNameButton onPress={handleNavProfileUpdate}>
-          <UserAvatar
-            source={{
-              uri:
-                'https://avatars0.githubusercontent.com/u/50875570?s=460&u=fe14fc8cb776233600522328f1ea1406f895f44a&v=4',
-            }}
-          />
+          {userInfo.photoUrl ? (
+            <UserAvatar
+              source={{
+                uri: `${userInfo.photoUrl}`,
+              }}
+            />
+          ) : (
+            <UserAvatar source={imgUserIcon} />
+          )}
         </UserNameButton>
 
         <ContainerMessage>
@@ -63,7 +83,7 @@ const Dashboard: React.FC = () => {
             Bem vinda,
             {'\n'}
           </WelcomeText>
-          <UserNameText>Nome do usuário</UserNameText>
+          <UserNameText>{userInfo?.name}</UserNameText>
         </ContainerMessage>
 
         <LogoutButton onPress={handleNavLogOff}>
