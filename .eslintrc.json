@@ -29,6 +29,8 @@
       "prettier"
   ],
   "rules": {
+    "no-shadow":"off",
+    "import/no-duplicates": "off",
     "no-unused-expressions": "off",
     "import/no-extraneous-dependencies": "off",
     "prettier/prettier": "error",

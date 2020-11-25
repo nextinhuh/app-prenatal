@@ -11,6 +11,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import firebaseConfig from './src/config/FirebaseConfig';
 import Routes from './src/routes';
 
+import AppContextProvider from './src/hooks';
+
 firebase.initializeApp(firebaseConfig);
 
 const App: React.FC = () => {
@@ -27,7 +29,9 @@ const App: React.FC = () => {
     <NavigationContainer>
       <StatusBar barStyle="light-content" translucent />
       <PaperProvider>
-        <Routes />
+        <AppContextProvider>
+          <Routes />
+        </AppContextProvider>
       </PaperProvider>
     </NavigationContainer>
   );

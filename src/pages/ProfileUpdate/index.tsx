@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ScrollView, Alert } from 'react-native';
+import { ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -25,25 +25,41 @@ import {
 } from './styles';
 
 interface User {
-  name: string | undefined | null;
-  photoUrl: string | undefined | null;
+  name: string | undefined;
+  photoUrl: string | undefined;
+  email: string | undefined;
+}
+
+interface UserUpdate {
+  name: string | undefined;
+  email: string | undefined;
+  password: string;
+  confirmPassword: string;
 }
 
 const ProfileUpdate: React.FC = () => {
   const navigation = useNavigation();
-  const firebaseAuth = firebase.auth();
+  const firebaseAuth = firebase.auth().currentUser;
   const storageFirebase = firebase.storage();
   const [userInfo, setUserInfo] = useState<User>({} as User);
+  const [updatingPhoto, setUpdatingPhoto] = useState(false);
 
   useEffect(() => {
-    const user = {
-      name: firebaseAuth.currentUser?.displayName,
-      photoUrl: firebaseAuth.currentUser?.photoURL,
-    };
-    setUserInfo(user);
-  }, []);
+    async function loadUser() {
+      if (firebaseAuth) {
+        const user = {
+          name: firebaseAuth.displayName ? firebaseAuth.displayName : '',
+          photoUrl: firebaseAuth.photoURL ? firebaseAuth.photoURL : '',
+          email: firebaseAuth.email ? firebaseAuth.email : '',
+        };
+        setUserInfo(user);
+      }
+    }
 
-  const handlePNavBack = useCallback(() => {
+    loadUser();
+  }, [firebaseAuth]);
+
+  const handleNavBack = useCallback(() => {
     navigation.reset({
       index: 0,
       routes: [{ name: 'Dashboard' }],
@@ -56,54 +72,19 @@ const ProfileUpdate: React.FC = () => {
 
   const handleTakePhoto = useCallback(async () => {
     const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      const image = await fetch(result.uri);
-      const blobImage = await image.blob();
-
-      const imageRef = storageFirebase
-        .ref()
-        .child(`images/${firebaseAuth.currentUser?.uid}`);
-
-      const uploadImage = imageRef.put(blobImage);
-      let linkImage = '';
-
-      await imageRef.getDownloadURL().then(url => {
-        if (url) {
-          linkImage = url;
-        }
-      });
-
-      firebaseAuth.currentUser?.updateProfile({
-        photoURL: linkImage,
-      });
-
-      const user = {
-        name: firebase.auth().currentUser?.displayName,
-        photoUrl: linkImage,
-      };
-      setUserInfo(user);
-    }
-  }, [storageFirebase, firebaseAuth]);
-
-  const handleGaleryPhotoPicker = useCallback(async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       quality: 1,
     });
 
     if (!result.cancelled) {
+      setUpdatingPhoto(true);
       const image = await fetch(result.uri);
       const blobImage = await image.blob();
 
       const imageRef = await storageFirebase
         .ref()
-        .child(`images/${firebaseAuth.currentUser?.uid}`);
+        .child(`images/${firebaseAuth?.uid}`);
 
       const uploadImage = await imageRef.put(blobImage);
       let linkImage = '';
@@ -114,17 +95,58 @@ const ProfileUpdate: React.FC = () => {
         }
       });
 
-      firebaseAuth.currentUser?.updateProfile({
+      firebaseAuth?.updateProfile({
         photoURL: linkImage,
       });
 
       const user = {
-        name: firebase.auth().currentUser?.displayName,
+        name: userInfo.name,
         photoUrl: linkImage,
+        email: userInfo.email,
       };
       setUserInfo(user);
+      setUpdatingPhoto(false);
     }
-  }, [storageFirebase, firebaseAuth]);
+  }, [storageFirebase, firebaseAuth, userInfo.name, userInfo.email]);
+
+  const handleGaleryPhotoPicker = useCallback(async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setUpdatingPhoto(true);
+      const image = await fetch(result.uri);
+      const blobImage = await image.blob();
+
+      const imageRef = await storageFirebase
+        .ref()
+        .child(`images/${firebaseAuth?.uid}`);
+
+      const uploadImage = await imageRef.put(blobImage);
+      let linkImage = '';
+
+      await imageRef.getDownloadURL().then(url => {
+        if (url) {
+          linkImage = url;
+        }
+      });
+
+      firebaseAuth?.updateProfile({
+        photoURL: linkImage,
+      });
+
+      const user = {
+        name: userInfo.name,
+        photoUrl: linkImage,
+        email: userInfo.email,
+      };
+      setUserInfo(user);
+      setUpdatingPhoto(false);
+    }
+  }, [storageFirebase, firebaseAuth, userInfo.name, userInfo.email]);
 
   const handleAddPhoto = useCallback(() => {
     Alert.alert('', 'Favor escolha alguma das opções abaixo:', [
@@ -139,10 +161,38 @@ const ProfileUpdate: React.FC = () => {
     ]);
   }, [handleGaleryPhotoPicker, handleTakePhoto]);
 
+  const handleUpdateUser = useCallback(
+    (user: UserUpdate) => {
+      if (user.email !== userInfo.email && user.email !== undefined) {
+        firebaseAuth?.updateEmail(user.email).catch(err => {
+          console.log(err);
+        });
+      }
+
+      if (user.name !== userInfo.name && user.name !== undefined) {
+        firebaseAuth?.updateProfile({
+          displayName: user.name,
+        });
+      }
+
+      if (user.confirmPassword !== '') {
+        firebaseAuth?.updatePassword(user.confirmPassword);
+      }
+
+      Alert.alert('Perfil atualizado com sucesso!', '', [
+        {
+          text: 'Ok',
+          onPress: handleNavBack,
+        },
+      ]);
+    },
+    [firebaseAuth, userInfo.email, userInfo.name, handleNavBack],
+  );
+
   return (
     <Container>
       <Header>
-        <BackButton onPress={handlePNavBack}>
+        <BackButton onPress={handleNavBack}>
           <FontAwesome5 name="chevron-left" size={25} color="#503d77" />
         </BackButton>
 
@@ -152,7 +202,10 @@ const ProfileUpdate: React.FC = () => {
       </Header>
 
       <Title>Meu Perfil</Title>
-      {userInfo.photoUrl ? (
+
+      {updatingPhoto ? (
+        <ActivityIndicator size={50} color="#503d77" />
+      ) : userInfo.photoUrl ? (
         <Image
           source={{
             uri: `${userInfo.photoUrl}`,
@@ -168,27 +221,21 @@ const ProfileUpdate: React.FC = () => {
       <ScrollView style={{ width: '100%' }}>
         <Formik
           initialValues={{
-            email: firebaseAuth.currentUser?.email,
+            email: firebaseAuth?.email ? firebaseAuth?.email : '',
             password: '',
-            name: firebaseAuth.currentUser?.displayName,
+            name: firebaseAuth?.displayName ? firebaseAuth?.displayName : '',
             confirmPassword: '',
           }}
           validationSchema={Yup.object().shape({
-            email: Yup.string()
-              .required('Email é obrigatório')
-              .email('Precisa ser um email'),
-            password: Yup.string()
-              .required('Senha é obrigatória')
-              .min(6, 'No minímo 6 caracteres'),
-            name: Yup.string()
-              .required('Nome é obrigatório')
-              .min(5, 'Deve conter no mínimo 5 letas'),
+            email: Yup.string().email('Precisa ser um email'),
+            name: Yup.string().min(5, 'Deve conter no mínimo 5 letas'),
+            password: Yup.string().min(6, 'No minímo 6 caracteres'),
             confirmPassword: Yup.string().oneOf(
               [Yup.ref('password'), undefined],
               'As senhas devem ser iguais',
             ),
           })}
-          onSubmit={() => {}}
+          onSubmit={values => handleUpdateUser(values)}
         >
           {({
             values,
@@ -244,8 +291,13 @@ const ProfileUpdate: React.FC = () => {
                 <ErrorText>{errors.confirmPassword}</ErrorText>
               )}
 
+              {isSubmitting && <ActivityIndicator />}
+
               {!isSubmitting && (
-                <Button onPress={() => handleSubmit()}>
+                <Button
+                  style={{ alignSelf: 'center' }}
+                  onPress={() => handleSubmit()}
+                >
                   Confirmar alteração
                 </Button>
               )}

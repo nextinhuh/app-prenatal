@@ -80,7 +80,7 @@ const Dashboard: React.FC = () => {
 
         <ContainerMessage>
           <WelcomeText>
-            Bem vinda,
+            Olá,
             {'\n'}
           </WelcomeText>
           <UserNameText>{userInfo?.name}</UserNameText>

@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
+  align-items: center;
 `;
 
 export const Header = styled.View`
@@ -74,5 +75,6 @@ export const ConsultText = styled.Text`
   font-family: Sofia_400Regular;
   font-size: 16px;
   color: black;
-  width: 150px;
+  width: 70%;
+  margin-left: 10px;
 `;

@@ -7,7 +7,7 @@ import Prescriptions from '../pages/Prescriptions';
 
 const BottomTabs = createBottomTabNavigator();
 
-const AuthRoutes: React.FC = () => (
+const BottomTabsNavigation: React.FC = () => (
   <BottomTabs.Navigator
     tabBarOptions={{
       activeBackgroundColor: '#b2dcea',
@@ -16,7 +16,7 @@ const AuthRoutes: React.FC = () => (
     }}
   >
     <BottomTabs.Screen
-      name="ProfileUpdate"
+      name="MedicalRecords"
       component={MedicalRecords}
       options={{
         tabBarLabel: 'Prontuário',
@@ -38,4 +38,4 @@ const AuthRoutes: React.FC = () => (
   </BottomTabs.Navigator>
 );
 
-export default AuthRoutes;
+export default BottomTabsNavigation;
