@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 import React, { useCallback, useEffect, useState } from 'react';
@@ -34,6 +35,13 @@ import Input from '../../components/Input';
 import Button2 from '../../components/Button';
 
 interface Note {
+  id: string;
+  title: string;
+  description: string;
+}
+
+interface NoteEdit {
+  id: string;
   title: string;
   description: string;
 }
@@ -48,7 +56,9 @@ const Notes: React.FC = () => {
   const navigation = useNavigation();
   const [visibleMenu, setVisibleMenu] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectionDelete, setSelectionDelete] = useState(false);
+  const [noteToEdit, setNoteToEdit] = useState<Note | undefined>();
   const [listNotesToDelete, setListNotesToDelete] = useState<string[]>([]);
   const [noteList, setNoteList] = useState<ListNotes | undefined>();
   const firebaseAuth = firebase.auth().currentUser;
@@ -206,6 +216,60 @@ const Notes: React.FC = () => {
       });
   }, [firebaseAuth, firebaseFirestore, listNotesToDelete]);
 
+  const handleEditNote = useCallback(
+    (noteId: string) => {
+      const note = noteList?.find(note => {
+        if (note.id === noteId) {
+          return note;
+        }
+      });
+      setNoteToEdit(note);
+      setEditModalVisible(true);
+    },
+    [noteList],
+  );
+
+  const updateNote = useCallback(
+    async (note: NoteEdit) => {
+      await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth?.uid)
+        .collection('notes')
+        .doc(note.id)
+        .update({
+          title: note.title,
+          description: note.description,
+        })
+        .then(() => {
+          noteList?.map(noteToUpdate => {
+            if (noteToUpdate.id === note.id) {
+              noteToUpdate.title = note.title;
+              noteToUpdate.description = note.description;
+            }
+          });
+          setNoteList(noteList);
+          Alert.alert('A nota foi atualizada com sucesso!', '', [
+            {
+              text: 'Ok',
+            },
+          ]);
+          setEditModalVisible(!editModalVisible);
+        })
+        .catch(() => {
+          Alert.alert(
+            'Ops! Deu algum erro na criação da nota, favor tentar novamente!',
+            '',
+            [
+              {
+                text: 'Ok',
+              },
+            ],
+          );
+        });
+    },
+    [firebaseAuth, firebaseFirestore, editModalVisible, noteList],
+  );
+
   return (
     <Container>
       <Modal
@@ -282,6 +346,91 @@ const Notes: React.FC = () => {
               style={{ marginTop: '5%', marginBottom: '2%' }}
               onPress={() => {
                 setModalVisible(!modalVisible);
+              }}
+            >
+              Fechar janela
+            </Button2>
+          </ModalContent>
+        </ModalContainer>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent
+        visible={editModalVisible}
+        onRequestClose={() => {
+          Alert.alert('Para cancelar, pressione o botão fechar janela.');
+        }}
+      >
+        <ModalContainer>
+          <ModalContent>
+            <ModalTitle>Editar nota</ModalTitle>
+            <Formik
+              initialValues={{
+                id: noteToEdit?.id ? noteToEdit.id : '',
+                title: noteToEdit?.title ? noteToEdit.title : '',
+                description: noteToEdit?.description
+                  ? noteToEdit.description
+                  : '',
+              }}
+              validationSchema={Yup.object().shape({
+                title: Yup.string()
+                  .required('Título é obrigatório')
+                  .min(3, 'Precisa ter 3 caracteres'),
+                description: Yup.string()
+                  .required('Texto da nota é obrigatório')
+                  .min(5, 'Precisa ter 5 caracteres'),
+              })}
+              onSubmit={values => updateNote(values)}
+            >
+              {({
+                values,
+                handleChange,
+                handleSubmit,
+                errors,
+                handleBlur,
+                touched,
+              }) => (
+                <>
+                  <Input
+                    onBlur={handleBlur('title')}
+                    name="title"
+                    value={values.title}
+                    onChangeText={handleChange('title')}
+                    placeholder="Título da nota"
+                  />
+                  {touched.title && errors.title && (
+                    <ErrorText>{errors.title}</ErrorText>
+                  )}
+
+                  <Input
+                    onBlur={handleBlur('description')}
+                    name="description"
+                    value={values.description}
+                    onChangeText={handleChange('description')}
+                    multiline
+                    style={{ marginTop: '5%', height: 60 }}
+                    numberOfLines={6}
+                    placeholder="Digite o texto..."
+                  />
+                  {touched.description && errors.description && (
+                    <ErrorText>{errors.description}</ErrorText>
+                  )}
+
+                  <Button2
+                    style={{ marginTop: '15%' }}
+                    onPress={() => handleSubmit()}
+                  >
+                    Salvar alteração
+                  </Button2>
+                </>
+              )}
+            </Formik>
+
+            <Button2
+              style={{ marginTop: '5%', marginBottom: '2%' }}
+              onPress={() => {
+                setEditModalVisible(!editModalVisible);
               }}
             >
               Fechar janela
@@ -370,7 +519,12 @@ const Notes: React.FC = () => {
               <Paragraph>{note.description}</Paragraph>
             </Card.Content>
             <Card.Actions style={{ justifyContent: 'flex-end' }}>
-              <Button labelStyle={{ color: '#503d77' }}>Editar</Button>
+              <Button
+                labelStyle={{ color: '#503d77' }}
+                onPress={() => handleEditNote(note.id)}
+              >
+                Editar
+              </Button>
             </Card.Actions>
           </Card>
         )}
