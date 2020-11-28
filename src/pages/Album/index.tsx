@@ -54,19 +54,6 @@ const Album: React.FC = () => {
     })();
   }, []);
 
-  const handleAddPhoto = useCallback(() => {
-    Alert.alert('', 'Favor escolha alguma das opções abaixo:', [
-      {
-        text: 'Cancelar',
-      },
-      { text: 'Tirar uma foto agora', onPress: handleTakePhoto },
-      {
-        text: 'Escolher uma foto da galeria',
-        onPress: handleGaleryPhotoPicker,
-      },
-    ]);
-  }, []);
-
   const handleGaleryPhotoPicker = useCallback(async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -86,6 +73,19 @@ const Album: React.FC = () => {
 
     console.log(result);
   }, []);
+
+  const handleAddPhoto = useCallback(() => {
+    Alert.alert('', 'Favor escolha alguma das opções abaixo:', [
+      {
+        text: 'Cancelar',
+      },
+      { text: 'Tirar uma foto agora', onPress: handleTakePhoto },
+      {
+        text: 'Escolher uma foto da galeria',
+        onPress: handleGaleryPhotoPicker,
+      },
+    ]);
+  }, [handleGaleryPhotoPicker, handleTakePhoto]);
 
   const handleToggleMenu = useCallback(() => {
     setVisibleMenu(!visibleMenu);

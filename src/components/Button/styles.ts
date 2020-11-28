@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
-import { RectButton } from 'react-native-gesture-handler';
 
-export const Container = styled(RectButton)`
+export const Container = styled.TouchableHighlight`
+  display: flex;
   width: 232px;
   height: 36px;
   background: #503d77;

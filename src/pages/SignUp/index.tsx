@@ -123,7 +123,9 @@ const SignUp: React.FC = () => {
                   value={values.name}
                   onChangeText={handleChange('name')}
                 />
-                {touched.name && <ErrorText>{errors.name}</ErrorText>}
+                {touched.name && errors.name && (
+                  <ErrorText>{errors.name}</ErrorText>
+                )}
 
                 <Input
                   onBlur={handleBlur('email')}
@@ -133,7 +135,9 @@ const SignUp: React.FC = () => {
                   value={values.email}
                   onChangeText={handleChange('email')}
                 />
-                {touched.email && <ErrorText>{errors.email}</ErrorText>}
+                {touched.email && errors.email && (
+                  <ErrorText>{errors.email}</ErrorText>
+                )}
 
                 <Input
                   onBlur={handleBlur('password')}
@@ -144,7 +148,9 @@ const SignUp: React.FC = () => {
                   onChangeText={handleChange('password')}
                   secureTextEntry
                 />
-                {touched.password && <ErrorText>{errors.password}</ErrorText>}
+                {touched.password && errors.password && (
+                  <ErrorText>{errors.password}</ErrorText>
+                )}
 
                 <Input
                   onBlur={handleBlur('confirmPassword')}
@@ -155,7 +161,7 @@ const SignUp: React.FC = () => {
                   onChangeText={handleChange('confirmPassword')}
                   secureTextEntry
                 />
-                {touched.confirmPassword && (
+                {touched.confirmPassword && errors.confirmPassword && (
                   <ErrorText>{errors.confirmPassword}</ErrorText>
                 )}
 

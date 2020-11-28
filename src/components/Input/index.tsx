@@ -4,8 +4,8 @@ import { TextInputProps } from 'react-native';
 import { Container, TextInput, Icon } from './styles';
 
 interface InputProps extends TextInputProps {
-  name: string;
-  icon: string;
+  name?: string;
+  icon?: string;
 }
 
 const Input: React.FC<InputProps> = ({ name, icon, onBlur, ...rest }) => (

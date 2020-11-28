@@ -1,5 +1,36 @@
 import styled from 'styled-components/native';
 
+export const ModalContainer = styled.KeyboardAvoidingView`
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.75);
+`;
+
+export const ModalContent = styled.View`
+  margin: 20px;
+  background-color: white;
+  border-radius: 20px;
+  padding: 15px;
+  align-items: center;
+  height: 390px;
+`;
+
+export const ErrorText = styled.Text`
+  color: red;
+  font-size: 16px;
+  font-weight: bold;
+  align-self: flex-end;
+`;
+
+export const ModalTitle = styled.Text`
+  font-size: 25px;
+  font-family: Underdog_400Regular;
+  color: #503d77;
+  margin-bottom: 5%;
+`;
+
 export const Container = styled.View`
   flex: 1;
 `;
@@ -29,9 +60,51 @@ export const TitleCard = styled.Text`
 `;
 
 export const Paragraph = styled.Text`
+  margin-left: 15px;
   font-family: Underdog_400Regular;
   font-size: 16px;
 `;
 
-export const OptionButton = styled.TouchableOpacity``;
+export const OptionButton = styled.TouchableOpacity`
+  width: 200%;
+`;
 export const BackButton = styled.TouchableOpacity``;
+
+export const DeleteButton = styled.TouchableOpacity``;
+
+export const DeleteContainer = styled.View`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: -20px;
+  margin-bottom: 15px;
+`;
+
+export const CancelDeleteButton = styled.TouchableOpacity`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+export const ConfirmDeleteButton = styled.TouchableOpacity`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const CancelDeleteButtonText = styled.Text`
+  font-size: 20px;
+  font-family: Underdog_400Regular;
+  color: #503d77;
+  margin-right: 10px;
+`;
+
+export const ConfirmDeleteButtonText = styled.Text`
+  font-size: 20px;
+  font-family: Underdog_400Regular;
+  color: #503d77;
+  margin-right: 10px;
+`;
