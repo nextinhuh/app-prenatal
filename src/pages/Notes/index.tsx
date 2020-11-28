@@ -7,7 +7,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import firebase from 'firebase';
+import firebase, { firestore } from 'firebase';
 import 'firebase/firestore';
 
 import {
@@ -64,7 +64,7 @@ const Notes: React.FC = () => {
         .then(result => {
           const resultList: any = [];
           result.forEach(doc => {
-            resultList.push(doc.data().note);
+            resultList.push(doc.data());
           });
           setNoteList(resultList);
         });
@@ -101,11 +101,9 @@ const Notes: React.FC = () => {
         .collection('notes')
         .doc(time.toString())
         .set({
-          note: {
-            id: time.toString(),
-            title: note.title,
-            description: note.description,
-          },
+          id: time.toString(),
+          title: note.title,
+          description: note.description,
         })
         .then(() => {
           Alert.alert('A nota foi criada com sucesso!', '', [
@@ -133,7 +131,7 @@ const Notes: React.FC = () => {
           );
         });
     },
-    [firebaseAuth, firebaseFirestore, modalVisible],
+    [firebaseAuth, firebaseFirestore, modalVisible, noteList],
   );
 
   const addNotesToDelete = useCallback(
@@ -154,6 +152,59 @@ const Notes: React.FC = () => {
     },
     [listNotesToDelete],
   );
+
+  const confirmNoteDelete = useCallback(async () => {
+    await firebaseFirestore
+      .collection('users')
+      .doc(firebaseAuth?.uid)
+      .collection('notes')
+      .get()
+      .then(result => {
+        const batch = firebaseFirestore.batch();
+
+        result.forEach(doc => {
+          listNotesToDelete.map(note => {
+            if (doc.id === note) {
+              batch.delete(doc.ref);
+            }
+          });
+        });
+
+        Alert.alert('As notas foram deletadas com sucesso!', '', [
+          {
+            text: 'Ok',
+          },
+        ]);
+
+        firebaseFirestore
+          .collection('users')
+          .doc(firebaseAuth?.uid)
+          .collection('notes')
+          .get()
+          .then(result => {
+            const resultList: any = [];
+            result.forEach(doc => {
+              resultList.push(doc.data());
+            });
+            setNoteList(resultList);
+          });
+
+        setSelectionDelete(false);
+
+        return batch.commit();
+      })
+      .catch(() => {
+        Alert.alert(
+          'Ops! Deu algum erro na criação da nota, favor tentar novamente!',
+          '',
+          [
+            {
+              text: 'Ok',
+            },
+          ],
+        );
+      });
+  }, [firebaseAuth, firebaseFirestore, listNotesToDelete]);
 
   return (
     <Container>
@@ -268,7 +319,7 @@ const Notes: React.FC = () => {
 
       {selectionDelete ? (
         <DeleteContainer>
-          <ConfirmDeleteButton onPress={handleToggleSelectionDelete}>
+          <ConfirmDeleteButton onPress={confirmNoteDelete}>
             <ConfirmDeleteButtonText>Apagar</ConfirmDeleteButtonText>
             <FontAwesome5 name="check" size={22} color="#503d77" />
           </ConfirmDeleteButton>
