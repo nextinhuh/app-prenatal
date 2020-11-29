@@ -8,7 +8,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import firebase, { firestore } from 'firebase';
+import firebase from 'firebase';
 import 'firebase/firestore';
 
 import {
@@ -103,7 +103,7 @@ const Notes: React.FC = () => {
   }, [selectionDelete]);
 
   const createNewNote = useCallback(
-    async (note: Note) => {
+    async (note: Omit<Note, 'id'>) => {
       const time = new Date().getTime();
       await firebaseFirestore
         .collection('users')

@@ -1,11 +1,16 @@
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
+/* eslint-disable no-alert */
 /* eslint-disable no-param-reassign */
 import React, { useCallback, useEffect, useState } from 'react';
 import ImageView from 'react-native-image-viewing';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { Menu, Divider } from 'react-native-paper';
+import { Menu, Divider, ActivityIndicator } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
-import { Alert, Platform } from 'react-native';
+import { Alert, Platform, Modal } from 'react-native';
+import firebase from 'firebase';
+import 'firebase/firestore';
 
 import {
   Container,
@@ -23,10 +28,11 @@ import {
   ConfirmDeleteButton,
   ConfirmDeleteButtonText,
   ImageContainer,
+  ModalContainer,
 } from './styles';
 
 type Images = Array<{
-  id: number;
+  id: string;
   uri: string;
 }>;
 
@@ -38,6 +44,11 @@ const Album: React.FC = () => {
   const [selectionDelete, setSelectionDelete] = useState(false);
   const [buttonDeleteActive, setButtonDeleteActive] = useState(true);
   const [selectedImages, setSelectedIamges] = useState<number[]>([]);
+  const [listImages, setListImages] = useState<Images>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const firebaseAuth = firebase.auth().currentUser;
+  const storageFirebase = firebase.storage();
+  const firebaseFirestore = firebase.firestore();
 
   useEffect(() => {
     (async () => {
@@ -52,7 +63,27 @@ const Album: React.FC = () => {
         }
       }
     })();
-  }, []);
+
+    async function listImagesUrl() {
+      await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth?.uid)
+        .collection('album')
+        .get()
+        .then(result => {
+          const resultList: any = [];
+          result.forEach(doc => {
+            resultList.push({
+              id: doc.data().id,
+              uri: doc.data().linkImage,
+            });
+          });
+          setListImages(resultList);
+        });
+    }
+
+    listImagesUrl();
+  }, [firebaseAuth, firebaseFirestore]);
 
   const handleGaleryPhotoPicker = useCallback(async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -61,8 +92,43 @@ const Album: React.FC = () => {
       quality: 1,
     });
 
-    console.log(result);
-  }, []);
+    if (!result.cancelled) {
+      setModalVisible(true);
+      const image = await fetch(result.uri);
+      const blobImage = await image.blob();
+      const time = new Date().getTime();
+
+      const imageRef = await storageFirebase
+        .ref()
+        .child(`album/${firebaseAuth?.uid}/${time}`);
+
+      await imageRef.put(blobImage);
+
+      let linkImage = '';
+
+      await imageRef.getDownloadURL().then(url => {
+        if (url) {
+          linkImage = url;
+        }
+      });
+
+      await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth?.uid)
+        .collection('album')
+        .doc(time.toString())
+        .set({ linkImage, id: time.toString() });
+
+      const newImage = {
+        id: time.toString(),
+        uri: linkImage,
+      };
+
+      setVisibleMenu(false);
+      setListImages([newImage, ...listImages]);
+      setModalVisible(false);
+    }
+  }, [firebaseAuth, firebaseFirestore, storageFirebase, listImages]);
 
   const handleTakePhoto = useCallback(async () => {
     const result = await ImagePicker.launchCameraAsync({
@@ -71,8 +137,43 @@ const Album: React.FC = () => {
       quality: 1,
     });
 
-    console.log(result);
-  }, []);
+    if (!result.cancelled) {
+      setModalVisible(true);
+      const image = await fetch(result.uri);
+      const blobImage = await image.blob();
+      const time = new Date().getTime();
+
+      const imageRef = await storageFirebase
+        .ref()
+        .child(`album/${firebaseAuth?.uid}/${time}`);
+
+      await imageRef.put(blobImage);
+
+      let linkImage = '';
+
+      await imageRef.getDownloadURL().then(url => {
+        if (url) {
+          linkImage = url;
+        }
+      });
+
+      await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth?.uid)
+        .collection('album')
+        .doc(time.toString())
+        .set({ linkImage, id: time.toString() });
+
+      const newImage = {
+        id: time.toString(),
+        uri: linkImage,
+      };
+
+      setVisibleMenu(false);
+      setListImages([newImage, ...listImages]);
+      setModalVisible(false);
+    }
+  }, [firebaseAuth, firebaseFirestore, storageFirebase, listImages]);
 
   const handleAddPhoto = useCallback(() => {
     Alert.alert('', 'Favor escolha alguma das opções abaixo:', [
@@ -95,122 +196,6 @@ const Album: React.FC = () => {
     navigation.goBack();
   }, [navigation]);
 
-  const images = [
-    {
-      id: 1,
-      uri:
-        'https://avatars0.githubusercontent.com/u/50875570?s=460&u=fe14fc8cb776233600522328f1ea1406f895f44a&v=4',
-    },
-    {
-      id: 2,
-      uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-    },
-    {
-      id: 3,
-      uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-    },
-    {
-      id: 4,
-      uri:
-        'https://images.pexels.com/photos/4669141/pexels-photo-4669141.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 5,
-      uri:
-        'https://images.pexels.com/photos/4669107/pexels-photo-4669107.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 6,
-      uri:
-        'https://images.pexels.com/photos/4669103/pexels-photo-4669103.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 7,
-      uri:
-        'https://images.pexels.com/photos/4669109/pexels-photo-4669109.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-    },
-    {
-      id: 8,
-      uri:
-        'https://images.pexels.com/photos/4669142/pexels-photo-4669142.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 9,
-      uri:
-        'https://images.pexels.com/photos/4669118/pexels-photo-4669118.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 10,
-      uri:
-        'https://images.pexels.com/photos/4669102/pexels-photo-4669102.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 11,
-      uri:
-        'https://images.pexels.com/photos/4669101/pexels-photo-4669101.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 12,
-      uri:
-        'https://images.pexels.com/photos/5192920/pexels-photo-5192920.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 13,
-      uri:
-        'https://images.pexels.com/photos/1046399/pexels-photo-1046399.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 14,
-      uri:
-        'https://images.pexels.com/photos/1550337/pexels-photo-1550337.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 15,
-      uri:
-        'https://images.pexels.com/photos/1550342/pexels-photo-1550342.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-    },
-    {
-      id: 16,
-      uri:
-        'https://images.pexels.com/photos/1046398/pexels-photo-1046398.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 17,
-      uri:
-        'https://images.pexels.com/photos/1550340/pexels-photo-1550340.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 18,
-      uri:
-        'https://images.pexels.com/photos/3973905/pexels-photo-3973905.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-    },
-    {
-      id: 19,
-      uri:
-        'https://images.pexels.com/photos/5756577/pexels-photo-5756577.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-    },
-    {
-      id: 20,
-      uri:
-        'https://images.pexels.com/photos/1550334/pexels-photo-1550334.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 21,
-      uri:
-        'https://images.pexels.com/photos/4669146/pexels-photo-4669146.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-    },
-    {
-      id: 22,
-      uri:
-        'https://images.pexels.com/photos/5756565/pexels-photo-5756565.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-    },
-    {
-      id: 23,
-      uri:
-        'https://images.pexels.com/photos/258644/pexels-photo-258644.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-    },
-  ] as Images;
-
   const handleToggleImageView = useCallback(
     index => {
       setImageIndex(index);
@@ -220,6 +205,7 @@ const Album: React.FC = () => {
   );
 
   const handleToggleSelectionDelete = useCallback(() => {
+    setVisibleMenu(false);
     setSelectionDelete(!selectionDelete);
     setButtonDeleteActive(!buttonDeleteActive);
     setSelectedIamges([]);
@@ -241,6 +227,62 @@ const Album: React.FC = () => {
     [selectedImages],
   );
 
+  const confirmImagesDelete = useCallback(async () => {
+    setModalVisible(true);
+
+    await firebaseFirestore
+      .collection('users')
+      .doc(firebaseAuth?.uid)
+      .collection('album')
+      .get()
+      .then(result => {
+        const batch = firebaseFirestore.batch();
+
+        result.forEach(doc => {
+          selectedImages.map(image => {
+            if (image.toString() === doc.id) {
+              const imageRef = storageFirebase.refFromURL(doc.data().linkImage);
+              batch.delete(doc.ref);
+              imageRef.delete();
+            }
+          });
+        });
+
+        Alert.alert('As fotos foram deletadas com sucesso!', '', [
+          {
+            text: 'Ok',
+          },
+        ]);
+
+        firebaseFirestore
+          .collection('users')
+          .doc(firebaseAuth?.uid)
+          .collection('album')
+          .get()
+          .then(result => {
+            const resultList: any = [];
+            result.forEach(doc => {
+              resultList.push({
+                id: doc.data().id,
+                uri: doc.data().linkImage,
+              });
+            });
+            setListImages(resultList);
+          });
+
+        handleToggleSelectionDelete();
+        setModalVisible(false);
+
+        return batch.commit();
+      });
+  }, [
+    firebaseAuth,
+    firebaseFirestore,
+    selectedImages,
+    storageFirebase,
+    handleToggleSelectionDelete,
+  ]);
+
   return (
     <Container>
       <Header>
@@ -260,22 +302,22 @@ const Album: React.FC = () => {
           }
         >
           <Menu.Item
-            onPress={handleToggleSelectionDelete}
-            title="Apagar foto(s)"
-          />
-          <Divider />
-          <Menu.Item
             onPress={() => {
               handleAddPhoto();
             }}
             title="Adicionar uma foto"
+          />
+          <Divider />
+          <Menu.Item
+            onPress={handleToggleSelectionDelete}
+            title="Apagar foto(s)"
           />
         </Menu>
       </Header>
 
       {selectionDelete ? (
         <DeleteContainer>
-          <ConfirmDeleteButton onPress={handleToggleSelectionDelete}>
+          <ConfirmDeleteButton onPress={confirmImagesDelete}>
             <ConfirmDeleteButtonText>Apagar</ConfirmDeleteButtonText>
             <FontAwesome5 name="check" size={22} color="#503d77" />
           </ConfirmDeleteButton>
@@ -288,11 +330,11 @@ const Album: React.FC = () => {
       ) : null}
 
       <AlbumList
-        data={images}
+        data={listImages}
         showsVerticalScrollIndicator={false}
         numColumns={3}
         extraData={selectedImages}
-        keyExtractor={image => image.uri}
+        keyExtractor={image => image.id}
         renderItem={({ item: image, index }) => (
           <ImageContainer>
             <ImageButton
@@ -326,11 +368,24 @@ const Album: React.FC = () => {
       />
 
       <ImageView
-        images={images}
+        images={listImages}
         imageIndex={imageIndex}
         visible={visible}
         onRequestClose={() => setIsVisible(false)}
       />
+
+      <Modal
+        animationType="fade"
+        transparent
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Para cancelar, pressione o botão fechar janela.');
+        }}
+      >
+        <ModalContainer>
+          <ActivityIndicator size={50} color="#503d77" />
+        </ModalContainer>
+      </Modal>
     </Container>
   );
 };

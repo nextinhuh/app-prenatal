@@ -95,3 +95,11 @@ export const ImageButtonDelete = styled.TouchableOpacity`
   height: 100%;
   top: 10px;
 `;
+
+export const ModalContainer = styled.KeyboardAvoidingView`
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.75);
+`;
