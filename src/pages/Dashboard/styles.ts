@@ -5,7 +5,7 @@ export const Container = styled.View`
 `;
 
 export const Header = styled.View`
-  margin: 40px 20px 0 20px;
+  margin: 40px 20px 50px 20px;
   width: 90%;
   height: 150px;
   display: flex;

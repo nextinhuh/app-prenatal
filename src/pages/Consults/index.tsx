@@ -73,44 +73,6 @@ const Consults: React.FC = () => {
     [navigate, updateConsultId],
   );
 
-  const handleTest = useCallback(async () => {
-    const time = new Date().getTime();
-    await firebaseFirestore
-      .collection('users')
-      .doc(firebaseAuth?.uid)
-      .collection('consults')
-      .doc(time.toString())
-      .set({
-        prescriptions: {
-          bloodPressure: '120 x 80',
-          heartRate: 60,
-          weight: 86,
-          heigh: 1.6,
-          abdominalCircumference: 60,
-        },
-        medicalRecords: [
-          {
-            title: 'Repouso',
-            description:
-              'Fazer repouso com duração de 2 horas, a cada 5 horas.',
-          },
-          {
-            title: 'Alimentação',
-            description: ' Dieta balanceada, comer comidas leves.',
-          },
-          {
-            title: 'Exercício',
-            description: 'Exercitar os membros inferiores com regularidade.',
-          },
-          {
-            title: 'Teste',
-            description:
-              'Testando o teste Testando o teste Testando o teste Testando o teste.',
-          },
-        ],
-      });
-  }, [firebaseFirestore, firebaseAuth]);
-
   return (
     <Container>
       <Header>

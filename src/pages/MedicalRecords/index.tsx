@@ -45,7 +45,7 @@ const MedicalRecords: React.FC = () => {
         .get()
         .then(result => {
           if (result.exists) {
-            setMedicalRecords(result.data()?.prescriptions);
+            setMedicalRecords(result.data()?.medicalRecords);
           }
         });
     }
@@ -72,11 +72,11 @@ const MedicalRecords: React.FC = () => {
           Sinais vitais
           {'\n'}
         </ConsultCardTitle>
-        <ConsultCardText>Pressão aterial: {medicalRecords?.bloodPressure} mmHg</ConsultCardText>
-        <ConsultCardText>Frequência cardíaca: {medicalRecords?.heartRate} ipm</ConsultCardText>
-        <ConsultCardText>Peso: {medicalRecords?.weight} Kg</ConsultCardText>
-        <ConsultCardText>Altura: {medicalRecords?.heigh} Mts</ConsultCardText>
-        <ConsultCardText>Circunferência abdominal: {medicalRecords?.abdominalCircumference} Cm</ConsultCardText>
+        <ConsultCardText>Pressão aterial: {medicalRecords?.bloodPressure}</ConsultCardText>
+        <ConsultCardText>Frequência cardíaca: {medicalRecords?.heartRate}</ConsultCardText>
+        <ConsultCardText>Peso: {medicalRecords?.weight}</ConsultCardText>
+        <ConsultCardText>Altura: {medicalRecords?.heigh}</ConsultCardText>
+        <ConsultCardText>Circunferência abdominal: {medicalRecords?.abdominalCircumference}</ConsultCardText>
       </ConsultCard>
     </Container>
   );

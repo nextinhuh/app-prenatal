@@ -91,23 +91,6 @@ const Dashboard: React.FC = () => {
         </LogoutButton>
       </Header>
 
-      <IndicatorContainer>
-        <IndicatorCard>
-          <IndicatorTextNumber>16</IndicatorTextNumber>
-          <IndicatorText>Prontuários</IndicatorText>
-        </IndicatorCard>
-
-        <IndicatorCard>
-          <IndicatorTextNumber>4</IndicatorTextNumber>
-          <IndicatorText>Consultas</IndicatorText>
-        </IndicatorCard>
-
-        <IndicatorCard>
-          <IndicatorTextNumber>2</IndicatorTextNumber>
-          <IndicatorText>Gestações</IndicatorText>
-        </IndicatorCard>
-      </IndicatorContainer>
-
       <MenuContainer>
         <MenuItem
           style={{ backgroundColor: '#4CEC9F' }}

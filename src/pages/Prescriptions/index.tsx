@@ -39,7 +39,7 @@ const Prescription: React.FC = () => {
         .get()
         .then(result => {
           if (result.exists) {
-            const records: Prescription = result.data()?.medicalRecords;
+            const records: Prescription = result.data()?.prescriptions;
             setPrescription(records);
             setLoading(false);
           }
