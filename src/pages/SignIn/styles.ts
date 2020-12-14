@@ -27,7 +27,7 @@ export const CreateAccountButtonText = styled.Text`
 `;
 
 export const CreateAccountButton = styled.TouchableOpacity`
-  margin-top: 50px;
+  margin-top: 30px;
 `;
 
 export const ErrorText = styled.Text`

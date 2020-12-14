@@ -1,5 +1,10 @@
 import React, { useCallback } from 'react';
-import { Alert, ActivityIndicator, ScrollView } from 'react-native';
+import {
+  Alert,
+  ActivityIndicator,
+  ScrollView,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';

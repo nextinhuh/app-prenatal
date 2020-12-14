@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert } from 'react-native';
+import { ActivityIndicator, Alert, KeyboardAvoidingView } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
@@ -66,65 +66,72 @@ const SignIn: React.FC = () => {
   }
 
   return (
-    <Container>
-      <Title>Cegonha</Title>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <Container>
+        <Title>Cegonha</Title>
 
-      <Image source={logoImg} />
+        <Image source={logoImg} />
 
-      <TitleDescription>Faça seu login</TitleDescription>
+        <TitleDescription>Faça seu login</TitleDescription>
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          validationSchema={Yup.object().shape({
+            email: Yup.string()
+              .required('Email é obrigatório')
+              .email('Precisa ser um email'),
+            password: Yup.string().required('Senha é obrigatória'),
+          })}
+          onSubmit={values => handleLogon(values)}
+        >
+          {({
+            values,
+            handleChange,
+            handleSubmit,
+            errors,
+            isSubmitting,
+            handleBlur,
+            touched,
+          }) => (
+            <>
+              <Input
+                onBlur={handleBlur('email')}
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                value={values.email}
+                onChangeText={handleChange('email')}
+              />
+              {touched.email && errors.email && (
+                <ErrorText>{errors.email}</ErrorText>
+              )}
 
-      <Formik
-        initialValues={{ email: '', password: '' }}
-        validationSchema={Yup.object().shape({
-          email: Yup.string()
-            .required('Email é obrigatório')
-            .email('Precisa ser um email'),
-          password: Yup.string().required('Senha é obrigatória'),
-        })}
-        onSubmit={values => handleLogon(values)}
-      >
-        {({
-          values,
-          handleChange,
-          handleSubmit,
-          errors,
-          isSubmitting,
-          handleBlur,
-          touched,
-        }) => (
-          <>
-            <Input
-              onBlur={handleBlur('email')}
-              name="email"
-              icon="mail"
-              placeholder="E-mail"
-              value={values.email}
-              onChangeText={handleChange('email')}
-            />
-            {touched.email && <ErrorText>{errors.email}</ErrorText>}
+              <Input
+                onBlur={handleBlur('password')}
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                value={values.password}
+                onChangeText={handleChange('password')}
+                secureTextEntry
+              />
+              {touched.password && errors.password && (
+                <ErrorText>{errors.password}</ErrorText>
+              )}
 
-            <Input
-              onBlur={handleBlur('password')}
-              name="password"
-              icon="lock"
-              placeholder="Senha"
-              value={values.password}
-              onChangeText={handleChange('password')}
-              secureTextEntry
-            />
-            {touched.password && <ErrorText>{errors.password}</ErrorText>}
+              {loading && <ActivityIndicator />}
 
-            {loading && <ActivityIndicator />}
+              {!loading && (
+                <Button onPress={() => handleSubmit()}>Entrar</Button>
+              )}
+            </>
+          )}
+        </Formik>
 
-            {!loading && <Button onPress={() => handleSubmit()}>Entrar</Button>}
-          </>
-        )}
-      </Formik>
-
-      <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
-        <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
-      </CreateAccountButton>
-    </Container>
+        <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
+          <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
+        </CreateAccountButton>
+      </Container>
+    </KeyboardAvoidingView>
   );
 };
 
