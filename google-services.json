@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "224867413527",
+    "firebase_url": "https://app-prenatal.firebaseio.com",
+    "project_id": "app-prenatal",
+    "storage_bucket": "app-prenatal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224867413527:android:c0d54cae2690ba6c8ff652",
+        "android_client_info": {
+          "package_name": "br.com.alvaroneto.cegonha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "224867413527-d388ppp959pav98rrt3pvlrq203bv30q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASW91LOIX52dJ1ItJGRrOi3b0eDAtybfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "224867413527-d388ppp959pav98rrt3pvlrq203bv30q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

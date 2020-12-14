@@ -21,6 +21,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "android": {
+      "package": "br.com.alvaroneto.cegonha",
+      "versionCode": 1,
+      "googleServicesFile": "./google-services.json"
     }
   }
 }

@@ -4,6 +4,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import firebase from 'firebase';
 import 'firebase/firestore';
+import { AdMobBanner } from 'expo-ads-admob';
 
 import imgUserIcon from '../../assets/user.png';
 
@@ -14,10 +15,7 @@ import {
   ContainerMessage,
   WelcomeText,
   UserNameText,
-  IndicatorContainer,
-  IndicatorCard,
-  IndicatorTextNumber,
-  IndicatorText,
+  AdMobContainer,
   MenuContainer,
   MenuItem,
   MenuText,
@@ -118,6 +116,13 @@ const Dashboard: React.FC = () => {
           <MenuText>Anotações</MenuText>
         </MenuItem>
       </MenuContainer>
+
+      <AdMobContainer>
+        <AdMobBanner
+          bannerSize="fullBanner"
+          adUnitID="ca-app-pub-3940256099942544/6300978111"
+        />
+      </AdMobContainer>
     </Container>
   );
 };

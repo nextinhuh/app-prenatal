@@ -103,3 +103,8 @@ export const LogoutButton = styled.TouchableOpacity`
   margin-left: 0px;
   margin-bottom: 80px;
 `;
+
+export const AdMobContainer = styled.View`
+  position: absolute;
+  bottom: 0;
+`;
