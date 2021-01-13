@@ -66,9 +66,15 @@ export const Paragraph = styled.Text`
 `;
 
 export const OptionButton = styled.TouchableOpacity`
-  width: 200%;
+  align-items: center;
+  height: 40px;
+  justify-content: center;
 `;
-export const BackButton = styled.TouchableOpacity``;
+export const BackButton = styled.TouchableOpacity`
+  align-items: center;
+  height: 30px;
+  width: 30px;
+`;
 
 export const DeleteButton = styled.TouchableOpacity``;
 

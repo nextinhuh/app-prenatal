@@ -164,56 +164,74 @@ const Notes: React.FC = () => {
   );
 
   const confirmNoteDelete = useCallback(async () => {
-    await firebaseFirestore
-      .collection('users')
-      .doc(firebaseAuth?.uid)
-      .collection('notes')
-      .get()
-      .then(result => {
-        const batch = firebaseFirestore.batch();
+    Alert.alert(
+      'Tem certeza que deseja deletar essa(s) nota(s) ?',
+      '',
+      [
+        {
+          text: 'Não',
+          style: 'cancel',
+        },
+        {
+          text: 'Sim, tenho certeza!',
+          onPress: () => deleteNotes(),
+        },
+      ],
+      { cancelable: false },
+    );
 
-        result.forEach(doc => {
-          listNotesToDelete.map(note => {
-            if (doc.id === note) {
-              batch.delete(doc.ref);
-            }
-          });
-        });
+    async function deleteNotes() {
+      await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth?.uid)
+        .collection('notes')
+        .get()
+        .then(result => {
+          const batch = firebaseFirestore.batch();
 
-        Alert.alert('As notas foram deletadas com sucesso!', '', [
-          {
-            text: 'Ok',
-          },
-        ]);
-
-        firebaseFirestore
-          .collection('users')
-          .doc(firebaseAuth?.uid)
-          .collection('notes')
-          .get()
-          .then(result => {
-            const resultList: any = [];
-            result.forEach(doc => {
-              resultList.push(doc.data());
+          result.forEach(doc => {
+            listNotesToDelete.map(note => {
+              if (doc.id === note) {
+                batch.delete(doc.ref);
+              }
             });
-            setNoteList(resultList);
           });
 
-        setSelectionDelete(false);
-
-        return batch.commit();
-      })
-      .catch(() => {
-        Alert.alert(
-          'Ops! Deu algum erro na criação da nota, favor tentar novamente!',
-          '',
-          [
+          Alert.alert('A(s) nota(s) foi(ram) excluída(s) com sucesso!', '', [
             {
               text: 'Ok',
             },
-          ],
-        );
-      });
+          ]);
+
+          firebaseFirestore
+            .collection('users')
+            .doc(firebaseAuth?.uid)
+            .collection('notes')
+            .get()
+            .then(result => {
+              const resultList: any = [];
+              result.forEach(doc => {
+                resultList.push(doc.data());
+              });
+              setNoteList(resultList);
+            });
+
+          setSelectionDelete(false);
+
+          return batch.commit();
+        })
+        .catch(() => {
+          Alert.alert(
+            'Ops! Deu algum erro na criação da nota, favor tentar novamente!',
+            '',
+            [
+              {
+                text: 'Ok',
+              },
+            ],
+          );
+        });
+    }
   }, [firebaseAuth, firebaseFirestore, listNotesToDelete]);
 
   const handleEditNote = useCallback(
@@ -451,7 +469,7 @@ const Notes: React.FC = () => {
           onDismiss={handleToggleMenu}
           anchor={
             <OptionButton onPress={handleToggleMenu}>
-              <FontAwesome5 name="ellipsis-v" size={25} color="#503d77" />
+              <FontAwesome5 name="ellipsis-v" size={30} color="#503d77" />
             </OptionButton>
           }
         >

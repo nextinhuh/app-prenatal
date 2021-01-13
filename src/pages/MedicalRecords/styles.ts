@@ -25,6 +25,9 @@ export const Title = styled.Text`
 export const BackButton = styled.TouchableOpacity`
   position: absolute;
   left: 30px;
+  align-items: center;
+  height: 30px;
+  width: 30px;
 `;
 
 export const ConsultCard = styled.View`

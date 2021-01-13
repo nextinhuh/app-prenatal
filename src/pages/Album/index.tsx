@@ -228,53 +228,73 @@ const Album: React.FC = () => {
   );
 
   const confirmImagesDelete = useCallback(async () => {
-    setModalVisible(true);
+    Alert.alert(
+      'Tem certeza que deseja deletar essas fotos ?',
+      '',
+      [
+        {
+          text: 'Não',
+          style: 'cancel',
+        },
+        {
+          text: 'Sim, tenho certeza!',
+          onPress: () => deletePhotos(),
+        },
+      ],
+      { cancelable: false },
+    );
 
-    await firebaseFirestore
-      .collection('users')
-      .doc(firebaseAuth?.uid)
-      .collection('album')
-      .get()
-      .then(result => {
-        const batch = firebaseFirestore.batch();
+    async function deletePhotos() {
+      setModalVisible(true);
 
-        result.forEach(doc => {
-          selectedImages.map(image => {
-            if (image.toString() === doc.id) {
-              const imageRef = storageFirebase.refFromURL(doc.data().linkImage);
-              batch.delete(doc.ref);
-              imageRef.delete();
-            }
-          });
-        });
+      await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth?.uid)
+        .collection('album')
+        .get()
+        .then(result => {
+          const batch = firebaseFirestore.batch();
 
-        Alert.alert('As fotos foram deletadas com sucesso!', '', [
-          {
-            text: 'Ok',
-          },
-        ]);
-
-        firebaseFirestore
-          .collection('users')
-          .doc(firebaseAuth?.uid)
-          .collection('album')
-          .get()
-          .then(result => {
-            const resultList: any = [];
-            result.forEach(doc => {
-              resultList.push({
-                id: doc.data().id,
-                uri: doc.data().linkImage,
-              });
+          result.forEach(doc => {
+            selectedImages.map(image => {
+              if (image.toString() === doc.id) {
+                const imageRef = storageFirebase.refFromURL(
+                  doc.data().linkImage,
+                );
+                batch.delete(doc.ref);
+                imageRef.delete();
+              }
             });
-            setListImages(resultList);
           });
 
-        handleToggleSelectionDelete();
-        setModalVisible(false);
+          Alert.alert('As fotos foram deletadas com sucesso!', '', [
+            {
+              text: 'Ok',
+            },
+          ]);
 
-        return batch.commit();
-      });
+          firebaseFirestore
+            .collection('users')
+            .doc(firebaseAuth?.uid)
+            .collection('album')
+            .get()
+            .then(result => {
+              const resultList: any = [];
+              result.forEach(doc => {
+                resultList.push({
+                  id: doc.data().id,
+                  uri: doc.data().linkImage,
+                });
+              });
+              setListImages(resultList);
+            });
+
+          handleToggleSelectionDelete();
+          setModalVisible(false);
+
+          return batch.commit();
+        });
+    }
   }, [
     firebaseAuth,
     firebaseFirestore,
@@ -297,7 +317,7 @@ const Album: React.FC = () => {
           onDismiss={handleToggleMenu}
           anchor={
             <OptionButton onPress={handleToggleMenu}>
-              <FontAwesome5 name="ellipsis-v" size={25} color="#503d77" />
+              <FontAwesome5 name="ellipsis-v" size={30} color="#503d77" />
             </OptionButton>
           }
         >

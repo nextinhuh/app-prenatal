@@ -21,8 +21,16 @@ export const Header = styled.View`
   justify-content: space-between;
 `;
 
-export const OptionButton = styled.TouchableOpacity``;
-export const BackButton = styled.TouchableOpacity``;
+export const OptionButton = styled.TouchableOpacity`
+  align-items: center;
+  height: 40px;
+  justify-content: center;
+`;
+export const BackButton = styled.TouchableOpacity`
+  align-items: center;
+  height: 30px;
+  width: 30px;
+`;
 
 export const DeleteContainer = styled.View`
   width: 100%;

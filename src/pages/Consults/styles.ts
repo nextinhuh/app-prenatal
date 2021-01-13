@@ -24,7 +24,11 @@ export const Title = styled.Text`
   margin-left: 85px;
 `;
 
-export const BackButton = styled.TouchableOpacity``;
+export const BackButton = styled.TouchableOpacity`
+  align-items: center;
+  height: 30px;
+  width: 30px;
+`;
 
 export const IndicatorContainer = styled.View`
   display: flex;
