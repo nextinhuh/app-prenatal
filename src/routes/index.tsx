@@ -1,22 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import firebase from 'firebase';
+import * as SplashScreen from 'expo-splash-screen';
 
 import AppRoutes from './app.routes';
 import AuthRoutes from './auth.routes';
 import BottomTabs from './bottom.tabs.routes';
 
 const Routes: React.FC = () => {
-  const [userStatus, setUserStatus] = useState(false);
+  const [userStatus, setUserStatus] = useState<React.FC>(AppRoutes);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    SplashScreen.preventAutoHideAsync();
     firebase.auth().onAuthStateChanged(status => {
       if (status) {
-        setUserStatus(true);
-      } else setUserStatus(false);
+        setUserStatus(AuthRoutes);
+        setLoading(false);
+        SplashScreen.hideAsync();
+      } else {
+        setUserStatus(AppRoutes);
+        setLoading(false);
+        SplashScreen.hideAsync();
+      }
     });
   }, []);
 
-  return userStatus ? <AuthRoutes /> : <AppRoutes />;
+  return <>{loading ? null : userStatus}</>;
 };
 
 export default Routes;

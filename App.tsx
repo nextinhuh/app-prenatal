@@ -7,6 +7,7 @@ import { Underdog_400Regular } from '@expo-google-fonts/underdog';
 import { Provider as PaperProvider } from 'react-native-paper';
 import firebase from 'firebase';
 import { NavigationContainer } from '@react-navigation/native';
+import * as SplashScreen from 'expo-splash-screen';
 
 import firebaseConfig from './src/config/FirebaseConfig';
 import Routes from './src/routes';
@@ -22,8 +23,8 @@ const App: React.FC = () => {
     Lato_700Bold,
     Underdog_400Regular,
   });
-  if (!fontsLoaded)
-    return <Text>Carregando - trocar por outra tela depois</Text>;
+  if (!fontsLoaded) SplashScreen.preventAutoHideAsync();
+  else SplashScreen.hideAsync();
 
   return (
     <NavigationContainer>
