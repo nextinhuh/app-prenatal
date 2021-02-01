@@ -41,18 +41,6 @@ const Dashboard: React.FC = () => {
     setUserInfo(user);
   }, []);
 
-  const handleNavConsult = useCallback(() => {
-    navigate.navigate('Consults');
-  }, [navigate]);
-
-  const handleNavNotes = useCallback(() => {
-    navigate.navigate('Notes');
-  }, [navigate]);
-
-  const handleNavAlbum = useCallback(() => {
-    navigate.navigate('Album');
-  }, [navigate]);
-
   const handleNavProfileUpdate = useCallback(() => {
     navigate.navigate('ProfileUpdate');
   }, [navigate]);
@@ -92,7 +80,7 @@ const Dashboard: React.FC = () => {
       <MenuContainer>
         <MenuItem
           style={{ backgroundColor: '#4CEC9F' }}
-          onPress={handleNavConsult}
+          onPress={() => navigate.navigate('Consults')}
         >
           <FontAwesome5 name="user-md" size={50} color="#503d77" />
           <MenuText>Consultas</MenuText>
@@ -100,7 +88,7 @@ const Dashboard: React.FC = () => {
 
         <MenuItem
           style={{ backgroundColor: '#F1D99A' }}
-          onPress={handleNavAlbum}
+          onPress={() => navigate.navigate('Album')}
         >
           <FontAwesome5 name="images" size={50} color="#503d77" />
           <MenuText>Álbum de fotos</MenuText>
@@ -110,10 +98,18 @@ const Dashboard: React.FC = () => {
       <MenuContainer>
         <MenuItem
           style={{ backgroundColor: '#F98996' }}
-          onPress={handleNavNotes}
+          onPress={() => navigate.navigate('Notes')}
         >
           <FontAwesome5 name="sticky-note" size={50} color="#503d77" />
           <MenuText>Anotações</MenuText>
+        </MenuItem>
+
+        <MenuItem
+          style={{ backgroundColor: '#89a3f9' }}
+          onPress={() => navigate.navigate('Tips')}
+        >
+          <FontAwesome5 name="sticky-note" size={50} color="#503d77" />
+          <MenuText>Dicas</MenuText>
         </MenuItem>
       </MenuContainer>
 

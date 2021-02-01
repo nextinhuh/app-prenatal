@@ -6,6 +6,7 @@ import ProfileUpdate from '../pages/ProfileUpdate';
 import Notes from '../pages/Notes';
 import Album from '../pages/Album';
 import Consults from '../pages/Consults';
+import Tips from '../pages/Tips';
 
 import BottomTabs from './bottom.tabs.routes';
 
@@ -22,6 +23,7 @@ const AuthRoutes: React.FC = () => (
     <Auth.Screen name="Consults" component={Consults} />
     <Auth.Screen name="Album" component={Album} />
     <Auth.Screen name="Notes" component={Notes} />
+    <Auth.Screen name="Tips" component={Tips} />
     <Auth.Screen name="ProfileUpdate" component={ProfileUpdate} />
 
     <Auth.Screen name="BottomTabsMedicalRecords" component={BottomTabs} />
