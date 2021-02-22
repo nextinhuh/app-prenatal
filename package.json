@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@expo-google-fonts/lato": "^0.1.0",
+    "@expo-google-fonts/montserrat": "^0.1.0",
+    "@expo-google-fonts/poiret-one": "^0.1.0",
     "@expo-google-fonts/sofia": "^0.1.0",
     "@expo-google-fonts/trocchi": "^0.1.0",
     "@expo-google-fonts/underdog": "^0.1.0",

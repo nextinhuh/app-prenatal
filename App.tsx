@@ -1,13 +1,18 @@
 import React from 'react';
-import { StatusBar, Text } from 'react-native';
+import { StatusBar } from 'react-native';
+
 import { useFonts, Sofia_400Regular } from '@expo-google-fonts/sofia';
 import { Trocchi_400Regular } from '@expo-google-fonts/trocchi';
 import { Lato_700Bold } from '@expo-google-fonts/lato';
+import { PoiretOne_400Regular } from '@expo-google-fonts/poiret-one';
 import { Underdog_400Regular } from '@expo-google-fonts/underdog';
+import { Montserrat_400Regular } from '@expo-google-fonts/montserrat';
+import * as SplashScreen from 'expo-splash-screen';
+
 import { Provider as PaperProvider } from 'react-native-paper';
+
 import firebase from 'firebase';
 import { NavigationContainer } from '@react-navigation/native';
-import * as SplashScreen from 'expo-splash-screen';
 
 import firebaseConfig from './src/config/FirebaseConfig';
 import Routes from './src/routes';
@@ -22,6 +27,8 @@ const App: React.FC = () => {
     Trocchi_400Regular,
     Lato_700Bold,
     Underdog_400Regular,
+    PoiretOne_400Regular,
+    Montserrat_400Regular,
   });
   if (!fontsLoaded) SplashScreen.preventAutoHideAsync();
   else SplashScreen.hideAsync();

@@ -1039,6 +1039,16 @@
   resolved "https://registry.yarnpkg.com/@expo-google-fonts/lato/-/lato-0.1.0.tgz#c0b62ebb883adf41f3e02bd76959914afc7d5d87"
   integrity sha512-+ooOTs9CPnAHvwe0HjtEHnBZ2MrxzBLqBuXsBIhne20BOuq251MRYzc+2R1cWi/mxyjX+S/buXAES8UvAoTGhw==
 
+"@expo-google-fonts/montserrat@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/montserrat/-/montserrat-0.1.0.tgz#745361cf6c7414749161930e94ccc962ed8ee7d3"
+  integrity sha512-jSGVtgapN4Ahxf/p978TWIPV+Ax2cc60671BzkewLG/zGNIyRreE3eXsVJudotpRl2fRJQC5Q98DARfPh917Jg==
+
+"@expo-google-fonts/poiret-one@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/poiret-one/-/poiret-one-0.1.0.tgz#79a364205e57bbe956dbbb862c8478c8ef8db4ee"
+  integrity sha512-byH6zMJOAZ7pFl5/imwtpbTjrrhX7vVwxlB+14CEzKj3PcxUbiGO4LCyIwqTafBxaE3irizVUv0g1Uv4hrnjCA==
+
 "@expo-google-fonts/sofia@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@expo-google-fonts/sofia/-/sofia-0.1.0.tgz#168d2974108106c85462e97f22c52cee9521517e"

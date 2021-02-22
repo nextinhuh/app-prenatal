@@ -15,11 +15,21 @@ import {
   CreateAccountButtonText,
   CreateAccountButton,
   ErrorText,
-  Image,
-  TitleDescription,
+  ContainerSingIn,
+  InputContainer,
+  ForgotPasswordButton,
+  ForgotPasswordButtonText,
+  DividerContainer,
+  Line,
+  DividerText,
+  SocialEntryButton,
+  SocialEntryButtonText,
+  SocialEntryContainer,
+  ImageIcon,
 } from './styles';
 
-import logoImg from '../../assets/logo.png';
+import logoGoogle from '../../assets/google.svg';
+import logoFacebook from '../../assets/facebook.png';
 
 interface UserData {
   email: string;
@@ -68,68 +78,95 @@ const SignIn: React.FC = () => {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <Container>
-        <Title>Cegonha</Title>
+        <ContainerSingIn>
+          <Title>Cegonha</Title>
 
-        <Image source={logoImg} />
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={Yup.object().shape({
+              email: Yup.string()
+                .required('Email é obrigatório')
+                .email('Precisa ser um email'),
+              password: Yup.string().required('Senha é obrigatória'),
+            })}
+            onSubmit={values => handleLogon(values)}
+          >
+            {({
+              values,
+              handleChange,
+              handleSubmit,
+              errors,
+              isSubmitting,
+              handleBlur,
+              touched,
+            }) => (
+              <InputContainer>
+                <Input
+                  onBlur={handleBlur('email')}
+                  name="email"
+                  icon="mail"
+                  placeholder="E-mail"
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                />
+                {touched.email && errors.email && (
+                  <ErrorText>{errors.email}</ErrorText>
+                )}
 
-        <TitleDescription>Faça seu login</TitleDescription>
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          validationSchema={Yup.object().shape({
-            email: Yup.string()
-              .required('Email é obrigatório')
-              .email('Precisa ser um email'),
-            password: Yup.string().required('Senha é obrigatória'),
-          })}
-          onSubmit={values => handleLogon(values)}
-        >
-          {({
-            values,
-            handleChange,
-            handleSubmit,
-            errors,
-            isSubmitting,
-            handleBlur,
-            touched,
-          }) => (
-            <>
-              <Input
-                onBlur={handleBlur('email')}
-                name="email"
-                icon="mail"
-                placeholder="E-mail"
-                value={values.email}
-                onChangeText={handleChange('email')}
-              />
-              {touched.email && errors.email && (
-                <ErrorText>{errors.email}</ErrorText>
-              )}
+                <Input
+                  onBlur={handleBlur('password')}
+                  name="password"
+                  icon="lock"
+                  placeholder="Senha"
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  secureTextEntry
+                />
+                {touched.password && errors.password && (
+                  <ErrorText>{errors.password}</ErrorText>
+                )}
 
-              <Input
-                onBlur={handleBlur('password')}
-                name="password"
-                icon="lock"
-                placeholder="Senha"
-                value={values.password}
-                onChangeText={handleChange('password')}
-                secureTextEntry
-              />
-              {touched.password && errors.password && (
-                <ErrorText>{errors.password}</ErrorText>
-              )}
+                <ForgotPasswordButton
+                  onPress={() => navigation.navigate('SignUp')}
+                >
+                  <ForgotPasswordButtonText>
+                    Esqueceu a senha?
+                  </ForgotPasswordButtonText>
+                </ForgotPasswordButton>
 
-              {loading && <ActivityIndicator />}
+                <CreateAccountButton
+                  onPress={() => navigation.navigate('SignUp')}
+                >
+                  <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
+                </CreateAccountButton>
+              </InputContainer>
+            )}
+          </Formik>
 
-              {!loading && (
-                <Button onPress={() => handleSubmit()}>Entrar</Button>
-              )}
-            </>
-          )}
-        </Formik>
+          <DividerContainer>
+            <Line />
+            <DividerText>OU</DividerText>
+            <Line />
+          </DividerContainer>
 
-        <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
-          <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
-        </CreateAccountButton>
+          <SocialEntryButton>
+            <SocialEntryContainer>
+              <ImageIcon source={logoGoogle} />
+              <SocialEntryButtonText>Entrar com Google</SocialEntryButtonText>
+            </SocialEntryContainer>
+          </SocialEntryButton>
+
+          <SocialEntryButton>
+            <SocialEntryContainer>
+              <ImageIcon source={logoFacebook} />
+              <SocialEntryButtonText>Entrar com Facebook</SocialEntryButtonText>
+            </SocialEntryContainer>
+          </SocialEntryButton>
+        </ContainerSingIn>
+
+        {loading && <ActivityIndicator />}
+
+        {!loading && <Button icon="arrowright" onPress={() => { }} />}
       </Container>
     </KeyboardAvoidingView>
   );

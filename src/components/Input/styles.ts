@@ -5,21 +5,23 @@ export const Container = styled.View`
   width: 100%;
   height: 60px;
   border-radius: 10px;
-  margin-bottom: 8px;
+  margin-bottom: 25px;
   padding: 0 16px;
 
   flex-direction: row;
 
   align-items: center;
+
+  border-width: 2px;
+  border-color: #f1f1f1;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 `;
 
 export const TextInput = styled.TextInput`
   flex: 1;
-  color: #76348d;
+  color: #f1f1f1;
   font-size: 16px;
-  font-family: 'Trocchi_400Regular';
-  border-bottom-width: 2px;
-  border-color: #76348d;
+  font-family: 'Montserrat_400Regular';
 `;
 
 export const Icon = styled(Feather)`
