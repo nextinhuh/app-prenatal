@@ -22,8 +22,11 @@ export const TextInput = styled.TextInput`
   color: #f1f1f1;
   font-size: 16px;
   font-family: 'Montserrat_400Regular';
+  padding-right: 10px;
 `;
 
 export const Icon = styled(Feather)`
   margin-right: 16px;
 `;
+
+export const IconButton = styled.TouchableOpacity``;

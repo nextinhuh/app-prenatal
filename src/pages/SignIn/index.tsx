@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, Alert, KeyboardAvoidingView } from 'react-native';
-import { Formik } from 'formik';
+/* eslint-disable prettier/prettier */
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  View,
+} from 'react-native';
+import { Formik, useFormik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
 import 'firebase/firestore';
 
 import { useNavigation } from '@react-navigation/native';
+import { green100 } from 'react-native-paper/lib/typescript/src/styles/colors';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -40,6 +49,18 @@ const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const dbFirestore = firebase.firestore();
   const [loading, setLoading] = useState(false);
+  const [handleSubmit, setHandleSubmit] = useState<any>();
+
+  const formik = useFormik({
+    initialValues: { email: '', password: '' },
+    onSubmit: values => handleLogon(values),
+    validationSchema: Yup.object().shape({
+      email: Yup.string()
+        .required('Email é obrigatório')
+        .email('Precisa ser um email'),
+      password: Yup.string().required('Senha é obrigatória'),
+    }),
+  });
 
   async function handleLogon(user: UserData) {
     setLoading(!loading);
@@ -76,99 +97,88 @@ const SignIn: React.FC = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-      <Container>
+    <Container>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ContainerSingIn>
           <Title>Cegonha</Title>
-
-          <Formik
-            initialValues={{ email: '', password: '' }}
-            validationSchema={Yup.object().shape({
-              email: Yup.string()
-                .required('Email é obrigatório')
-                .email('Precisa ser um email'),
-              password: Yup.string().required('Senha é obrigatória'),
-            })}
-            onSubmit={values => handleLogon(values)}
+          <KeyboardAvoidingView
+            style={{ width: '100%', alignItems: 'center' }}
+            behavior="height"
           >
-            {({
-              values,
-              handleChange,
-              handleSubmit,
-              errors,
-              isSubmitting,
-              handleBlur,
-              touched,
-            }) => (
-              <InputContainer>
-                <Input
-                  onBlur={handleBlur('email')}
-                  name="email"
-                  icon="mail"
-                  placeholder="E-mail"
-                  value={values.email}
-                  onChangeText={handleChange('email')}
-                />
-                {touched.email && errors.email && (
-                  <ErrorText>{errors.email}</ErrorText>
-                )}
+            <InputContainer>
+              <Input
+                onBlur={formik.handleBlur('email')}
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                autoCapitalize="none"
+                value={formik.values.email}
+                onChangeText={formik.handleChange('email')}
+              />
+              {formik.touched.email && formik.errors.email && (
+                <ErrorText>{formik.errors.email}</ErrorText>
+              )}
 
-                <Input
-                  onBlur={handleBlur('password')}
-                  name="password"
-                  icon="lock"
-                  placeholder="Senha"
-                  value={values.password}
-                  onChangeText={handleChange('password')}
-                  secureTextEntry
-                />
-                {touched.password && errors.password && (
-                  <ErrorText>{errors.password}</ErrorText>
-                )}
+              <Input
+                onBlur={formik.handleBlur('password')}
+                name="password"
+                icon="lock"
+                autoCapitalize="none"
+                placeholder="Senha"
+                value={formik.values.password}
+                onChangeText={formik.handleChange('password')}
+                isPassword
+              />
+              {formik.touched.password && formik.errors.password && (
+                <ErrorText>{formik.errors.password}</ErrorText>
+              )}
 
-                <ForgotPasswordButton
-                  onPress={() => navigation.navigate('SignUp')}
-                >
-                  <ForgotPasswordButtonText>
-                    Esqueceu a senha?
-                  </ForgotPasswordButtonText>
-                </ForgotPasswordButton>
+              <ForgotPasswordButton
+                onPress={() => navigation.navigate('SignUp')}
+              >
+                <ForgotPasswordButtonText>
+                  Esqueceu a senha?
+                </ForgotPasswordButtonText>
+              </ForgotPasswordButton>
 
-                <CreateAccountButton
-                  onPress={() => navigation.navigate('SignUp')}
-                >
-                  <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
-                </CreateAccountButton>
-              </InputContainer>
-            )}
-          </Formik>
+              <CreateAccountButton
+                onPress={() => navigation.navigate('SignUp')}
+              >
+                <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
+              </CreateAccountButton>
+            </InputContainer>
 
-          <DividerContainer>
-            <Line />
-            <DividerText>OU</DividerText>
-            <Line />
-          </DividerContainer>
+            <DividerContainer>
+              <Line />
+              <DividerText>OU</DividerText>
+              <Line />
+            </DividerContainer>
 
-          <SocialEntryButton>
-            <SocialEntryContainer>
-              <ImageIcon source={logoGoogle} />
-              <SocialEntryButtonText>Entrar com Google</SocialEntryButtonText>
-            </SocialEntryContainer>
-          </SocialEntryButton>
+            <SocialEntryButton>
+              <SocialEntryContainer>
+                <ImageIcon source={logoGoogle} />
+                <SocialEntryButtonText>Entrar com Google</SocialEntryButtonText>
+              </SocialEntryContainer>
+            </SocialEntryButton>
 
-          <SocialEntryButton>
-            <SocialEntryContainer>
-              <ImageIcon source={logoFacebook} />
-              <SocialEntryButtonText>Entrar com Facebook</SocialEntryButtonText>
-            </SocialEntryContainer>
-          </SocialEntryButton>
+            <SocialEntryButton>
+              <SocialEntryContainer>
+                <ImageIcon source={logoFacebook} />
+                <SocialEntryButtonText>
+                  Entrar com Facebook
+                </SocialEntryButtonText>
+              </SocialEntryContainer>
+            </SocialEntryButton>
+          </KeyboardAvoidingView>
         </ContainerSingIn>
+      </TouchableWithoutFeedback>
 
-        {loading && <ActivityIndicator />}
-
-        {!loading && <Button icon="arrowright" onPress={() => { }} />}
-      </Container>
-    </KeyboardAvoidingView>
+      {!loading ? (
+        <Button icon="arrowright" onPress={() => formik.handleSubmit()} />
+      ) : (
+          <ActivityIndicator style={{ marginTop: 25 }} size={40} color="#fd3954" />
+        )}
+    </Container>
   );
 };
 

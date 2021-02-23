@@ -6,15 +6,15 @@ export const Container = styled.View`
 `;
 
 export const ContainerSingIn = styled.View`
+  height: 680px;
   width: 100%;
-  height: 85%;
+  background: #fd3954;
+
   border-bottom-left-radius: 70px;
   border-bottom-right-radius: 70px;
 
-  background: #fd3954;
-
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 
   elevation: 30;
 `;
@@ -24,27 +24,28 @@ export const Title = styled.Text`
   color: #f1f1f1;
   font-family: 'PoiretOne_400Regular';
   text-shadow: 3px 6px 5px #505050;
-  height: 13%;
-  margin-top: 2%;
+  height: 90px;
+  margin-top: 80px;
 `;
 
 export const InputContainer = styled.View`
-  margin-top: 30px;
   padding: 20px 30px;
   align-items: center;
 `;
 export const ErrorText = styled.Text`
-  color: red;
+  color: #4d0820;
   font-size: 16px;
   font-weight: bold;
   align-self: flex-end;
+  margin-top: -18px;
+  margin-bottom: 8px;
 `;
 
 export const ForgotPasswordButton = styled.TouchableOpacity``;
 
 export const ForgotPasswordButtonText = styled.Text`
   color: #fff;
-  font-size: 17px;
+  font-size: 16px;
   margin-bottom: 15px;
   color: #f1f1f1;
   border-bottom-width: 1px;
@@ -56,8 +57,7 @@ export const CreateAccountButton = styled.TouchableOpacity``;
 
 export const CreateAccountButtonText = styled.Text`
   color: #fff;
-  font-size: 18px;
-  margin-left: 16px;
+  font-size: 22px;
   color: #f1f1f1;
   font-family: 'Montserrat_400Regular';
   font-weight: bold;
@@ -91,7 +91,8 @@ export const SocialEntryButton = styled.TouchableOpacity`
   height: 50px;
   background: #f1f1f1;
   border-radius: 15px;
-  margin-top: 20px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 
   justify-content: center;
   align-items: center;
