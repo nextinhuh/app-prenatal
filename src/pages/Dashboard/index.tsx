@@ -1,10 +1,13 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable prettier/prettier */
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import { AdMobBanner } from 'expo-ads-admob';
+
+import Carousel from 'react-native-snap-carousel';
 
 import imgUserIcon from '../../assets/user.png';
 
@@ -12,14 +15,14 @@ import {
   Container,
   Header,
   UserAvatar,
-  ContainerMessage,
   WelcomeText,
-  UserNameText,
+  DrawerMenuButton,
+  CarouselCard,
   AdMobContainer,
-  MenuContainer,
-  MenuItem,
-  MenuText,
-  UserNameButton,
+  CarouselContainer,
+  ImageBannerCard,
+  TitleBannerCard,
+  DescriptionBannerCard,
   LogoutButton,
 } from './styles';
 
@@ -28,10 +31,52 @@ interface User {
   photoUrl: string | undefined | null;
 }
 
+interface ItemProps {
+  title: string;
+  text: string;
+}
+
 const Dashboard: React.FC = () => {
   const navigate = useNavigation();
   const dbFirestore = firebase.firestore();
   const [userInfo, setUserInfo] = useState<User>({} as User);
+  const [indexCarousel, setIndexCarousel] = useState(0);
+  const [carouselTeste, setCarouselTeste] = useState({
+    activeIndex: 0,
+    carouselItems: [
+      {
+        title: "O que fazer no primeiro trimestre ?",
+        text: "A maioria dos remédios não foram testados durante a gravidez e por isso não se sabe se são seguros para a mãe e para o bebê. Alguns passam pela placenta e podem causar graves alterações, como é o caso do Roacutan. Normalmente os únicos remédios que a grávida pode tomar são a Novalgina e o Paracetamol.",
+      },
+      {
+        title: "Item 2",
+        text: "Text 2",
+      },
+      {
+        title: "Item 3",
+        text: "Text 3",
+      },
+      {
+        title: "Item 4",
+        text: "Text 4",
+      },
+      {
+        title: "Item 5",
+        text: "Text 5",
+      },
+    ]
+  });
+
+  const renderCarouselItem = ({ item, index }: { item: ItemProps; index: number }) => {
+    return (
+      <CarouselCard>
+        <ImageBannerCard source={{ uri: 'https://images.pexels.com/photos/3662773/pexels-photo-3662773.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260' }} />
+        <TitleBannerCard>{item.title}</TitleBannerCard>
+        <DescriptionBannerCard>{item.text}</DescriptionBannerCard>
+      </CarouselCard>
+    );
+  };
+
 
   useEffect(() => {
     const user = {
@@ -52,73 +97,40 @@ const Dashboard: React.FC = () => {
   return (
     <Container>
       <Header>
-        <UserNameButton onPress={handleNavProfileUpdate}>
-          {userInfo.photoUrl ? (
-            <UserAvatar
-              source={{
-                uri: `${userInfo.photoUrl}`,
-              }}
-            />
-          ) : (
-            <UserAvatar source={imgUserIcon} />
-          )}
-        </UserNameButton>
+        <DrawerMenuButton onPress={() => navigate.dispatch(DrawerActions.toggleDrawer())}>
+          <FontAwesome5
+            name="grip-lines"
+            size={30}
+            color="#FE637A"
+          />
+        </DrawerMenuButton>
 
-        <ContainerMessage>
-          <WelcomeText>
-            Olá,
-            {'\n'}
-          </WelcomeText>
-          <UserNameText>{userInfo?.name}</UserNameText>
-        </ContainerMessage>
-
-        <LogoutButton onPress={handleNavLogOff}>
-          <FontAwesome5 name="power-off" size={25} color="#503d77" />
-        </LogoutButton>
+        <WelcomeText>
+          Olá, {` ${userInfo?.name}`}
+        </WelcomeText>
       </Header>
 
-      <MenuContainer>
-        <MenuItem
-          style={{ backgroundColor: '#4CEC9F' }}
-          onPress={() => navigate.navigate('Consults')}
-        >
-          <FontAwesome5 name="user-md" size={50} color="#503d77" />
-          <MenuText>Consultas</MenuText>
-        </MenuItem>
-
-        <MenuItem
-          style={{ backgroundColor: '#F1D99A' }}
-          onPress={() => navigate.navigate('Album')}
-        >
-          <FontAwesome5 name="images" size={50} color="#503d77" />
-          <MenuText>Álbum de fotos</MenuText>
-        </MenuItem>
-      </MenuContainer>
-
-      <MenuContainer>
-        <MenuItem
-          style={{ backgroundColor: '#F98996' }}
-          onPress={() => navigate.navigate('Notes')}
-        >
-          <FontAwesome5 name="sticky-note" size={50} color="#503d77" />
-          <MenuText>Anotações</MenuText>
-        </MenuItem>
-
-        <MenuItem
-          style={{ backgroundColor: '#89a3f9' }}
-          onPress={() => navigate.navigate('Tips')}
-        >
-          <FontAwesome5 name="sticky-note" size={50} color="#503d77" />
-          <MenuText>Dicas</MenuText>
-        </MenuItem>
-      </MenuContainer>
-
-      <AdMobContainer>
-        <AdMobBanner
-          bannerSize="fullBanner"
-          adUnitID="ca-app-pub-3940256099942544/6300978111"
+      <CarouselContainer>
+        <Carousel
+          layout="default"
+          data={carouselTeste.carouselItems}
+          sliderWidth={100}
+          itemWidth={400}
+          renderItem={renderCarouselItem}
+          onSnapToItem={(index: number) => setIndexCarousel(index)}
         />
-      </AdMobContainer>
+      </CarouselContainer>
+
+      {userInfo.photoUrl ? (
+        <UserAvatar
+          source={{
+            uri: `${userInfo.photoUrl}`,
+          }}
+        />
+      ) : (
+          <UserAvatar source={imgUserIcon} />
+        )}
+
     </Container>
   );
 };

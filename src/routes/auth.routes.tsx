@@ -1,5 +1,8 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { AntDesign } from '@expo/vector-icons';
+
+import CustomDrawerMenu from '../components/CustomDrawerMenu';
 
 import Dashboard from '../pages/Dashboard';
 import ProfileUpdate from '../pages/ProfileUpdate';
@@ -10,19 +13,46 @@ import Tips from '../pages/Tips';
 
 import BottomTabs from './bottom.tabs.routes';
 
-const Auth = createStackNavigator();
+const Auth = createDrawerNavigator();
 
 const AuthRoutes: React.FC = () => (
   <Auth.Navigator
-    screenOptions={{
-      headerShown: false,
+    initialRouteName="Home"
+    drawerContentOptions={{
+      activeBackgroundColor: '#EC6478',
+      activeTintColor: 'white',
     }}
+    drawerContent={props => <CustomDrawerMenu {...props} />}
   >
-    <Auth.Screen name="Dashboard" component={Dashboard} />
+    <Auth.Screen
+      name="Dashboard"
+      component={Dashboard}
+      options={{
+        title: 'Home',
+      }}
+    />
 
-    <Auth.Screen name="Consults" component={Consults} />
-    <Auth.Screen name="Album" component={Album} />
-    <Auth.Screen name="Notes" component={Notes} />
+    <Auth.Screen
+      name="Consults"
+      component={Consults}
+      options={{
+        title: 'Consultas',
+      }}
+    />
+    <Auth.Screen
+      name="Album"
+      component={Album}
+      options={{
+        title: 'Album',
+      }}
+    />
+    <Auth.Screen
+      name="Notes"
+      component={Notes}
+      options={{
+        title: 'Notas',
+      }}
+    />
     <Auth.Screen name="Tips" component={Tips} />
     <Auth.Screen name="ProfileUpdate" component={ProfileUpdate} />
 

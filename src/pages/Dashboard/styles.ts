@@ -5,40 +5,75 @@ export const Container = styled.View`
 `;
 
 export const Header = styled.View`
-  margin: 40px 20px 50px 20px;
-  width: 90%;
-  height: 150px;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  background-color: #e5f2eb;
   border-radius: 50px;
+  margin-top: 20%;
+  flex-direction: row;
+  margin-left: 5%;
+`;
+
+export const DrawerMenuButton = styled.TouchableOpacity``;
+
+export const WelcomeText = styled.Text`
+  margin-left: 3%;
+  font-size: 20px;
+  color: #fe637a;
+  font-family: 'Montserrat_400Regular';
+`;
+
+export const CarouselContainer = styled.View`
+  flex-direction: row;
+  height: 50%;
+  margin-top: 15px;
 `;
 
 export const UserAvatar = styled.Image`
-  width: 100px;
-  height: 100px;
-  border-radius: 50px;
+  width: 110px;
+  height: 110px;
+  border-radius: 55px;
+  position: absolute;
+  right: 15px;
+  top: 60px;
   margin-left: 40px;
+  border-width: 2px;
+  border-color: white;
 `;
 
-export const ContainerMessage = styled.Text`
-  margin-left: 20px;
-  display: flex;
-  flex-direction: column;
-  width: 45%;
+export const CarouselCard = styled.View`
+  border-radius: 15px;
+  border-width: 1px;
+  height: 100%;
+  margin: 0px 0px 0px 10px;
+  z-index: 50;
 `;
 
-export const UserNameButton = styled.TouchableOpacity``;
-
-export const UserNameText = styled.Text`
-  font-size: 20px;
-  color: #a884f4;
+export const ImageBannerCard = styled.Image`
+  width: 100%;
+  height: 50%;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 `;
 
-export const WelcomeText = styled.Text`
-  font-size: 20px;
-  color: #503d77;
+export const TitleBannerCard = styled.Text`
+  background-color: #fe637a;
+  font-family: 'Montserrat_400Regular';
+  border-radius: 5px;
+  width: 90%;
+  text-align: center;
+  position: absolute;
+  align-self: center;
+  height: 30px;
+  color: white;
+  font-size: 16px;
+  top: 48%;
+`;
+
+export const DescriptionBannerCard = styled.Text`
+  margin-top: 30px;
+  text-align: center;
+  padding: 0px 5px;
+  font-family: 'Montserrat_400Regular';
 `;
 
 export const IndicatorContainer = styled.View`
@@ -71,32 +106,6 @@ export const IndicatorText = styled.Text`
   font-size: 12px;
   font-family: Trocchi_400Regular;
   color: #a884f4;
-`;
-
-export const MenuContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-  margin: 10px 50px;
-  max-height: 300px;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-export const MenuItem = styled.TouchableOpacity`
-  width: 45%;
-  height: 170px;
-  background-color: #b2dcea;
-  border-radius: 20px;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const MenuText = styled.Text`
-  font-family: Sofia_400Regular;
-  font-size: 19px;
-  color: #503d77;
-  margin-top: 20px;
 `;
 
 export const LogoutButton = styled.TouchableOpacity`

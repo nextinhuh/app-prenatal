@@ -68,7 +68,7 @@ const Tips: React.FC = () => {
     );
   };
 
-  useEffect(() => {}, [firebaseFirestore, firebaseAuth]);
+  useEffect(() => { }, [firebaseFirestore, firebaseAuth]);
 
   const handleNavBack = useCallback(() => {
     navigation.goBack();
@@ -96,9 +96,9 @@ const Tips: React.FC = () => {
             </OptionButton>
           }
         >
-          <Menu.Item onPress={() => {}} title="Adicionar uma foto" />
+          <Menu.Item onPress={() => { }} title="Adicionar uma foto" />
           <Divider />
-          <Menu.Item onPress={() => {}} title="Apagar foto(s)" />
+          <Menu.Item onPress={() => { }} title="Apagar foto(s)" />
         </Menu>
       </Header>
 

@@ -1,13 +1,15 @@
+/* eslint-disable prettier/prettier */
 import React, { useCallback } from 'react';
 import {
   Alert,
   ActivityIndicator,
   ScrollView,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { Formik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
 import 'firebase/firestore';
@@ -20,9 +22,9 @@ import {
   Title,
   BackToSignIn,
   BackToSignInText,
-  Image,
-  TitleDescription,
   ErrorText,
+  SingUpContainer,
+  InputContainer,
 } from './styles';
 
 import logoImg from '../../assets/logo.png';
@@ -37,6 +39,26 @@ interface User {
 const SignUp: React.FC = () => {
   const navigation = useNavigation();
   const dbFirestore = firebase.firestore();
+
+  const formik = useFormik({
+    initialValues: { email: '', password: '', name: '', confirmPassword: '' },
+    onSubmit: values => handleCreateUser(values),
+    validationSchema: Yup.object().shape({
+      email: Yup.string()
+        .required('Email é obrigatório')
+        .email('Precisa ser um email'),
+      password: Yup.string()
+        .required('Senha é obrigatória')
+        .min(6, 'No minímo 6 caracteres'),
+      name: Yup.string()
+        .required('Nome é obrigatório')
+        .min(5, 'Deve conter no mínimo 5 letas'),
+      confirmPassword: Yup.string().oneOf(
+        [Yup.ref('password'), undefined],
+        'As senhas devem ser iguais',
+      ),
+    }),
+  });
 
   const handleCreateUser = useCallback(
     (user: User) => {
@@ -80,116 +102,88 @@ const SignUp: React.FC = () => {
 
   return (
     <Container>
-      <ScrollView style={{ flex: 1, width: '100%' }}>
-        <Container>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SingUpContainer>
           <Title>Cegonha</Title>
-          <Image source={logoImg} />
-          <TitleDescription>Crie sua conta</TitleDescription>
 
-          <Formik
-            initialValues={{
-              email: '',
-              password: '',
-              name: '',
-              confirmPassword: '',
-            }}
-            validationSchema={Yup.object().shape({
-              email: Yup.string()
-                .required('Email é obrigatório')
-                .email('Precisa ser um email'),
-              password: Yup.string()
-                .required('Senha é obrigatória')
-                .min(6, 'No minímo 6 caracteres'),
-              name: Yup.string()
-                .required('Nome é obrigatório')
-                .min(5, 'Deve conter no mínimo 5 letas'),
-              confirmPassword: Yup.string().oneOf(
-                [Yup.ref('password'), undefined],
-                'As senhas devem ser iguais',
-              ),
-            })}
-            onSubmit={values => handleCreateUser(values)}
-          >
-            {({
-              values,
-              handleChange,
-              handleSubmit,
-              errors,
-              isSubmitting,
-              handleBlur,
-              touched,
-            }) => (
-              <>
-                <Input
-                  onBlur={handleBlur('name')}
-                  name="name"
-                  icon="user"
-                  placeholder="Nome"
-                  value={values.name}
-                  onChangeText={handleChange('name')}
-                />
-                {touched.name && errors.name && (
-                  <ErrorText>{errors.name}</ErrorText>
+          <InputContainer>
+            <KeyboardAvoidingView
+              style={{ width: '100%', alignItems: 'center', flex: 1 }}
+              behavior="height"
+            >
+              <Input
+                onBlur={formik.handleBlur('name')}
+                name="name"
+                icon="user"
+                placeholder="Nome"
+                value={formik.values.name}
+                onChangeText={formik.handleChange('name')}
+              />
+              {formik.touched.name && formik.errors.name && (
+                <ErrorText>{formik.errors.name}</ErrorText>
+              )}
+
+              <Input
+                onBlur={formik.handleBlur('email')}
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                value={formik.values.email}
+                onChangeText={formik.handleChange('email')}
+              />
+              {formik.touched.email && formik.errors.email && (
+                <ErrorText>{formik.errors.email}</ErrorText>
+              )}
+
+              <Input
+                onBlur={formik.handleBlur('password')}
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                value={formik.values.password}
+                onChangeText={formik.handleChange('password')}
+                isPassword
+              />
+              {formik.touched.password && formik.errors.password && (
+                <ErrorText>{formik.errors.password}</ErrorText>
+              )}
+
+              <Input
+                onBlur={formik.handleBlur('confirmPassword')}
+                name="confirmPassword"
+                icon="lock"
+                placeholder="Confirmar senha"
+                value={formik.values.confirmPassword}
+                onChangeText={formik.handleChange('confirmPassword')}
+                isPassword
+              />
+              {formik.touched.confirmPassword &&
+                formik.errors.confirmPassword && (
+                  <ErrorText>{formik.errors.confirmPassword}</ErrorText>
                 )}
 
-                <Input
-                  onBlur={handleBlur('email')}
-                  name="email"
-                  icon="mail"
-                  placeholder="E-mail"
-                  value={values.email}
-                  onChangeText={handleChange('email')}
-                />
-                {touched.email && errors.email && (
-                  <ErrorText>{errors.email}</ErrorText>
-                )}
+              <BackToSignIn onPress={() => navigation.goBack()}>
+                <BackToSignInText>
+                  Já possui uma conta? Faça já o login
+                </BackToSignInText>
+              </BackToSignIn>
 
-                <Input
-                  onBlur={handleBlur('password')}
-                  name="password"
-                  icon="lock"
-                  placeholder="Senha"
-                  value={values.password}
-                  onChangeText={handleChange('password')}
-                  secureTextEntry
-                />
-                {touched.password && errors.password && (
-                  <ErrorText>{errors.password}</ErrorText>
-                )}
+            </KeyboardAvoidingView>
 
-                <Input
-                  onBlur={handleBlur('confirmPassword')}
-                  name="confirmPassword"
-                  icon="lock"
-                  placeholder="Confirmar senha"
-                  value={values.confirmPassword}
-                  onChangeText={handleChange('confirmPassword')}
-                  secureTextEntry
-                />
-                {touched.confirmPassword && errors.confirmPassword && (
-                  <ErrorText>{errors.confirmPassword}</ErrorText>
-                )}
+          </InputContainer>
+        </SingUpContainer>
+      </TouchableWithoutFeedback>
 
-                {isSubmitting && <ActivityIndicator />}
+      {!formik.isSubmitting ? (
+        <Button icon="check" onPress={() => formik.handleSubmit()} />
+      ) : (
+          <ActivityIndicator
+            style={{ marginTop: 25 }}
+            size={40}
+            color="#fd3954"
+          />
+        )}
 
-                {!isSubmitting && (
-                  <Button onPress={() => handleSubmit()}>Criar conta</Button>
-                )}
-              </>
-            )}
-          </Formik>
-        </Container>
-      </ScrollView>
-
-      <BackToSignIn onPress={() => navigation.goBack()}>
-        <MaterialIcons
-          name="arrow-back"
-          size={20}
-          color="#76348D"
-          style={{ marginRight: 10 }}
-        />
-        <BackToSignInText>Voltar</BackToSignInText>
-      </BackToSignIn>
     </Container>
   );
 };

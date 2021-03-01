@@ -6,7 +6,7 @@ export const Container = styled.View`
 `;
 
 export const ContainerSingIn = styled.View`
-  height: 680px;
+  height: 85%;
   width: 100%;
   background: #fd3954;
 
@@ -14,7 +14,7 @@ export const ContainerSingIn = styled.View`
   border-bottom-right-radius: 70px;
 
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
 
   elevation: 30;
 `;

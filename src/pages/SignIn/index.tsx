@@ -101,11 +101,12 @@ const SignIn: React.FC = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ContainerSingIn>
           <Title>Cegonha</Title>
-          <KeyboardAvoidingView
-            style={{ width: '100%', alignItems: 'center' }}
-            behavior="height"
-          >
-            <InputContainer>
+
+          <InputContainer>
+            <KeyboardAvoidingView
+              style={{ width: '100%', alignItems: 'center' }}
+              behavior="height"
+            >
               <Input
                 onBlur={formik.handleBlur('email')}
                 name="email"
@@ -132,44 +133,45 @@ const SignIn: React.FC = () => {
               {formik.touched.password && formik.errors.password && (
                 <ErrorText>{formik.errors.password}</ErrorText>
               )}
+            </KeyboardAvoidingView>
+          </InputContainer>
 
-              <ForgotPasswordButton
-                onPress={() => navigation.navigate('SignUp')}
-              >
-                <ForgotPasswordButtonText>
-                  Esqueceu a senha?
-                </ForgotPasswordButtonText>
-              </ForgotPasswordButton>
 
-              <CreateAccountButton
-                onPress={() => navigation.navigate('SignUp')}
-              >
-                <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
-              </CreateAccountButton>
-            </InputContainer>
+          <ForgotPasswordButton
+            onPress={() => navigation.navigate('SignUp')}
+          >
+            <ForgotPasswordButtonText>
+              Esqueceu a senha?
+            </ForgotPasswordButtonText>
+          </ForgotPasswordButton>
 
-            <DividerContainer>
-              <Line />
-              <DividerText>OU</DividerText>
-              <Line />
-            </DividerContainer>
+          <CreateAccountButton
+            onPress={() => navigation.navigate('SignUp')}
+          >
+            <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
+          </CreateAccountButton>
 
-            <SocialEntryButton>
-              <SocialEntryContainer>
-                <ImageIcon source={logoGoogle} />
-                <SocialEntryButtonText>Entrar com Google</SocialEntryButtonText>
-              </SocialEntryContainer>
-            </SocialEntryButton>
+          <DividerContainer>
+            <Line />
+            <DividerText>OU</DividerText>
+            <Line />
+          </DividerContainer>
 
-            <SocialEntryButton>
-              <SocialEntryContainer>
-                <ImageIcon source={logoFacebook} />
-                <SocialEntryButtonText>
-                  Entrar com Facebook
-                </SocialEntryButtonText>
-              </SocialEntryContainer>
-            </SocialEntryButton>
-          </KeyboardAvoidingView>
+          <SocialEntryButton>
+            <SocialEntryContainer>
+              <ImageIcon source={logoGoogle} />
+              <SocialEntryButtonText>Entrar com Google</SocialEntryButtonText>
+            </SocialEntryContainer>
+          </SocialEntryButton>
+
+          <SocialEntryButton>
+            <SocialEntryContainer>
+              <ImageIcon source={logoFacebook} />
+              <SocialEntryButtonText>
+                Entrar com Facebook
+              </SocialEntryButtonText>
+            </SocialEntryContainer>
+          </SocialEntryButton>
         </ContainerSingIn>
       </TouchableWithoutFeedback>
 
