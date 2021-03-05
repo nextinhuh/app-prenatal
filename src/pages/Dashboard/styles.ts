@@ -22,12 +22,6 @@ export const WelcomeText = styled.Text`
   font-family: 'Montserrat_400Regular';
 `;
 
-export const CarouselContainer = styled.View`
-  flex-direction: row;
-  height: 50%;
-  margin-top: 15px;
-`;
-
 export const UserAvatar = styled.Image`
   width: 110px;
   height: 110px;
@@ -38,6 +32,12 @@ export const UserAvatar = styled.Image`
   margin-left: 40px;
   border-width: 2px;
   border-color: white;
+`;
+
+export const CarouselContainer = styled.View`
+  flex-direction: row;
+  height: 50%;
+  margin-top: 15px;
 `;
 
 export const CarouselCard = styled.View`
@@ -76,36 +76,91 @@ export const DescriptionBannerCard = styled.Text`
   font-family: 'Montserrat_400Regular';
 `;
 
-export const IndicatorContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-  padding: 20px 40px;
+export const CarouselContainer2 = styled.View`
+  height: 7%;
+  margin-top: 10px;
   width: 100%;
-  align-items: center;
-  justify-content: space-between;
 `;
 
-export const IndicatorCard = styled.View`
-  display: flex;
-  flex-direction: column;
-  width: 90px;
-  height: 57px;
+export const DividerContainer = styled.View`
+  height: 55px;
+  width: 105px;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: #b2dcea;
-  border-radius: 8px;
 `;
 
-export const IndicatorTextNumber = styled.Text`
-  font-size: 20px;
-  font-family: Lato_700Bold;
-  color: #503d77;
+export const Line = styled.View`
+  height: 2px;
+  flex: 1;
+  background-color: #f98996;
 `;
 
-export const IndicatorText = styled.Text`
-  font-size: 12px;
-  font-family: Trocchi_400Regular;
-  color: #a884f4;
+export const FilledCircle = styled.View`
+  height: 35px;
+  width: 35px;
+  border-radius: 18px;
+  background-color: #ff4261;
+  margin-right: 10px;
+`;
+
+export const CarouselCard2 = styled.View`
+  height: 35px;
+  width: 35px;
+  border-radius: 18px;
+  align-items: center;
+  justify-content: center;
+  background-color: #ff4261;
+  elevation: 3;
+`;
+
+export const TitleBannerCard2 = styled.Text`
+  font-size: 30px;
+  color: white;
+`;
+
+export const SelectWeekButtonContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const BackgroudImage = styled.ImageBackground`
+  flex: 1;
+  height: 140px;
+  width: 140px;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ContainerButton = styled.View`
+  height: 140px;
+  width: 140px;
+  border-radius: 70px;
+  background-color: black;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const SelectWeekButton = styled.TouchableOpacity`
+  height: 20%;
+  width: 20%;
+  margin: 5px 0px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const SelectWeekCountText = styled.Text`
+  color: white;
+  font-family: 'Montserrat_400Regular';
+  font-size: 28px;
+  width: 40px;
+  text-align: center;
+`;
+
+export const SelectWeekText = styled.Text`
+  color: white;
+  font-family: 'Montserrat_400Regular';
 `;
 
 export const LogoutButton = styled.TouchableOpacity`

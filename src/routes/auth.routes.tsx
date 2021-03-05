@@ -17,13 +17,20 @@ const Auth = createDrawerNavigator();
 
 const AuthRoutes: React.FC = () => (
   <Auth.Navigator
-    initialRouteName="Home"
+    initialRouteName="Notes"
     drawerContentOptions={{
       activeBackgroundColor: '#EC6478',
       activeTintColor: 'white',
     }}
     drawerContent={props => <CustomDrawerMenu {...props} />}
   >
+    <Auth.Screen
+      name="Notes"
+      component={Notes}
+      options={{
+        title: 'Notas',
+      }}
+    />
     <Auth.Screen
       name="Dashboard"
       component={Dashboard}
@@ -46,13 +53,7 @@ const AuthRoutes: React.FC = () => (
         title: 'Album',
       }}
     />
-    <Auth.Screen
-      name="Notes"
-      component={Notes}
-      options={{
-        title: 'Notas',
-      }}
-    />
+
     <Auth.Screen name="Tips" component={Tips} />
     <Auth.Screen name="ProfileUpdate" component={ProfileUpdate} />
 
