@@ -7,6 +7,7 @@ import CustomDrawerMenu from '../components/CustomDrawerMenu';
 import Dashboard from '../pages/Dashboard';
 import ProfileUpdate from '../pages/ProfileUpdate';
 import Notes from '../pages/Notes';
+import NoteView from '../pages/NoteView';
 import Album from '../pages/Album';
 import Consults from '../pages/Consults';
 import Tips from '../pages/Tips';
@@ -53,6 +54,7 @@ const AuthRoutes: React.FC = () => (
         title: 'Album',
       }}
     />
+    <Auth.Screen name="NoteView" component={NoteView} />
 
     <Auth.Screen name="Tips" component={Tips} />
     <Auth.Screen name="ProfileUpdate" component={ProfileUpdate} />

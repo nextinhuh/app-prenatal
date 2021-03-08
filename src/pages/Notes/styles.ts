@@ -53,15 +53,16 @@ export const Title = styled.Text`
 `;
 
 export const TitleCard = styled.Text`
-  font-size: 23px;
-  font-family: Sofia_400Regular;
-  color: #503d77;
-  margin-bottom: 20px;
+  font-size: 20px;
+  font-family: 'Montserrat_400Regular';
+  color: white;
+  font-weight: bold;
+  background-color: #f54f51;
 `;
 
 export const Paragraph = styled.Text`
   margin-left: 15px;
-  font-family: Underdog_400Regular;
+  font-family: 'Montserrat_400Regular';
   font-size: 16px;
 `;
 
@@ -76,7 +77,7 @@ export const BackButton = styled.TouchableOpacity`
   width: 30px;
 `;
 
-export const DeleteButton = styled.TouchableOpacity``;
+export const DeleteButtonSquare = styled.TouchableOpacity``;
 
 export const DeleteContainer = styled.View`
   width: 100%;
@@ -84,33 +85,20 @@ export const DeleteContainer = styled.View`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  margin-top: -20px;
-  margin-bottom: 15px;
+  margin-top: 20px;
+  margin-bottom: 10px;
 `;
 
-export const CancelDeleteButton = styled.TouchableOpacity`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
-export const ConfirmDeleteButton = styled.TouchableOpacity`
+export const DeleteButton = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 `;
 
-export const CancelDeleteButtonText = styled.Text`
+export const DeleteButtonText = styled.Text`
   font-size: 20px;
-  font-family: Underdog_400Regular;
-  color: #503d77;
-  margin-right: 10px;
-`;
-
-export const ConfirmDeleteButtonText = styled.Text`
-  font-size: 20px;
-  font-family: Underdog_400Regular;
-  color: #503d77;
+  font-family: 'Montserrat_400Regular';
+  color: #f54f51;
   margin-right: 10px;
 `;

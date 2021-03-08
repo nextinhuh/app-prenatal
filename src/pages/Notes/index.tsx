@@ -1,10 +1,11 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-param-reassign */
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, Alert, Modal } from 'react-native';
+import { FlatList, Alert, Modal, TouchableOpacity } from 'react-native';
 import { Button, Card, Menu, Divider } from 'react-native-paper';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -17,22 +18,20 @@ import {
   Title,
   BackButton,
   OptionButton,
-  Header,
   Paragraph,
   ModalContainer,
   ModalContent,
   ModalTitle,
   ErrorText,
+  DeleteButtonSquare,
   DeleteButton,
-  CancelDeleteButton,
-  CancelDeleteButtonText,
+  DeleteButtonText,
   DeleteContainer,
-  ConfirmDeleteButton,
-  ConfirmDeleteButtonText,
 } from './styles';
 
 import Input from '../../components/Input';
 import Button2 from '../../components/Button';
+import Header from '../../components/Header';
 
 interface Note {
   id: string;
@@ -235,16 +234,17 @@ const Notes: React.FC = () => {
   }, [firebaseAuth, firebaseFirestore, listNotesToDelete]);
 
   const handleEditNote = useCallback(
-    (noteId: string) => {
-      const note = noteList?.find(note => {
+    (noteId: string, noteDescription: string) => {
+      /* const note = noteList?.find(note => {
         if (note.id === noteId) {
           return note;
         }
       });
       setNoteToEdit(note);
-      setEditModalVisible(true);
+      setEditModalVisible(true); */
+      navigation.navigate('NoteView', { noteId, noteDescription })
     },
-    [noteList],
+    [navigation],
   );
 
   const updateNote = useCallback(
@@ -457,8 +457,15 @@ const Notes: React.FC = () => {
         </ModalContainer>
       </Modal>
 
-      <Header>
-        <BackButton onPress={handleNavBack}>
+      <Header title="SUAS ANOTAÇÕES">
+        <TouchableOpacity onPress={handleToggleSelectionDelete}>
+          <AntDesign name="delete" size={25} color="#f54f51" />
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <AntDesign name="sharealt" size={25} color="#f54f51" />
+        </TouchableOpacity>
+        {/* <BackButton onPress={handleNavBack}>
           <FontAwesome5 name="chevron-left" size={25} color="#503d77" />
         </BackButton>
 
@@ -481,20 +488,20 @@ const Notes: React.FC = () => {
             title="Apagar nota(s)"
             onPress={handleToggleSelectionDelete}
           />
-        </Menu>
+        </Menu> */}
       </Header>
 
       {selectionDelete ? (
         <DeleteContainer>
-          <ConfirmDeleteButton onPress={confirmNoteDelete}>
-            <ConfirmDeleteButtonText>Apagar</ConfirmDeleteButtonText>
-            <FontAwesome5 name="check" size={22} color="#503d77" />
-          </ConfirmDeleteButton>
+          <DeleteButton onPress={confirmNoteDelete}>
+            <DeleteButtonText>Apagar</DeleteButtonText>
+            <FontAwesome5 name="check" size={22} color="#f54f51" />
+          </DeleteButton>
 
-          <CancelDeleteButton onPress={handleToggleSelectionDelete}>
-            <CancelDeleteButtonText>Cancelar</CancelDeleteButtonText>
-            <FontAwesome5 name="times" size={22} color="#503d77" />
-          </CancelDeleteButton>
+          <DeleteButton onPress={handleToggleSelectionDelete}>
+            <DeleteButtonText>Cancelar</DeleteButtonText>
+            <FontAwesome5 name="times" size={22} color="#f54f51" />
+          </DeleteButton>
         </DeleteContainer>
       ) : null}
 
@@ -502,51 +509,52 @@ const Notes: React.FC = () => {
         data={noteList}
         keyExtractor={note => note.id}
         showsVerticalScrollIndicator={false}
+        style={{ marginBottom: '10%' }}
         renderItem={({ item: note }) => (
-          <Card style={{ margin: 20, backgroundColor: '#B2DCEA' }}>
+          <Card style={{ margin: 20, borderWidth: 1, borderColor: '#F54F51', maxHeight: '100%' }}>
             <Card.Content>
               <Card.Title
                 title={<TitleCard>{note.title}</TitleCard>}
+                style={{ marginTop: '-7%', marginLeft: '-10%' }}
                 right={() => (
                   <>
                     {selectionDelete ? (
                       listNotesToDelete.indexOf(note.id) < 0 ? (
-                        <DeleteButton onPress={() => addNotesToDelete(note.id)}>
+                        <DeleteButtonSquare onPress={() => addNotesToDelete(note.id)}>
                           <FontAwesome5
                             name="square"
                             size={30}
-                            color="#E03CFB"
+                            color="#f54f51"
                           />
-                        </DeleteButton>
+                        </DeleteButtonSquare>
                       ) : (
-                        <DeleteButton
+                        <DeleteButtonSquare
                           onPress={() => removeNotesToDelete(note.id)}
                         >
                           <FontAwesome5
                             name="check-square"
                             size={30}
-                            color="#E03CFB"
+                            color="#f54f51"
                           />
-                        </DeleteButton>
+                        </DeleteButtonSquare>
                       )
                     ) : null}
                   </>
                 )}
               />
 
-              <Paragraph>{note.description}</Paragraph>
+              <Paragraph numberOfLines={5}>{note.description}</Paragraph>
             </Card.Content>
-            <Card.Actions style={{ justifyContent: 'flex-end' }}>
-              <Button
-                labelStyle={{ color: '#503d77' }}
-                onPress={() => handleEditNote(note.id)}
-              >
-                Editar
-              </Button>
+            <Card.Actions style={{ justifyContent: 'flex-end', marginRight: 10 }}>
+              <TouchableOpacity onPress={() => handleEditNote(note.id, note.description)}>
+                <FontAwesome5 name="pencil-alt" size={25} color="#f54f51" />
+              </TouchableOpacity>
             </Card.Actions>
+
           </Card>
         )}
       />
+      <Button2 onPress={handleCreateNewNote} icon="plus" style={{ width: 45, height: 45, borderRadius: 23, position: 'absolute', bottom: 25, right: 15 }} />
     </Container>
   );
 };

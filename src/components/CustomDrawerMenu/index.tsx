@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -13,8 +15,13 @@ import {
 import { Container, BorderRight } from './styles';
 
 const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
-  props: any,
+  props: DrawerContentComponentProps,
 ) => {
+  const { state, ...rest } = props;
+  const newState = { ...state }; // copy from state before applying any filter. do not change original state
+  newState.routes = newState.routes.filter(
+    (item: { name: string }) => item.name !== 'NoteView',
+  ); // replace "Login' with your route name
   return (
     <Container>
       <BorderRight>
@@ -48,7 +55,8 @@ const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
       </BorderRight>
       <DrawerContentScrollView {...props} style={{}}>
         <DrawerItemList
-          {...props}
+          {...rest}
+          state={newState}
           labelStyle={{
             fontFamily: 'Montserrat_400Regular',
             fontWeight: 'bold',
