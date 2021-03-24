@@ -234,15 +234,8 @@ const Notes: React.FC = () => {
   }, [firebaseAuth, firebaseFirestore, listNotesToDelete]);
 
   const handleEditNote = useCallback(
-    (noteId: string, noteDescription: string) => {
-      /* const note = noteList?.find(note => {
-        if (note.id === noteId) {
-          return note;
-        }
-      });
-      setNoteToEdit(note);
-      setEditModalVisible(true); */
-      navigation.navigate('NoteView', { noteId, noteDescription })
+    (noteId: string, noteDescription: string, noteTitle: string) => {
+      navigation.navigate('NoteView', { noteId, noteDescription, noteTitle })
     },
     [navigation],
   );
@@ -546,7 +539,7 @@ const Notes: React.FC = () => {
               <Paragraph numberOfLines={5}>{note.description}</Paragraph>
             </Card.Content>
             <Card.Actions style={{ justifyContent: 'flex-end', marginRight: 10 }}>
-              <TouchableOpacity onPress={() => handleEditNote(note.id, note.description)}>
+              <TouchableOpacity onPress={() => handleEditNote(note.id, note.description, note.title)}>
                 <FontAwesome5 name="pencil-alt" size={25} color="#f54f51" />
               </TouchableOpacity>
             </Card.Actions>

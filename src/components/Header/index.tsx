@@ -1,23 +1,46 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ViewProps } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 
 import { Container, BackNavigationButton, TitleText, ChildrenContainer } from './styles';
 
 interface HeaderViewProps extends ViewProps {
   title?: string;
   icon?: string;
-  teste?: Function;
+  backFunction?: Function;
 }
 
-const Input: React.FC<HeaderViewProps> = ({ teste, title, children, ...rest }) => {
+const Input: React.FC<HeaderViewProps> = ({ backFunction, title, children, ...rest }) => {
   const navigation = useNavigation();
+  const [backFunctionExist, setBackFunctionExist] = useState<Boolean>();
+
+  useEffect(() => {
+    if (backFunction != null) {
+      setBackFunctionExist(true);
+    } else {
+      setBackFunctionExist(false);
+    }
+  }, [backFunction]);
+
+  const navBackFunction = useCallback(() => {
+    if (backFunction != null) {
+      backFunction();
+    } else {
+      navigation.dispatch(DrawerActions.toggleDrawer())
+    }
+  }, [navigation, backFunction]);
+
   return (
     <Container>
-      <BackNavigationButton onPress={teste}>
-        <Ionicons name="ios-arrow-back" size={40} color="#F54F51" />
+      <BackNavigationButton onPress={navBackFunction}>
+        {backFunctionExist ?
+          <Ionicons name="ios-arrow-back" size={40} color="#F54F51" />
+          :
+          <FontAwesome5 name="grip-lines" size={36} color="#F54F51" />}
+
       </BackNavigationButton>
 
       <TitleText>{title}</TitleText>

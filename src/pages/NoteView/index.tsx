@@ -13,7 +13,7 @@ import * as Yup from 'yup';
 import firebase from 'firebase';
 import 'firebase/firestore';
 
-import { Container, InputTitle } from './styles';
+import { Container, InputTitle, ContainerTitleInput } from './styles';
 
 import Input from '../../components/Input';
 import Button2 from '../../components/Button';
@@ -22,6 +22,7 @@ import Header from '../../components/Header';
 interface RouteParams {
   noteId: string;
   noteDescription: string;
+  noteTitle: string;
 }
 
 interface Note {
@@ -49,57 +50,46 @@ const NoteView: React.FC = () => {
 
   const richEditorRef = React.createRef<RichEditor>();
   const richEditorRef2 = React.createRef<RichEditor>();
+
   const [noteDescriptionText, setNoteDescriptionText] = useState<string>();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [noteTitleText, setNoteTitleText] = useState<string>();
+
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [selectionDelete, setSelectionDelete] = useState(false);
-  const [noteToEdit, setNoteToEdit] = useState<Note | undefined>();
-  const [listNotesToDelete, setListNotesToDelete] = useState<string[]>([]);
-  const [noteList, setNoteList] = useState<ListNotes | undefined>();
   const firebaseAuth = firebase.auth().currentUser;
   const firebaseFirestore = firebase.firestore();
 
 
   useEffect(() => {
     setNoteDescriptionText(routeParams.noteDescription);
-  }, [routeParams.noteDescription]);
+    setNoteTitleText(routeParams.noteTitle);
+  }, [routeParams.noteDescription, routeParams.noteTitle]);
 
-  /*
-    const handleToggleMenu = useCallback(() => {
-      setVisibleMenu(!visibleMenu);
-    }, [visibleMenu]);
-
-    const handleCreateNewNote = useCallback(() => {
-      setModalVisible(true);
-      setVisibleMenu(!visibleMenu);
-    }, [visibleMenu]);
-  */
+  const navBackResetRoute = useCallback(() => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Notes' }],
+    })
+  }, [navigation])
 
   const updateNote = useCallback(
-    async (note: NoteEdit) => {
+    async () => {
       await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .collection('notes')
-        .doc(note.id)
+        .doc(routeParams.noteId)
         .update({
-          title: note.title,
-          description: note.description,
+          title: noteTitleText,
+          description: noteDescriptionText,
         })
         .then(() => {
-          noteList?.map(noteToUpdate => {
-            if (noteToUpdate.id === note.id) {
-              noteToUpdate.title = note.title;
-              noteToUpdate.description = note.description;
-            }
-          });
-          setNoteList(noteList);
           Alert.alert('A nota foi atualizada com sucesso!', '', [
             {
               text: 'Ok',
             },
           ]);
           setEditModalVisible(!editModalVisible);
+          navBackResetRoute();
         })
         .catch(() => {
           Alert.alert(
@@ -113,46 +103,40 @@ const NoteView: React.FC = () => {
           );
         });
     },
-    [firebaseAuth, firebaseFirestore, editModalVisible, noteList],
+    [firebaseAuth, firebaseFirestore, editModalVisible, noteDescriptionText, noteTitleText, routeParams.noteId, navBackResetRoute],
   );
-
-  function editorInitializedCallback() {
-    richEditorRef.current?.registerToolbar(function (items) {
-      // items contain all the actions that are currently active
-      console.log(
-        "Toolbar click, selected items (insert end callback):",
-        items
-      );
-    });
-  }
 
   return (
 
     <Container>
       <Header
-        title="SUA ANOTAÇÂO"
-        teste={() => navigation.reset({
-          index: 0,
-          routes: [{ name: 'Notes' }],
-        })}
+        title="SUA ANOTAÇÃO"
+        backFunction={navBackResetRoute}
       />
 
-      <Text>{routeParams.noteId}</Text>
+      <ContainerTitleInput>
+        <Input style={{ color: 'black' }} defaultValue={routeParams.noteTitle} onChangeText={value => setNoteTitleText(value)} />
+      </ContainerTitleInput>
+
+
       <RichToolbar
         editor={richEditorRef}
         selectedIconTint="#2095F2"
         disabledIconTint="#bfbfbf"
+        style={{ marginTop: -15, marginBottom: 5, backgroundColor: '#FFF' }}
       />
       <ScrollView>
         <RichEditor
           disabled={false}
           ref={richEditorRef}
-          style={{ marginLeft: 10, marginRight: 10 }}
+          style={{ marginLeft: 10, marginRight: 10, marginBottom: 10 }}
           initialContentHTML={noteDescriptionText}
           scrollEnabled
           onChange={(text) => setNoteDescriptionText(text)}
         />
       </ScrollView>
+
+      <Button2 icon="check" onPress={updateNote} style={{ alignSelf: 'center', marginBottom: 5, width: 60, height: 60, borderRadius: 30 }} />
 
 
 

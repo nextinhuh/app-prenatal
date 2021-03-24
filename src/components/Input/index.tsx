@@ -40,8 +40,8 @@ const Input: React.FC<InputProps> = ({
           {viewPassword ? (
             <Icon name="eye" size={25} color="#F1F1F1" />
           ) : (
-              <Icon name="eye-off" size={25} color="#F1F1F1" />
-            )}
+            <Icon name="eye-off" size={25} color="#F1F1F1" />
+          )}
         </IconButton>
       )}
 

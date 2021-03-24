@@ -190,7 +190,7 @@ const Dashboard: React.FC = () => {
         <DrawerMenuButton onPress={() => navigate.dispatch(DrawerActions.toggleDrawer())}>
           <FontAwesome5
             name="grip-lines"
-            size={30}
+            size={36}
             color="#FE637A"
           />
         </DrawerMenuButton>
@@ -220,8 +220,8 @@ const Dashboard: React.FC = () => {
           }}
         />
       ) : (
-          <UserAvatar source={imgUserIcon} />
-        )}
+        <UserAvatar source={imgUserIcon} />
+      )}
 
       <CarouselContainer2>
         <Carousel
