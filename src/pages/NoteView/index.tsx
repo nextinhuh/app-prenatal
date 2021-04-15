@@ -47,6 +47,7 @@ const NoteView: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const routeParams = route.params as RouteParams;
+  const [isToCreateNewNote, setIsToCreateNewNote] = useState<boolean>();
 
   const richEditorRef = React.createRef<RichEditor>();
   const richEditorRef2 = React.createRef<RichEditor>();
@@ -60,9 +61,15 @@ const NoteView: React.FC = () => {
 
 
   useEffect(() => {
+    if (routeParams.noteId === "newNote") {
+      setIsToCreateNewNote(true);
+    } else {
+      setIsToCreateNewNote(false);
+    }
     setNoteDescriptionText(routeParams.noteDescription);
     setNoteTitleText(routeParams.noteTitle);
-  }, [routeParams.noteDescription, routeParams.noteTitle]);
+
+  }, [routeParams.noteDescription, routeParams.noteTitle, routeParams.noteId]);
 
   const navBackResetRoute = useCallback(() => {
     navigation.reset({
@@ -88,7 +95,6 @@ const NoteView: React.FC = () => {
               text: 'Ok',
             },
           ]);
-          setEditModalVisible(!editModalVisible);
           navBackResetRoute();
         })
         .catch(() => {
@@ -103,7 +109,43 @@ const NoteView: React.FC = () => {
           );
         });
     },
-    [firebaseAuth, firebaseFirestore, editModalVisible, noteDescriptionText, noteTitleText, routeParams.noteId, navBackResetRoute],
+    [firebaseAuth, firebaseFirestore, noteDescriptionText, noteTitleText, routeParams.noteId, navBackResetRoute],
+  );
+
+  const createNewNote = useCallback(
+    async () => {
+      const time = new Date().getTime();
+      await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth?.uid)
+        .collection('notes')
+        .doc(time.toString())
+        .set({
+          id: time.toString(),
+          title: noteTitleText,
+          description: noteDescriptionText,
+        })
+        .then(() => {
+          Alert.alert('A nota foi criada com sucesso!', '', [
+            {
+              text: 'Ok',
+            },
+          ]);
+          navBackResetRoute();
+        })
+        .catch(() => {
+          Alert.alert(
+            'Ops! Deu algum erro na criação da nota, favor tentar novamente!',
+            '',
+            [
+              {
+                text: 'Ok',
+              },
+            ],
+          );
+        });
+    },
+    [firebaseAuth, firebaseFirestore, navBackResetRoute, noteDescriptionText, noteTitleText],
   );
 
   return (
@@ -136,7 +178,10 @@ const NoteView: React.FC = () => {
         />
       </ScrollView>
 
-      <Button2 icon="check" onPress={updateNote} style={{ alignSelf: 'center', marginBottom: 5, width: 60, height: 60, borderRadius: 30 }} />
+      {isToCreateNewNote ?
+        <Button2 icon="check" onPress={createNewNote} style={{ alignSelf: 'center', marginBottom: 5, width: 60, height: 60, borderRadius: 30 }} /> :
+        <Button2 icon="check" onPress={updateNote} style={{ alignSelf: 'center', marginBottom: 5, width: 60, height: 60, borderRadius: 30 }} />}
+
 
 
 

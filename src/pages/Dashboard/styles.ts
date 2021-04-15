@@ -22,14 +22,18 @@ export const WelcomeText = styled.Text`
   font-family: 'Montserrat_400Regular';
 `;
 
+export const UserAvatarButton = styled.TouchableOpacity`
+  width: 110px;
+  height: 110px;
+  position: absolute;
+  right: 15px;
+  top: 60px;
+`;
+
 export const UserAvatar = styled.Image`
   width: 110px;
   height: 110px;
   border-radius: 55px;
-  position: absolute;
-  right: 15px;
-  top: 60px;
-  margin-left: 40px;
   border-width: 2px;
   border-color: white;
 `;

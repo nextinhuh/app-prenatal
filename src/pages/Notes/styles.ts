@@ -1,36 +1,5 @@
 import styled from 'styled-components/native';
 
-export const ModalContainer = styled.KeyboardAvoidingView`
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.75);
-`;
-
-export const ModalContent = styled.View`
-  margin: 20px;
-  background-color: white;
-  border-radius: 20px;
-  padding: 15px;
-  align-items: center;
-  height: 390px;
-`;
-
-export const ErrorText = styled.Text`
-  color: red;
-  font-size: 16px;
-  font-weight: bold;
-  align-self: flex-end;
-`;
-
-export const ModalTitle = styled.Text`
-  font-size: 25px;
-  font-family: Underdog_400Regular;
-  color: #503d77;
-  margin-bottom: 5%;
-`;
-
 export const Container = styled.View`
   flex: 1;
 `;
@@ -46,35 +15,12 @@ export const Header = styled.View`
   justify-content: space-between;
 `;
 
-export const Title = styled.Text`
-  font-size: 28px;
-  font-family: Underdog_400Regular;
-  color: #503d77;
-`;
-
 export const TitleCard = styled.Text`
   font-size: 20px;
   font-family: 'Montserrat_400Regular';
   color: white;
   font-weight: bold;
   background-color: #f54f51;
-`;
-
-export const Paragraph = styled.Text`
-  margin-left: 15px;
-  font-family: 'Montserrat_400Regular';
-  font-size: 16px;
-`;
-
-export const OptionButton = styled.TouchableOpacity`
-  align-items: center;
-  height: 40px;
-  justify-content: center;
-`;
-export const BackButton = styled.TouchableOpacity`
-  align-items: center;
-  height: 30px;
-  width: 30px;
 `;
 
 export const DeleteButtonSquare = styled.TouchableOpacity``;

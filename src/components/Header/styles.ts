@@ -1,4 +1,3 @@
-import { Feather } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
@@ -28,5 +27,5 @@ export const ChildrenContainer = styled.View`
   height: 100%;
   width: 30%;
   flex-direction: row;
-  margin-left: 6%;
+  margin-left: 3%;
 `;

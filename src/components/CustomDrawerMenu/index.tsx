@@ -13,15 +13,24 @@ import {
 } from '@react-navigation/drawer';
 
 import { Container, BorderRight } from './styles';
+import ProfileUpdate from '../../pages/ProfileUpdate';
 
 const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
   props: DrawerContentComponentProps,
 ) => {
   const { state, ...rest } = props;
   const newState = { ...state }; // copy from state before applying any filter. do not change original state
-  newState.routes = newState.routes.filter(
-    (item: { name: string }) => item.name !== 'NoteView',
-  ); // replace "Login' with your route name
+  newState.routes = newState.routes.filter((item: { name: string }) => {
+    if (
+      item.name !== 'NoteView' &&
+      item.name !== 'Tips' &&
+      item.name !== 'ProfileUpdate' &&
+      item.name !== 'BottomTabsMedicalRecords'
+    ) {
+      return true;
+    }
+    return false;
+  }); // replace "Login' with your route name
   return (
     <Container>
       <BorderRight>
