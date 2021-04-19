@@ -5,29 +5,35 @@ export const Container = styled.View`
   align-items: center;
 `;
 
-export const Header = styled.View`
-  margin-top: 10px;
+export const HeaderTitle = styled.Text`
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  margin-right: -360%;
+`;
+
+export const HeaderContainer = styled.View`
+  flex: 1;
+  background-color: black;
   width: 100%;
-  padding: 0px 40px;
-  height: 150px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  height: 100%;
+  margin-top: 30%;
 `;
 
-export const Title = styled.Text`
-  font-size: 28px;
-  color: #503d77;
-  font-family: Underdog_400Regular;
-  border-bottom-width: 2px;
-  border-color: #503d77;
-  margin-left: 85px;
+export const UserAvatarButton = styled.TouchableOpacity`
+  width: 110px;
+  height: 110px;
+  position: absolute;
+  right: 15px;
+  top: 60px;
 `;
 
-export const BackButton = styled.TouchableOpacity`
-  align-items: center;
-  height: 30px;
-  width: 30px;
+export const UserAvatar = styled.Image`
+  width: 110px;
+  height: 110px;
+  border-radius: 55px;
+  border-width: 2px;
+  border-color: white;
 `;
 
 export const IndicatorContainer = styled.View`

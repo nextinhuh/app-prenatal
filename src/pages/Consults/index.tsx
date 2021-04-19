@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable radix */
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, ActivityIndicator } from 'react-native';
+import { FlatList, ActivityIndicator, Text } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
@@ -10,17 +10,18 @@ import firebase from 'firebase';
 import { useConsult } from '../../hooks/consults';
 import 'firebase/firestore';
 
+import Header from '../../components/Header';
+
 import {
   Container,
-  Header,
-  Title,
   IndicatorContainer,
   IndicatorCard,
   IndicatorTextNumber,
   IndicatorText,
-  BackButton,
   ConsultCard,
   ConsultText,
+  HeaderTitle,
+  HeaderContainer,
 } from './styles';
 
 const Consults: React.FC = () => {
@@ -75,13 +76,19 @@ const Consults: React.FC = () => {
 
   return (
     <Container>
-      <Header>
+      <HeaderContainer>
+        <Header iconColor="#FFF">
+          <HeaderTitle>REGISTRAR</HeaderTitle>
+        </Header>
+      </HeaderContainer>
+
+      {/* <Header>
         <BackButton onPress={handleNavBack}>
           <FontAwesome5 name="chevron-left" size={25} color="#503d77" />
         </BackButton>
 
         <Title>Consultas</Title>
-      </Header>
+      </Header> */}
 
       <IndicatorContainer>
         <IndicatorCard>

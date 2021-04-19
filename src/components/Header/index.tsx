@@ -11,9 +11,10 @@ interface HeaderViewProps extends ViewProps {
   title?: string;
   icon?: string;
   backFunction?: Function;
+  iconColor?: string;
 }
 
-const Input: React.FC<HeaderViewProps> = ({ backFunction, title, children, ...rest }) => {
+const Input: React.FC<HeaderViewProps> = ({ iconColor, backFunction, title, children, ...rest }) => {
   const navigation = useNavigation();
   const [backFunctionExist, setBackFunctionExist] = useState<Boolean>();
 
@@ -39,7 +40,7 @@ const Input: React.FC<HeaderViewProps> = ({ backFunction, title, children, ...re
         {backFunctionExist ?
           <Ionicons name="ios-arrow-back" size={40} color="#F54F51" />
           :
-          <FontAwesome5 name="grip-lines" size={36} color="#F54F51" />}
+          <FontAwesome5 name="grip-lines" size={36} color={iconColor || "#F54F51"} />}
 
       </BackNavigationButton>
 

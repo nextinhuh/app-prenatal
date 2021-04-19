@@ -1,14 +1,13 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable prettier/prettier */
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import { AdMobBanner } from 'expo-ads-admob';
 import Timeline from 'react-native-timeline-flatlist';
-import HTML from "react-native-render-html";
 
 
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -114,15 +113,6 @@ const Dashboard: React.FC = () => {
       },
     ]
   });
-
-  const htmlContent = `
-    <h1>This HTML snippet is now rendered with native components !</h1>
-    <h2>Enjoy a webview-free and blazing fast application</h2>
-    <img src="https://i.imgur.com/dHLmxfO.jpg?2" />
-    <em style="textAlign: center;">Look at how happy this native cat is</em>
-`;
-  const testWidth = useWindowDimensions().width;
-
 
   const renderCarouselItem = ({ item, index }: { item: ItemProps; index: number }) => {
     return (
@@ -275,9 +265,6 @@ const Dashboard: React.FC = () => {
         </ContainerButton>
 
       </SelectWeekButtonContainer>
-
-
-
 
     </Container>
   );
