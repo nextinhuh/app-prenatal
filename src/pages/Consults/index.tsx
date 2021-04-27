@@ -1,23 +1,29 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable radix */
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, ActivityIndicator, Text } from 'react-native';
+import {
+  FlatList,
+  ActivityIndicator,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import firebase from 'firebase';
+import { TabView, SceneMap } from 'react-native-tab-view';
 import { useConsult } from '../../hooks/consults';
 import 'firebase/firestore';
+
+import MedicalRecords from '../MedicalRecords';
+import Prescriptions from '../Prescriptions';
 
 import Header from '../../components/Header';
 
 import {
   Container,
-  IndicatorContainer,
-  IndicatorCard,
-  IndicatorTextNumber,
-  IndicatorText,
   ConsultCard,
   ConsultText,
   HeaderTitle,
@@ -31,6 +37,26 @@ const Consults: React.FC = () => {
   const [consultsList, setConsultsList] = useState<string[]>();
   const [loading, setLoading] = useState(true);
   const { updateConsultId } = useConsult();
+
+  const layout = useWindowDimensions();
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'first', title: 'First' },
+    { key: 'second', title: 'Second' },
+  ]);
+
+  const FirstRoute: React.FC = () => (
+    <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+  );
+
+  const SecondRoute: React.FC = () => (
+    <View style={{ flex: 1, backgroundColor: '#673ab7' }} />
+  );
+
+  const renderScene = SceneMap({
+    first: MedicalRecords,
+    second: Prescriptions,
+  });
 
   useEffect(() => {
     async function listConsults() {
@@ -75,46 +101,12 @@ const Consults: React.FC = () => {
   );
 
   return (
-    <Container>
-      <HeaderContainer>
-        <Header iconColor="#FFF">
-          <HeaderTitle>REGISTRAR</HeaderTitle>
-        </Header>
-      </HeaderContainer>
-
-      {/* <Header>
-        <BackButton onPress={handleNavBack}>
-          <FontAwesome5 name="chevron-left" size={25} color="#503d77" />
-        </BackButton>
-
-        <Title>Consultas</Title>
-      </Header> */}
-
-      <IndicatorContainer>
-        <IndicatorCard>
-          <IndicatorTextNumber>{consultsList?.length}</IndicatorTextNumber>
-          <IndicatorText>Consultas</IndicatorText>
-        </IndicatorCard>
-      </IndicatorContainer>
-
-      {loading ? (
-        <ActivityIndicator />
-      ) : (
-        <FlatList
-          data={consultsList}
-          keyExtractor={consult => consult}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item: consult }) => (
-            <ConsultCard onPress={() => handleNavMedicalRecords(consult)}>
-              <FontAwesome5 name="laptop-medical" size={45} color="#503d77" />
-              <ConsultText>
-                Consulta realizada {getFormatedDate(parseInt(consult))}.
-              </ConsultText>
-            </ConsultCard>
-          )}
-        />
-      )}
-    </Container>
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+    />
   );
 };
 

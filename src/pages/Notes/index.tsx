@@ -167,7 +167,7 @@ const Notes: React.FC = () => {
   return (
     <Container>
 
-      <Header title="SUAS ANOTAÇÕES">
+      <Header title="SUAS ANOTAÇÕES" borderWhiteColor={false}>
         <TouchableOpacity onPress={handleToggleSelectionDelete}>
           <AntDesign name="delete" size={25} color="#f54f51" />
         </TouchableOpacity>

@@ -6543,6 +6543,11 @@ react-native-multiselect-sortable-flatlist@^1.0.5:
   dependencies:
     react-native-draggable-flatlist "^1.1.9"
 
+react-native-pager-view@^5.1.5:
+  version "5.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.1.5.tgz#711599b6e74ccf922c7dc6e4a8efb7e8ca90775a"
+  integrity sha512-Z2mW1Rz6Mzh2IDKL7KFi/s1BkZxpuGzRhmvYXWVN/TXDcEC8m3wIdCJOccDawbaQ1NXg2pIdACzmfHpO/tbo+w==
+
 react-native-paper@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-4.2.0.tgz#534c0f9dbeecfd73d20f1f7b1ef3df32aa2ca4b0"
@@ -6611,6 +6616,11 @@ react-native-status-bar-height@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.5.0.tgz#bc0fb85230603850aab9667ee8111a62954de90c"
   integrity sha512-sYBCPYA/NapBSHkdm/IVL4ID3LLlIuLqINi2FBDyMkc2BU9pfSGOtkz9yfxoK39mYJuTrlTOQ7mManARUsYDSA==
+
+react-native-tab-view@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-3.0.1.tgz#7ed8c5c4a0bb48fa8895e612d26e6d545ed03447"
+  integrity sha512-L7qXtYz5Z+NdWyu38zaJrlHA/8H6rNFRZXe3ydym12UEEPPoefbVZ71b9YK2O6QP0u4pUlzMpMVM/Lsz2DJ4jg==
 
 react-native-timeline-flatlist@^0.7.3:
   version "0.7.3"

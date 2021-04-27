@@ -1,13 +1,17 @@
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
+interface ContainerProps {
+  borderWhiteColor?: boolean;
+}
+
+export const Container = styled.View<ContainerProps>`
   width: 100%;
   height: 6%;
   margin-top: 15%;
   flex-direction: row;
   align-items: center;
   border-right-width: 8px;
-  border-color: #f54f51;
+  border-color: ${props => (props.borderWhiteColor ? '#FFF' : '#f54f51')};
   padding: 0px 15px;
 `;
 
