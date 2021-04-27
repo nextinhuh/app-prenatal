@@ -17,9 +17,9 @@ export const HeaderContainer = styled.View`
   position: absolute;
   background-color: #fe3855;
   width: 100%;
-  height: 30%;
-  border-bottom-left-radius: 150px;
-  border-bottom-right-radius: 180px;
+  height: 230px;
+  border-bottom-left-radius: 130px;
+  border-bottom-right-radius: 130px;
 `;
 
 export const UserAvatarButton = styled.TouchableOpacity`
@@ -28,6 +28,14 @@ export const UserAvatarButton = styled.TouchableOpacity`
   position: absolute;
   right: 15px;
   top: 60px;
+`;
+
+export const TabViewContainer = styled.View`
+  flex: 1;
+  margin-top: 280px;
+  width: 100%;
+  height: 40%;
+  background-color: black;
 `;
 
 export const UserAvatar = styled.Image`
@@ -51,7 +59,7 @@ export const ConsultCard = styled.TouchableOpacity`
 `;
 
 export const ConsultText = styled.Text`
-  font-family: Sofia_400Regular;
+  font-family: 'Montserrat_400Regular';
   font-size: 16px;
   color: black;
   width: 70%;

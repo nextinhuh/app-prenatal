@@ -35,7 +35,7 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <StatusBar barStyle="light-content" translucent />
+      <StatusBar barStyle="dark-content" translucent />
       <PaperProvider>
         <AppContextProvider>
           <Routes />

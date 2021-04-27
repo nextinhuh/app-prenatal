@@ -8,16 +8,18 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import firebase from 'firebase';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useConsult } from '../../hooks/consults';
 import 'firebase/firestore';
 
-import MedicalRecords from '../MedicalRecords';
+import ConsultList from '../../components/ConsultList';
 import Prescriptions from '../Prescriptions';
 
 import Header from '../../components/Header';
@@ -28,6 +30,7 @@ import {
   ConsultText,
   HeaderTitle,
   HeaderContainer,
+  TabViewContainer,
 } from './styles';
 
 const Consults: React.FC = () => {
@@ -41,21 +44,47 @@ const Consults: React.FC = () => {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    { key: 'first', title: 'First' },
-    { key: 'second', title: 'Second' },
+    { key: 'ConsultList' },
+    { key: 'MedicalRecordAndPrescription' },
   ]);
-
-  const FirstRoute: React.FC = () => (
-    <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
-  );
 
   const SecondRoute: React.FC = () => (
     <View style={{ flex: 1, backgroundColor: '#673ab7' }} />
   );
 
+  const renderTabBar = (props: any) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{
+        backgroundColor: '#FE3855',
+        width: '20%',
+        height: 4,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        marginLeft: '11%',
+      }}
+      style={{
+        backgroundColor: 'rgb(242,242,242)',
+        borderBottomLeftRadius: 45,
+        borderBottomRightRadius: 45,
+      }}
+      activeColor="#FE3855"
+      inactiveColor="gray"
+      renderIcon={({ route, focused, color }) => (
+        <>
+          {route.key === 'ConsultList' ? (
+            <FontAwesome name="list-alt" size={32} color={color} />
+          ) : (
+            <FontAwesome5 name="book-medical" size={32} color={color} />
+          )}
+        </>
+      )}
+    />
+  );
+
   const renderScene = SceneMap({
-    first: MedicalRecords,
-    second: Prescriptions,
+    ConsultList,
+    MedicalRecordAndPrescription: SecondRoute,
   });
 
   useEffect(() => {
@@ -101,12 +130,23 @@ const Consults: React.FC = () => {
   );
 
   return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
-    />
+    <Container>
+      <HeaderContainer>
+        <Header iconColor="#FFF" borderWhiteColor>
+          <HeaderTitle>CONSULTAS</HeaderTitle>
+        </Header>
+      </HeaderContainer>
+
+      <TabViewContainer>
+        <TabView
+          renderTabBar={renderTabBar}
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+        />
+      </TabViewContainer>
+    </Container>
   );
 };
 
