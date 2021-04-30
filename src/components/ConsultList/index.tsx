@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { FontAwesome } from '@expo/vector-icons';
+import { SceneRendererProps } from 'react-native-tab-view';
 
 import firebase from 'firebase';
 import { format } from 'date-fns';
@@ -11,7 +12,7 @@ import { useConsult } from '../../hooks/consults';
 
 import { Container, ConsultCard, ConsultText } from './styles';
 
-const ConsultList: React.FC = () => {
+const ConsultList: React.FC = (props: any) => {
   const navigate = useNavigation();
   const firebaseAuth = firebase.auth().currentUser;
   const firebaseFirestore = firebase.firestore();
@@ -47,6 +48,14 @@ const ConsultList: React.FC = () => {
     return formatedDate;
   }, []);
 
+  const handleJumpTo = useCallback(
+    (consultId: string) => {
+      updateConsultId(consultId);
+      props.jumpTo('MedicalRecordAndPrescription');
+    },
+    [props, updateConsultId],
+  );
+
   return (
     <Container>
       {loading ? (
@@ -57,7 +66,7 @@ const ConsultList: React.FC = () => {
           keyExtractor={consult => consult}
           showsVerticalScrollIndicator={false}
           renderItem={({ item: consult }) => (
-            <ConsultCard>
+            <ConsultCard onPress={() => handleJumpTo(consult)}>
               <FontAwesome
                 name="circle"
                 size={24}

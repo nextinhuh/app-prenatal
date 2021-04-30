@@ -36,7 +36,7 @@ const Input: React.FC<HeaderViewProps> = ({ borderWhiteColor, iconColor, backFun
   }, [navigation, backFunction]);
 
   return (
-    <Container borderWhiteColor={borderWhiteColor}>
+    <Container borderWhiteColor={borderWhiteColor} {...rest}>
       <BackNavigationButton onPress={navBackFunction}>
         {backFunctionExist ?
           <Ionicons name="ios-arrow-back" size={40} color="#F54F51" />

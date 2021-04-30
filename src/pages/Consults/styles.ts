@@ -22,12 +22,15 @@ export const HeaderContainer = styled.View`
   border-bottom-right-radius: 130px;
 `;
 
-export const UserAvatarButton = styled.TouchableOpacity`
-  width: 110px;
-  height: 110px;
+export const UserAvatar = styled.Image`
   position: absolute;
-  right: 15px;
-  top: 60px;
+  right: 28%;
+  top: 12%;
+  width: 170px;
+  height: 170px;
+  border-radius: 85px;
+  border-width: 2px;
+  border-color: white;
 `;
 
 export const TabViewContainer = styled.View`
@@ -36,14 +39,6 @@ export const TabViewContainer = styled.View`
   width: 100%;
   height: 40%;
   background-color: black;
-`;
-
-export const UserAvatar = styled.Image`
-  width: 110px;
-  height: 110px;
-  border-radius: 55px;
-  border-width: 2px;
-  border-color: white;
 `;
 
 export const ConsultCard = styled.TouchableOpacity`

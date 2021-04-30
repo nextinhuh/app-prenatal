@@ -5,6 +5,8 @@ import { useFonts, Sofia_400Regular } from '@expo-google-fonts/sofia';
 import { Trocchi_400Regular } from '@expo-google-fonts/trocchi';
 import { Lato_700Bold } from '@expo-google-fonts/lato';
 import { PoiretOne_400Regular } from '@expo-google-fonts/poiret-one';
+import { Roboto_400Regular } from '@expo-google-fonts/roboto';
+import { OpenSans_400Regular } from '@expo-google-fonts/open-sans';
 import { Underdog_400Regular } from '@expo-google-fonts/underdog';
 import { Montserrat_400Regular } from '@expo-google-fonts/montserrat';
 import * as SplashScreen from 'expo-splash-screen';
@@ -29,6 +31,8 @@ const App: React.FC = () => {
     Underdog_400Regular,
     PoiretOne_400Regular,
     Montserrat_400Regular,
+    Roboto_400Regular,
+    OpenSans_400Regular,
   });
   if (!fontsLoaded) SplashScreen.preventAutoHideAsync();
   else SplashScreen.hideAsync();

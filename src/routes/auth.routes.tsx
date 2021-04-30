@@ -1,6 +1,5 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { AntDesign } from '@expo/vector-icons';
 
 import CustomDrawerMenu from '../components/CustomDrawerMenu';
 
@@ -11,8 +10,6 @@ import NoteView from '../pages/NoteView';
 import Album from '../pages/Album';
 import Consults from '../pages/Consults';
 import Tips from '../pages/Tips';
-
-import BottomTabs from './bottom.tabs.routes';
 
 const Auth = createDrawerNavigator();
 
@@ -57,8 +54,6 @@ const AuthRoutes: React.FC = () => (
 
     <Auth.Screen name="Tips" component={Tips} />
     <Auth.Screen name="ProfileUpdate" component={ProfileUpdate} />
-
-    <Auth.Screen name="BottomTabsMedicalRecords" component={BottomTabs} />
   </Auth.Navigator>
 );
 
