@@ -1,19 +1,22 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable radix */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import firebase from 'firebase';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import {
+  TabView,
+  SceneMap,
+  TabBar,
+  SceneRendererProps,
+  NavigationState,
+} from 'react-native-tab-view';
 import 'firebase/firestore';
 
 import ConsultList from '../../components/ConsultList';
 import MedicalRecordAndPrescription from '../../components/MedicalRecordAndPrescription';
 import Header from '../../components/Header';
-import { useConsult } from '../../hooks/consults';
 
 import imgUserIcon from '../../assets/user.png';
 
@@ -34,7 +37,6 @@ const Consults: React.FC = () => {
   const firebaseAuth = firebase.auth().currentUser;
   const firebaseFirestore = firebase.firestore();
   const [userInfo, setUserInfo] = useState<User>({} as User);
-
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -42,7 +44,9 @@ const Consults: React.FC = () => {
     { key: 'MedicalRecordAndPrescription' },
   ]);
 
-  const renderTabBar = (props: any) => (
+  const renderTabBar = (
+    props: SceneRendererProps & { navigationState: NavigationState<any> },
+  ) => (
     <TabBar
       {...props}
       indicatorStyle={{

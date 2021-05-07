@@ -8,6 +8,8 @@ interface InputProps extends TextInputProps {
   name?: string;
   icon?: string;
   isPassword?: boolean;
+  borderColor?: string;
+  textPlaceHolderColor?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -15,6 +17,8 @@ const Input: React.FC<InputProps> = ({
   name,
   isPassword,
   onBlur,
+  borderColor,
+  textPlaceHolderColor,
   ...rest
 }) => {
   const [viewPassword, setViewPassword] = useState(isPassword);
@@ -24,12 +28,12 @@ const Input: React.FC<InputProps> = ({
   }, [viewPassword]);
 
   return (
-    <Container>
+    <Container borderColor={borderColor}>
       <Icon name={icon} size={25} color="#F1F1F1" />
 
       <TextInput
         onBlur={onBlur}
-        placeholderTextColor="#f1f1f1"
+        placeholderTextColor={textPlaceHolderColor || "#f1f1f1"}
         keyboardAppearance="dark"
         secureTextEntry={viewPassword}
         {...rest}

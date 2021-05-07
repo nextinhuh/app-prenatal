@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import { FlatList, ScrollView } from 'react-native';
 
 import firebase from 'firebase';
 import { useConsult } from '../../hooks/consults';

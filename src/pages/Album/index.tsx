@@ -5,17 +5,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ImageView from 'react-native-image-viewing';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { Menu, Divider, ActivityIndicator } from 'react-native-paper';
+import { Portal, Text, Button, Provider } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
-import { Alert, Platform, Modal } from 'react-native';
+import {
+  Alert,
+  Platform,
+  Modal,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 import firebase from 'firebase';
 import 'firebase/firestore';
+
+import Header from '../../components/Header';
+import ModalNewAlbum from '../../components/ModalNewAlbum';
 
 import {
   Container,
   Title,
-  Header,
   BackButton,
   OptionButton,
   AlbumList,
@@ -40,7 +50,7 @@ const Album: React.FC = () => {
   const navigation = useNavigation();
   const [visible, setIsVisible] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
-  const [visibleMenu, setVisibleMenu] = useState(false);
+  const [visibleModalNewAlbum, setVisibleModalNewAlbum] = useState(false);
   const [selectionDelete, setSelectionDelete] = useState(false);
   const [buttonDeleteActive, setButtonDeleteActive] = useState(true);
   const [selectedImages, setSelectedIamges] = useState<number[]>([]);
@@ -53,9 +63,20 @@ const Album: React.FC = () => {
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+          alert(
+            'Desculpe, nós precisamos da permissão de câmera para isto funcionar!',
+          );
+        }
+      }
+    })();
+
+    (async () => {
+      if (Platform.OS !== 'web') {
         const {
           status,
-        } = await ImagePicker.requestCameraRollPermissionsAsync();
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
           alert(
             'Desculpe, nós precisamos da permissão de câmera para isto funcionar!',
@@ -84,6 +105,10 @@ const Album: React.FC = () => {
 
     listImagesUrl();
   }, [firebaseAuth, firebaseFirestore]);
+
+  const handleAlbumAdd = useCallback(() => {
+    setVisibleModalNewAlbum(!visibleModalNewAlbum);
+  }, [setVisibleModalNewAlbum, visibleModalNewAlbum]);
 
   const handleGaleryPhotoPicker = useCallback(async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -187,10 +212,10 @@ const Album: React.FC = () => {
       },
     ]);
   }, [handleGaleryPhotoPicker, handleTakePhoto]);
-
+  /*
   const handleToggleMenu = useCallback(() => {
     setVisibleMenu(!visibleMenu);
-  }, [visibleMenu]);
+  }, [visibleMenu]); */
 
   const handleNavBack = useCallback(() => {
     navigation.goBack();
@@ -205,7 +230,7 @@ const Album: React.FC = () => {
   );
 
   const handleToggleSelectionDelete = useCallback(() => {
-    setVisibleMenu(false);
+    // setVisibleMenu(false);
     setSelectionDelete(!selectionDelete);
     setButtonDeleteActive(!buttonDeleteActive);
     setSelectedIamges([]);
@@ -305,7 +330,28 @@ const Album: React.FC = () => {
 
   return (
     <Container>
-      <Header>
+      <Header title="ÁLBUNS DE FOTOS" borderWhiteColor={false}>
+        <TouchableOpacity onPress={handleAlbumAdd}>
+          <MaterialCommunityIcons
+            name="book-plus-multiple-outline"
+            size={25}
+            color="#f54f51"
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleToggleSelectionDelete}>
+          <AntDesign name="delete" size={25} color="#f54f51" />
+        </TouchableOpacity>
+      </Header>
+
+      {visibleModalNewAlbum && (
+        <ModalNewAlbum
+          modalVisible={visibleModalNewAlbum}
+          setVisibleState={handleAlbumAdd}
+        />
+      )}
+
+      {/* <Header>
         <BackButton onPress={handleNavBack}>
           <FontAwesome5 name="chevron-left" size={25} color="#503d77" />
         </BackButton>
@@ -333,7 +379,7 @@ const Album: React.FC = () => {
             title="Apagar foto(s)"
           />
         </Menu>
-      </Header>
+      </Header> */}
 
       {selectionDelete ? (
         <DeleteContainer>
