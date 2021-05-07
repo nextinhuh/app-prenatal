@@ -9,8 +9,11 @@ import {
   Pressable,
   View,
   ModalProps,
+  ActivityIndicator,
 } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
+import firebase from 'firebase';
+import 'firebase/firestore';
 
 import { ModalContainer, ModalTitle, ModalCard } from './styles';
 
@@ -28,6 +31,25 @@ const ModalNewAlbum: React.FC<ModalNewAlbumProps> = ({
   ...rest
 }) => {
   const [visible, setVisible] = useState(modalVisible);
+  const [albumName, setAlbumName] = useState<string>();
+  const [loading, setLoading] = useState(false);
+  const firebaseAuth = firebase.auth().currentUser;
+  const storageFirebase = firebase.storage();
+  const firebaseFirestore = firebase.firestore();
+
+  const handleCreateNewAlbum = useCallback(async () => {
+    setLoading(true);
+    await firebaseFirestore
+      .collection('users')
+      .doc(firebaseAuth?.uid)
+      .collection('album')
+      .doc()
+      .set({ albumName })
+      .then(() => {
+        setLoading(false);
+        setVisibleState();
+      });
+  }, [albumName, firebaseAuth, firebaseFirestore, setVisibleState]);
 
   return (
     <Modal
@@ -56,20 +78,25 @@ const ModalNewAlbum: React.FC<ModalNewAlbumProps> = ({
             style={{ borderColor: '#f54f51', color: 'black' }}
             placeholder="Título do álbum"
             textPlaceHolderColor="black"
+            onChangeText={value => setAlbumName(value)}
           />
 
-          <Button
-            icon="check"
-            style={{
-              alignSelf: 'center',
-              marginTop: 1,
-              marginBottom: 15,
-              width: 60,
-              height: 60,
-              borderRadius: 30,
-            }}
-            onPress={() => setVisibleState()}
-          />
+          {loading ? (
+            <ActivityIndicator size="large" color="#f54f51" />
+          ) : (
+            <Button
+              icon="check"
+              style={{
+                alignSelf: 'center',
+                marginTop: 1,
+                marginBottom: 15,
+                width: 60,
+                height: 60,
+                borderRadius: 30,
+              }}
+              onPress={handleCreateNewAlbum}
+            />
+          )}
         </ModalCard>
       </ModalContainer>
     </Modal>
