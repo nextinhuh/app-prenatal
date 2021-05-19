@@ -10,6 +10,7 @@ import NoteView from '../pages/NoteView';
 import Album from '../pages/Album';
 import Consults from '../pages/Consults';
 import Tips from '../pages/Tips';
+import AlbumView from '../pages/AlbumView';
 
 const Auth = createDrawerNavigator();
 
@@ -51,6 +52,7 @@ const AuthRoutes: React.FC = () => (
       }}
     />
     <Auth.Screen name="NoteView" component={NoteView} />
+    <Auth.Screen name="AlbumView" component={AlbumView} />
 
     <Auth.Screen name="Tips" component={Tips} />
     <Auth.Screen name="ProfileUpdate" component={ProfileUpdate} />

@@ -51,57 +51,37 @@ export const DeleteButtonText = styled.Text`
 `;
 
 export const AlbumList = styled(FlatList as new () => FlatList)`
-  width: 100%;
-  margin-bottom: 15px;
-  margin-top: 10%;
-  padding-left: 5%;
-  padding-right: 5%;
+  width: 85%;
+  margin-top: 15%;
 `;
 
 export const ImageContainer = styled.View`
-  width: 100%;
-  margin-bottom: 5%;
-  border-color: #f54f51;
-  border-width: 0.1px;
-  border-radius: 3px;
+  position: relative;
 `;
 
-export const ImageButton = styled.TouchableOpacity`
-  align-items: center;
-  width: 100%;
-  height: 110px;
-  justify-content: center;
-`;
-
-export const AlbumTitle = styled.Text`
-  position: absolute;
-  top: 18px;
-  left: 0px;
-  max-width: 190px;
-  min-width: 60px;
-  padding-left: 10px;
-  background-color: #f54f51;
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
-
-  text-align: right;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  font-family: 'Montserrat_400Regular';
-`;
+export const ImageButton = styled.TouchableOpacity``;
 
 export const Image = styled.Image<ImageProps>`
-  width: 100%;
-  height: 110px;
+  width: 100px;
+  position: relative;
+  height: 100px;
   border-radius: 8px;
-  opacity: ${props => (props.isSelected ? 0.2 : 1)};
+  margin: 5px;
+  opacity: ${props => (props.isSelected ? 0.3 : 1)};
 `;
 
 export const ImageButtonDelete = styled.TouchableOpacity`
   position: absolute;
-  right: -300px;
+  left: 65px;
   width: 100%;
   height: 100%;
   top: 10px;
+`;
+
+export const ModalContainer = styled.KeyboardAvoidingView`
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.75);
 `;

@@ -1,16 +1,7 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable no-param-reassign */
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  Pressable,
-  View,
-  ModalProps,
-  ActivityIndicator,
-} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Alert, Modal, ModalProps, ActivityIndicator } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import firebase from 'firebase';
 import 'firebase/firestore';
@@ -23,18 +14,19 @@ import Button from '../Button';
 interface ModalNewAlbumProps extends ModalProps {
   modalVisible?: boolean;
   setVisibleState?: any;
+  updateAlbumList?: any;
 }
 
 const ModalNewAlbum: React.FC<ModalNewAlbumProps> = ({
   modalVisible,
   setVisibleState,
+  updateAlbumList,
   ...rest
 }) => {
   const [visible, setVisible] = useState(modalVisible);
   const [albumName, setAlbumName] = useState<string>();
   const [loading, setLoading] = useState(false);
   const firebaseAuth = firebase.auth().currentUser;
-  const storageFirebase = firebase.storage();
   const firebaseFirestore = firebase.firestore();
 
   const handleCreateNewAlbum = useCallback(async () => {
@@ -48,8 +40,15 @@ const ModalNewAlbum: React.FC<ModalNewAlbumProps> = ({
       .then(() => {
         setLoading(false);
         setVisibleState();
+        updateAlbumList();
       });
-  }, [albumName, firebaseAuth, firebaseFirestore, setVisibleState]);
+  }, [
+    albumName,
+    firebaseAuth,
+    firebaseFirestore,
+    setVisibleState,
+    updateAlbumList,
+  ]);
 
   return (
     <Modal

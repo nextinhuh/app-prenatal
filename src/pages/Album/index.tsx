@@ -3,20 +3,12 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-param-reassign */
 import React, { useCallback, useEffect, useState } from 'react';
-import ImageView from 'react-native-image-viewing';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { Portal, Text, Button, Provider } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
-import {
-  Alert,
-  Platform,
-  Modal,
-  ActivityIndicator,
-  TouchableOpacity,
-} from 'react-native';
+import { Alert, Platform, TouchableOpacity } from 'react-native';
 import firebase from 'firebase';
 import 'firebase/firestore';
 
@@ -25,39 +17,32 @@ import ModalNewAlbum from '../../components/ModalNewAlbum';
 
 import {
   Container,
-  Title,
-  BackButton,
-  OptionButton,
   AlbumList,
+  AlbumTitle,
   Image,
   ImageButton,
   ImageButtonDelete,
   CancelDeleteButton,
-  CancelDeleteButtonText,
+  DeleteButtonText,
   DeleteContainer,
   ConfirmDeleteButton,
-  ConfirmDeleteButtonText,
   ImageContainer,
-  ModalContainer,
 } from './styles';
 
-type Images = Array<{
+type Albuns = Array<{
   id: string;
   uri: string;
+  albumName: string;
 }>;
 
 const Album: React.FC = () => {
   const navigation = useNavigation();
-  const [visible, setIsVisible] = useState(false);
-  const [imageIndex, setImageIndex] = useState(0);
   const [visibleModalNewAlbum, setVisibleModalNewAlbum] = useState(false);
   const [selectionDelete, setSelectionDelete] = useState(false);
   const [buttonDeleteActive, setButtonDeleteActive] = useState(true);
-  const [selectedImages, setSelectedIamges] = useState<number[]>([]);
-  const [listImages, setListImages] = useState<Images>([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedAlbuns, setSelectedAlbuns] = useState<string[]>([]);
+  const [albumList, setAlbumList] = useState<Albuns>([]);
   const firebaseAuth = firebase.auth().currentUser;
-  const storageFirebase = firebase.storage();
   const firebaseFirestore = firebase.firestore();
 
   useEffect(() => {
@@ -85,7 +70,7 @@ const Album: React.FC = () => {
       }
     })();
 
-    async function listImagesUrl() {
+    async function getListAlbuns() {
       await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
@@ -93,168 +78,96 @@ const Album: React.FC = () => {
         .get()
         .then(result => {
           const resultList: any = [];
-          result.forEach(doc => {
-            resultList.push({
-              id: doc.data().id,
-              uri: doc.data().linkImage,
-            });
+
+          result.forEach((doc: any) => {
+            if (doc.data()?.listPhotos) {
+              resultList.push({
+                id: doc.id,
+                uri: doc.data().listPhotos[0].uri,
+                albumName: doc.data().albumName,
+              });
+            } else {
+              resultList.push({
+                id: doc.id,
+                uri: undefined,
+                albumName: doc.data().albumName,
+              });
+            }
           });
-          setListImages(resultList);
+          setAlbumList(resultList);
         });
     }
 
-    listImagesUrl();
+    getListAlbuns();
+  }, [firebaseAuth, firebaseFirestore]);
+
+  const getListAlbuns = useCallback(async () => {
+    await firebaseFirestore
+      .collection('users')
+      .doc(firebaseAuth?.uid)
+      .collection('album')
+      .get()
+      .then(result => {
+        const resultList: any = [];
+
+        result.forEach((doc: any) => {
+          if (doc.data()?.listPhotos) {
+            resultList.push({
+              id: doc.id,
+              uri: doc.data().listPhotos[0].uri,
+              albumName: doc.data().albumName,
+            });
+          } else {
+            resultList.push({
+              id: doc.id,
+              uri: undefined,
+              albumName: doc.data().albumName,
+            });
+          }
+        });
+        setAlbumList(resultList);
+      });
   }, [firebaseAuth, firebaseFirestore]);
 
   const handleAlbumAdd = useCallback(() => {
     setVisibleModalNewAlbum(!visibleModalNewAlbum);
   }, [setVisibleModalNewAlbum, visibleModalNewAlbum]);
 
-  const handleGaleryPhotoPicker = useCallback(async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setModalVisible(true);
-      const image = await fetch(result.uri);
-      const blobImage = await image.blob();
-      const time = new Date().getTime();
-
-      const imageRef = await storageFirebase
-        .ref()
-        .child(`album/${firebaseAuth?.uid}/${time}`);
-
-      await imageRef.put(blobImage);
-
-      let linkImage = '';
-
-      await imageRef.getDownloadURL().then(url => {
-        if (url) {
-          linkImage = url;
-        }
+  const showAlbumView = useCallback(
+    (albumId: string) => {
+      navigation.navigate('AlbumView', {
+        albumId,
       });
-
-      await firebaseFirestore
-        .collection('users')
-        .doc(firebaseAuth?.uid)
-        .collection('album')
-        .doc(time.toString())
-        .set({ linkImage, id: time.toString() });
-
-      const newImage = {
-        id: time.toString(),
-        uri: linkImage,
-      };
-
-      setVisibleMenu(false);
-      setListImages([newImage, ...listImages]);
-      setModalVisible(false);
-    }
-  }, [firebaseAuth, firebaseFirestore, storageFirebase, listImages]);
-
-  const handleTakePhoto = useCallback(async () => {
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setModalVisible(true);
-      const image = await fetch(result.uri);
-      const blobImage = await image.blob();
-      const time = new Date().getTime();
-
-      const imageRef = await storageFirebase
-        .ref()
-        .child(`album/${firebaseAuth?.uid}/${time}`);
-
-      await imageRef.put(blobImage);
-
-      let linkImage = '';
-
-      await imageRef.getDownloadURL().then(url => {
-        if (url) {
-          linkImage = url;
-        }
-      });
-
-      await firebaseFirestore
-        .collection('users')
-        .doc(firebaseAuth?.uid)
-        .collection('album')
-        .doc(time.toString())
-        .set({ linkImage, id: time.toString() });
-
-      const newImage = {
-        id: time.toString(),
-        uri: linkImage,
-      };
-
-      setVisibleMenu(false);
-      setListImages([newImage, ...listImages]);
-      setModalVisible(false);
-    }
-  }, [firebaseAuth, firebaseFirestore, storageFirebase, listImages]);
-
-  const handleAddPhoto = useCallback(() => {
-    Alert.alert('', 'Favor escolha alguma das opções abaixo:', [
-      {
-        text: 'Cancelar',
-      },
-      { text: 'Tirar uma foto agora', onPress: handleTakePhoto },
-      {
-        text: 'Escolher uma foto da galeria',
-        onPress: handleGaleryPhotoPicker,
-      },
-    ]);
-  }, [handleGaleryPhotoPicker, handleTakePhoto]);
-  /*
-  const handleToggleMenu = useCallback(() => {
-    setVisibleMenu(!visibleMenu);
-  }, [visibleMenu]); */
-
-  const handleNavBack = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
-
-  const handleToggleImageView = useCallback(
-    index => {
-      setImageIndex(index);
-      setIsVisible(!visible);
     },
-    [visible],
+    [navigation],
   );
 
   const handleToggleSelectionDelete = useCallback(() => {
     // setVisibleMenu(false);
     setSelectionDelete(!selectionDelete);
     setButtonDeleteActive(!buttonDeleteActive);
-    setSelectedIamges([]);
+    setSelectedAlbuns([]);
   }, [selectionDelete, buttonDeleteActive]);
 
-  const handleSelectPicture = useCallback(
-    (id: number) => {
-      if (selectedImages.indexOf(id) > -1) {
-        const selectedImagesUpdate = selectedImages.filter(imageId => {
+  const handleSelectAlbumToDelete = useCallback(
+    (id: string) => {
+      if (selectedAlbuns.indexOf(id) > -1) {
+        const selectedAlbunsUpdate = selectedAlbuns.filter(imageId => {
           return imageId !== id;
         });
-        setSelectedIamges([...selectedImagesUpdate]);
+        setSelectedAlbuns([...selectedAlbunsUpdate]);
         return;
       }
 
-      selectedImages.push(id);
-      setSelectedIamges([...selectedImages]);
+      selectedAlbuns.push(id);
+      setSelectedAlbuns([...selectedAlbuns]);
     },
-    [selectedImages],
+    [selectedAlbuns],
   );
 
   const confirmImagesDelete = useCallback(async () => {
     Alert.alert(
-      'Tem certeza que deseja deletar essas fotos ?',
+      'Tem certeza que deseja deletar esse(s) álbun(s) ?',
       '',
       [
         {
@@ -263,15 +176,13 @@ const Album: React.FC = () => {
         },
         {
           text: 'Sim, tenho certeza!',
-          onPress: () => deletePhotos(),
+          onPress: () => deleteAlbuns(),
         },
       ],
       { cancelable: false },
     );
 
-    async function deletePhotos() {
-      setModalVisible(true);
-
+    async function deleteAlbuns() {
       await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
@@ -281,13 +192,9 @@ const Album: React.FC = () => {
           const batch = firebaseFirestore.batch();
 
           result.forEach(doc => {
-            selectedImages.map(image => {
-              if (image.toString() === doc.id) {
-                const imageRef = storageFirebase.refFromURL(
-                  doc.data().linkImage,
-                );
+            selectedAlbuns.map(album => {
+              if (album === doc.id) {
                 batch.delete(doc.ref);
-                imageRef.delete();
               }
             });
           });
@@ -305,17 +212,25 @@ const Album: React.FC = () => {
             .get()
             .then(result => {
               const resultList: any = [];
-              result.forEach(doc => {
-                resultList.push({
-                  id: doc.data().id,
-                  uri: doc.data().linkImage,
-                });
+              result.forEach((doc: any) => {
+                if (doc.data()?.listPhotos) {
+                  resultList.push({
+                    id: doc.id,
+                    uri: doc.data().listPhotos[0].uri,
+                    albumName: doc.data().albumName,
+                  });
+                } else {
+                  resultList.push({
+                    id: doc.id,
+                    uri: undefined,
+                    albumName: doc.data().albumName,
+                  });
+                }
               });
-              setListImages(resultList);
+              setAlbumList(resultList);
             });
 
           handleToggleSelectionDelete();
-          setModalVisible(false);
 
           return batch.commit();
         });
@@ -323,9 +238,8 @@ const Album: React.FC = () => {
   }, [
     firebaseAuth,
     firebaseFirestore,
-    selectedImages,
-    storageFirebase,
     handleToggleSelectionDelete,
+    selectedAlbuns,
   ]);
 
   return (
@@ -348,110 +262,71 @@ const Album: React.FC = () => {
         <ModalNewAlbum
           modalVisible={visibleModalNewAlbum}
           setVisibleState={handleAlbumAdd}
+          updateAlbumList={getListAlbuns}
         />
       )}
-
-      {/* <Header>
-        <BackButton onPress={handleNavBack}>
-          <FontAwesome5 name="chevron-left" size={25} color="#503d77" />
-        </BackButton>
-
-        <Title>Album</Title>
-
-        <Menu
-          visible={visibleMenu}
-          onDismiss={handleToggleMenu}
-          anchor={
-            <OptionButton onPress={handleToggleMenu}>
-              <FontAwesome5 name="ellipsis-v" size={30} color="#503d77" />
-            </OptionButton>
-          }
-        >
-          <Menu.Item
-            onPress={() => {
-              handleAddPhoto();
-            }}
-            title="Adicionar uma foto"
-          />
-          <Divider />
-          <Menu.Item
-            onPress={handleToggleSelectionDelete}
-            title="Apagar foto(s)"
-          />
-        </Menu>
-      </Header> */}
 
       {selectionDelete ? (
         <DeleteContainer>
           <ConfirmDeleteButton onPress={confirmImagesDelete}>
-            <ConfirmDeleteButtonText>Apagar</ConfirmDeleteButtonText>
-            <FontAwesome5 name="check" size={22} color="#503d77" />
+            <DeleteButtonText>Apagar</DeleteButtonText>
+            <FontAwesome5 name="check" size={22} color="#f54f51" />
           </ConfirmDeleteButton>
 
           <CancelDeleteButton onPress={handleToggleSelectionDelete}>
-            <CancelDeleteButtonText>Cancelar</CancelDeleteButtonText>
-            <FontAwesome5 name="times" size={22} color="#503d77" />
+            <DeleteButtonText>Cancelar</DeleteButtonText>
+            <FontAwesome5 name="times" size={22} color="#f54f51" />
           </CancelDeleteButton>
         </DeleteContainer>
       ) : null}
 
       <AlbumList
-        data={listImages}
+        data={albumList}
         showsVerticalScrollIndicator={false}
-        numColumns={3}
-        extraData={selectedImages}
-        keyExtractor={image => image.id}
-        renderItem={({ item: image, index }) => (
+        numColumns={1}
+        extraData={selectedAlbuns}
+        keyExtractor={album => album.id}
+        renderItem={({ item: album }) => (
           <ImageContainer>
             <ImageButton
               disabled={selectionDelete}
-              onPress={() => handleToggleImageView(index)}
+              onPress={() => showAlbumView(album.id)}
             >
-              <Image
-                isSelected={selectedImages.indexOf(image.id) > -1}
-                source={{ uri: image.uri }}
-              />
+              {album.uri ? (
+                <Image
+                  isSelected={selectedAlbuns.indexOf(album.id) > -1}
+                  source={{ uri: album.uri }}
+                />
+              ) : (
+                <MaterialCommunityIcons
+                  name="image-off"
+                  size={35}
+                  color="black"
+                  style={{ marginTop: 35 }}
+                />
+              )}
 
               <ImageButtonDelete
                 disabled={buttonDeleteActive}
-                onPress={() => handleSelectPicture(image.id)}
+                onPress={() => handleSelectAlbumToDelete(album.id)}
               >
                 {!buttonDeleteActive ? (
-                  selectedImages.indexOf(image.id) < 0 ? (
-                    <FontAwesome5 name="square" size={30} color="#E03CFB" />
+                  selectedAlbuns.indexOf(album.id) < 0 ? (
+                    <FontAwesome5 name="square" size={30} color="#f54f51" />
                   ) : (
                     <FontAwesome5
                       name="check-square"
                       size={30}
-                      color="#E03CFB"
+                      color="#f54f51"
                     />
                   )
                 ) : null}
               </ImageButtonDelete>
+              <AlbumTitle>{album.albumName}</AlbumTitle>
             </ImageButton>
           </ImageContainer>
         )}
       />
-
-      <ImageView
-        images={listImages}
-        imageIndex={imageIndex}
-        visible={visible}
-        onRequestClose={() => setIsVisible(false)}
-      />
-
-      <Modal
-        animationType="fade"
-        transparent
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Para cancelar, pressione o botão fechar janela.');
-        }}
-      >
-        <ModalContainer>
-          <ActivityIndicator size={50} color="#503d77" />
-        </ModalContainer>
-      </Modal>
     </Container>
   );
 };
