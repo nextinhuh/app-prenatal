@@ -8,12 +8,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import {
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerItem,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 
 import { Container, BorderRight } from './styles';
-import ProfileUpdate from '../../pages/ProfileUpdate';
 
 const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
   props: DrawerContentComponentProps,
@@ -25,7 +23,8 @@ const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
       item.name !== 'NoteView' &&
       item.name !== 'Tips' &&
       item.name !== 'ProfileUpdate' &&
-      item.name !== 'BottomTabsMedicalRecords'
+      item.name !== 'BottomTabsMedicalRecords' &&
+      item.name !== 'AlbumView'
     ) {
       return true;
     }

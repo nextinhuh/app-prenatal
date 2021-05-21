@@ -15,16 +15,22 @@ interface ModalNewAlbumProps extends ModalProps {
   modalVisible?: boolean;
   setVisibleState?: any;
   updateAlbumList?: any;
+  albumId?: string;
+  albumTitle?: any;
+  updateAlbumTItle?: any;
 }
 
-const ModalNewAlbum: React.FC<ModalNewAlbumProps> = ({
+const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
   modalVisible,
   setVisibleState,
   updateAlbumList,
+  albumId,
+  albumTitle,
+  updateAlbumTItle,
   ...rest
 }) => {
   const [visible, setVisible] = useState(modalVisible);
-  const [albumName, setAlbumName] = useState<string>();
+  const [albumName, setAlbumName] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const firebaseAuth = firebase.auth().currentUser;
   const firebaseFirestore = firebase.firestore();
@@ -50,6 +56,28 @@ const ModalNewAlbum: React.FC<ModalNewAlbumProps> = ({
     updateAlbumList,
   ]);
 
+  const handleEditAlbumName = useCallback(async () => {
+    setLoading(true);
+    await firebaseFirestore
+      .collection('users')
+      .doc(firebaseAuth?.uid)
+      .collection('album')
+      .doc(albumId)
+      .update({ albumName })
+      .then(() => {
+        updateAlbumTItle();
+        setLoading(false);
+        setVisibleState();
+      });
+  }, [
+    albumId,
+    albumName,
+    firebaseAuth,
+    firebaseFirestore,
+    setVisibleState,
+    updateAlbumTItle,
+  ]);
+
   return (
     <Modal
       {...rest}
@@ -70,7 +98,7 @@ const ModalNewAlbum: React.FC<ModalNewAlbumProps> = ({
             style={{ position: 'absolute', top: '5%', right: '8%' }}
             onPress={() => setVisibleState()}
           />
-          <ModalTitle>Novo Álbum</ModalTitle>
+          <ModalTitle>{albumTitle ? 'Editar Nome' : 'Novo Álbum'}</ModalTitle>
 
           <Input
             borderColor="#f54f51"
@@ -78,6 +106,7 @@ const ModalNewAlbum: React.FC<ModalNewAlbumProps> = ({
             placeholder="Título do álbum"
             textPlaceHolderColor="black"
             onChangeText={value => setAlbumName(value)}
+            defaultValue={albumTitle}
           />
 
           {loading ? (
@@ -93,7 +122,7 @@ const ModalNewAlbum: React.FC<ModalNewAlbumProps> = ({
                 height: 60,
                 borderRadius: 30,
               }}
-              onPress={handleCreateNewAlbum}
+              onPress={albumTitle ? handleEditAlbumName : handleCreateNewAlbum}
             />
           )}
         </ModalCard>
@@ -102,4 +131,4 @@ const ModalNewAlbum: React.FC<ModalNewAlbumProps> = ({
   );
 };
 
-export default ModalNewAlbum;
+export default ModalTitleAlbum;

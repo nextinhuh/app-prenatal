@@ -8,11 +8,9 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Portal, Text, Button, Provider } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import {
   Alert,
-  Platform,
   Modal,
   ActivityIndicator,
   TouchableOpacity,
@@ -22,9 +20,7 @@ import 'firebase/firestore';
 
 import Header from '../../components/Header';
 import Button2 from '../../components/Button';
-import ModalNewAlbum from '../../components/ModalNewAlbum';
-
-import noImg from '../../../assets/icon.png';
+import ModalTitleAlbum from '../../components/ModalTitleAlbum';
 
 import {
   Container,
@@ -46,6 +42,7 @@ type Images = Array<{
 }>;
 
 interface Album {
+  id: string;
   albumName: string;
   listPhotos: Images;
 }
@@ -60,6 +57,7 @@ const AlbumView: React.FC = () => {
 
   const [album, setAlbum] = useState<Album>({} as Album);
 
+  const [visibleModalEditAlbum, setVisibleModalEditAlbum] = useState(false);
   const [visible, setIsVisible] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [selectionDelete, setSelectionDelete] = useState(false);
@@ -74,30 +72,6 @@ const AlbumView: React.FC = () => {
   const routeParams = route.params as RouteParams;
 
   useEffect(() => {
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== 'granted') {
-          alert(
-            'Desculpe, nós precisamos da permissão de câmera para isto funcionar!',
-          );
-        }
-      }
-    })();
-
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const {
-          status,
-        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert(
-            'Desculpe, nós precisamos da permissão de câmera para isto funcionar!',
-          );
-        }
-      }
-    })();
-
     async function listImagesUrl() {
       await firebaseFirestore
         .collection('users')
@@ -107,18 +81,29 @@ const AlbumView: React.FC = () => {
         .get()
         .then(result => {
           if (result.data()?.listPhotos) {
-            setAlbum(result.data() as Album);
+            const album = {
+              id: result.id,
+              albumName: result.data()?.albumName,
+              listPhotos: result.data()?.listPhotos,
+            };
+            setAlbum(album);
           } else {
-            setAlbum({
+            const album = {
+              id: result.id,
               albumName: result.data()?.albumName,
               listPhotos: [] as Images,
-            });
+            };
+            setAlbum(album);
           }
         });
     }
 
     listImagesUrl();
   }, [firebaseAuth, firebaseFirestore, routeParams]);
+
+  const handleAlbumEdit = useCallback(() => {
+    setVisibleModalEditAlbum(!visibleModalEditAlbum);
+  }, [setVisibleModalEditAlbum, visibleModalEditAlbum]);
 
   const handleGaleryPhotoPicker = useCallback(async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -350,6 +335,32 @@ const AlbumView: React.FC = () => {
     });
   }, [navigation]);
 
+  const updateAlbumTitle = useCallback(async () => {
+    await firebaseFirestore
+      .collection('users')
+      .doc(firebaseAuth?.uid)
+      .collection('album')
+      .doc(routeParams?.albumId)
+      .get()
+      .then(result => {
+        if (result.data()?.listPhotos) {
+          const album = {
+            id: result.id,
+            albumName: result.data()?.albumName,
+            listPhotos: result.data()?.listPhotos,
+          };
+          setAlbum(album);
+        } else {
+          const album = {
+            id: result.id,
+            albumName: result.data()?.albumName,
+            listPhotos: [] as Images,
+          };
+          setAlbum(album);
+        }
+      });
+  }, [firebaseAuth, firebaseFirestore, routeParams]);
+
   return (
     <Container>
       <Header title={album.albumName} backFunction={navBackResetRoute} />
@@ -362,11 +373,21 @@ const AlbumView: React.FC = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={handleToggleSelectionDelete}
+        onPress={handleAlbumEdit}
         style={{ position: 'absolute', right: 70, top: 72 }}
       >
         <FontAwesome5 name="pencil-alt" size={22} color="#f54f51" />
       </TouchableOpacity>
+
+      {visibleModalEditAlbum && (
+        <ModalTitleAlbum
+          modalVisible={visibleModalEditAlbum}
+          setVisibleState={handleAlbumEdit}
+          albumTitle={album.albumName}
+          albumId={album.id}
+          updateAlbumTItle={updateAlbumTitle}
+        />
+      )}
 
       {selectionDelete ? (
         <DeleteContainer>

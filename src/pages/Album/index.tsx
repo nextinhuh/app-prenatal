@@ -13,7 +13,7 @@ import firebase from 'firebase';
 import 'firebase/firestore';
 
 import Header from '../../components/Header';
-import ModalNewAlbum from '../../components/ModalNewAlbum';
+import ModalTitleAlbum from '../../components/ModalTitleAlbum';
 
 import {
   Container,
@@ -259,7 +259,7 @@ const Album: React.FC = () => {
       </Header>
 
       {visibleModalNewAlbum && (
-        <ModalNewAlbum
+        <ModalTitleAlbum
           modalVisible={visibleModalNewAlbum}
           setVisibleState={handleAlbumAdd}
           updateAlbumList={getListAlbuns}
