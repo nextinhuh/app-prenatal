@@ -8,20 +8,22 @@ import * as Yup from 'yup';
 import firebase from 'firebase';
 import 'firebase/firestore';
 
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+import { Lato_300Light } from '@expo-google-fonts/lato';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import imgUserIcon from '../../assets/user.png';
+import Header from '../../components/Header';
 
 import {
   Container,
-  Title,
   ButtonEditAvatar,
-  ButtonEditAvatarText,
-  Image,
-  Header,
-  BackButton,
-  LogOffButton,
   ErrorText,
+  HeaderContainer,
+  HeaderTitle,
+  UserAvatar,
+  FormContainer,
 } from './styles';
 
 interface User {
@@ -191,7 +193,7 @@ const ProfileUpdate: React.FC = () => {
 
   return (
     <Container>
-      <Header>
+      {/* <Header>
         <BackButton onPress={handleNavBack}>
           <FontAwesome5 name="chevron-left" size={25} color="#503d77" />
         </BackButton>
@@ -199,112 +201,144 @@ const ProfileUpdate: React.FC = () => {
         <LogOffButton onPress={handleNavLogOff}>
           <FontAwesome5 name="power-off" size={25} color="#503d77" />
         </LogOffButton>
-      </Header>
+      </Header> */}
 
-      <Title>Meu Perfil</Title>
+      <HeaderContainer>
+        <Header iconColor="#FFF" borderWhiteColor style={{ height: '18%' }}>
+          <HeaderTitle>PERFIL</HeaderTitle>
+        </Header>
 
-      {updatingPhoto ? (
-        <ActivityIndicator size={50} color="#503d77" />
-      ) : userInfo.photoUrl ? (
-        <Image
-          source={{
-            uri: `${userInfo.photoUrl}`,
-          }}
-        />
-      ) : (
-        <Image source={imgUserIcon} />
-      )}
+        {updatingPhoto ? (
+          <ActivityIndicator size={50} color="#503d77" />
+        ) : userInfo.photoUrl ? (
+          <UserAvatar
+            source={{
+              uri: `${userInfo.photoUrl}`,
+            }}
+          />
+        ) : (
+          <UserAvatar source={imgUserIcon} />
+        )}
+      </HeaderContainer>
 
       <ButtonEditAvatar onPress={handleAddPhoto}>
-        <ButtonEditAvatarText>Editar Foto</ButtonEditAvatarText>
+        <MaterialCommunityIcons
+          name="image-edit-outline"
+          size={30}
+          color="#fe3855"
+        />
       </ButtonEditAvatar>
-      <ScrollView style={{ width: '100%' }}>
-        <Formik
-          initialValues={{
-            email: firebaseAuth?.email ? firebaseAuth?.email : '',
-            password: '',
-            name: firebaseAuth?.displayName ? firebaseAuth?.displayName : '',
-            confirmPassword: '',
-          }}
-          validationSchema={Yup.object().shape({
-            email: Yup.string().email('Precisa ser um email'),
-            name: Yup.string().min(5, 'Deve conter no mínimo 5 letas'),
-            password: Yup.string().min(6, 'No minímo 6 caracteres'),
-            confirmPassword: Yup.string().oneOf(
-              [Yup.ref('password'), undefined],
-              'As senhas devem ser iguais',
-            ),
-          })}
-          onSubmit={values => handleUpdateUser(values)}
-        >
-          {({
-            values,
-            handleChange,
-            handleSubmit,
-            errors,
-            isSubmitting,
-            handleBlur,
-            touched,
-          }) => (
-            <>
-              <Input
-                onBlur={handleBlur('name')}
-                name="name"
-                icon="user"
-                placeholder="Nome"
-                value={values.name}
-                onChangeText={handleChange('name')}
-              />
-              {touched.name && <ErrorText>{errors.name}</ErrorText>}
 
-              <Input
-                onBlur={handleBlur('email')}
-                name="email"
-                icon="mail"
-                placeholder="E-mail"
-                value={values.email}
-                onChangeText={handleChange('email')}
-              />
-              {touched.email && <ErrorText>{errors.email}</ErrorText>}
+      <FormContainer>
+        <ScrollView style={{ width: '100%' }}>
+          <Formik
+            initialValues={{
+              email: firebaseAuth?.email ? firebaseAuth?.email : '',
+              password: '',
+              name: firebaseAuth?.displayName ? firebaseAuth?.displayName : '',
+              confirmPassword: '',
+            }}
+            validationSchema={Yup.object().shape({
+              email: Yup.string().email('Precisa ser um email'),
+              name: Yup.string().min(5, 'Deve conter no mínimo 5 letas'),
+              password: Yup.string().min(6, 'No minímo 6 caracteres'),
+              confirmPassword: Yup.string().oneOf(
+                [Yup.ref('password'), undefined],
+                'As senhas devem ser iguais',
+              ),
+            })}
+            onSubmit={values => handleUpdateUser(values)}
+          >
+            {({
+              values,
+              handleChange,
+              handleSubmit,
+              errors,
+              isSubmitting,
+              handleBlur,
+              touched,
+            }) => (
+              <>
+                <Input
+                  onBlur={handleBlur('name')}
+                  name="name"
+                  icon="user"
+                  defaultValue={values.name}
+                  onChangeText={handleChange('name')}
+                  borderColor="#000000"
+                  iconColor="#000000"
+                  textPlaceHolderColor="black"
+                  style={{ color: 'black' }}
+                />
+                {touched.name && <ErrorText>{errors.name}</ErrorText>}
 
-              <Input
-                onBlur={handleBlur('password')}
-                name="password"
-                icon="lock"
-                placeholder="Senha"
-                value={values.password}
-                onChangeText={handleChange('password')}
-                secureTextEntry
-              />
-              {touched.password && <ErrorText>{errors.password}</ErrorText>}
+                <Input
+                  onBlur={handleBlur('email')}
+                  name="email"
+                  icon="mail"
+                  placeholder="E-mail"
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                  borderColor="#000000"
+                  iconColor="#000000"
+                  textPlaceHolderColor="black"
+                  style={{ color: 'black' }}
+                />
+                {touched.email && <ErrorText>{errors.email}</ErrorText>}
 
-              <Input
-                onBlur={handleBlur('confirmPassword')}
-                name="confirmPassword"
-                icon="lock"
-                placeholder="Confirmar senha"
-                value={values.confirmPassword}
-                onChangeText={handleChange('confirmPassword')}
-                secureTextEntry
-              />
-              {touched.confirmPassword && (
-                <ErrorText>{errors.confirmPassword}</ErrorText>
-              )}
+                <Input
+                  onBlur={handleBlur('password')}
+                  name="password"
+                  icon="lock"
+                  placeholder="Senha"
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  borderColor="#000000"
+                  iconColor="#000000"
+                  style={{ color: 'black' }}
+                  isPassword
+                  textPlaceHolderColor="black"
+                />
+                {touched.password && <ErrorText>{errors.password}</ErrorText>}
 
-              {isSubmitting && <ActivityIndicator />}
+                <Input
+                  onBlur={handleBlur('confirmPassword')}
+                  name="confirmPassword"
+                  icon="lock"
+                  placeholder="Confirmar senha"
+                  value={values.confirmPassword}
+                  onChangeText={handleChange('confirmPassword')}
+                  borderColor="#000000"
+                  iconColor="#000000"
+                  style={{ color: 'black' }}
+                  textPlaceHolderColor="black"
+                  isPassword
+                />
+                {touched.confirmPassword && (
+                  <ErrorText>{errors.confirmPassword}</ErrorText>
+                )}
 
-              {!isSubmitting && (
-                <Button
-                  style={{ alignSelf: 'center' }}
-                  onPress={() => handleSubmit()}
-                >
-                  Confirmar alteração
-                </Button>
-              )}
-            </>
-          )}
-        </Formik>
-      </ScrollView>
+                {isSubmitting && <ActivityIndicator />}
+
+                {!isSubmitting && (
+                  <Button
+                    icon="check"
+                    style={{
+                      alignSelf: 'center',
+                      marginTop: 0,
+                      marginBottom: 3,
+                      width: 60,
+                      height: 60,
+                      borderRadius: 30,
+                    }}
+                    onPress={() => handleSubmit()}
+                  />
+                )}
+              </>
+            )}
+          </Formik>
+        </ScrollView>
+      </FormContainer>
     </Container>
   );
 };

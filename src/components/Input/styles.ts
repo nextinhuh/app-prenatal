@@ -17,7 +17,7 @@ export const Container = styled.View<ContainerProps>`
   align-items: center;
 
   border-width: 2px;
-  border-color: ${props => (props.borderColor ? '#f54f51' : '#f1f1f1')};
+  border-color: ${props => (props.borderColor ? props.borderColor : '#f1f1f1')};
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 `;
 

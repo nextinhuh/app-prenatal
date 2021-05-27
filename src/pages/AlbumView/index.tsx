@@ -291,31 +291,55 @@ const AlbumView: React.FC = () => {
             photo => !selectedImages.includes(photo.id),
           );
 
-          firebaseFirestore
-            .collection('users')
-            .doc(firebaseAuth?.uid)
-            .collection('album')
-            .doc(routeParams?.albumId)
-            .update({ listPhotos });
+          if (listPhotos.length > 0) {
+            firebaseFirestore
+              .collection('users')
+              .doc(firebaseAuth?.uid)
+              .collection('album')
+              .doc(routeParams?.albumId)
+              .update({ listPhotos });
 
-          Alert.alert('As fotos foram deletadas com sucesso!', '', [
-            {
-              text: 'Ok',
-            },
-          ]);
+            Alert.alert('As fotos foram deletadas com sucesso!', '', [
+              {
+                text: 'Ok',
+              },
+            ]);
 
-          firebaseFirestore
-            .collection('users')
-            .doc(firebaseAuth?.uid)
-            .collection('album')
-            .doc(routeParams?.albumId)
-            .get()
-            .then(result => {
-              setAlbum(result.data() as Album);
+            firebaseFirestore
+              .collection('users')
+              .doc(firebaseAuth?.uid)
+              .collection('album')
+              .doc(routeParams?.albumId)
+              .get()
+              .then(result => {
+                setAlbum(result.data() as Album);
+              });
+
+            handleToggleSelectionDelete();
+            setModalVisible(false);
+          } else {
+            const { albumName } = album;
+            setAlbum({
+              id: album.id,
+              albumName,
+              listPhotos,
             });
+            firebaseFirestore
+              .collection('users')
+              .doc(firebaseAuth?.uid)
+              .collection('album')
+              .doc(routeParams?.albumId)
+              .set({ albumName });
 
-          handleToggleSelectionDelete();
-          setModalVisible(false);
+            Alert.alert('As fotos foram deletadas com sucesso!', '', [
+              {
+                text: 'Ok',
+              },
+            ]);
+
+            handleToggleSelectionDelete();
+            setModalVisible(false);
+          }
         });
     }
   }, [
@@ -325,7 +349,7 @@ const AlbumView: React.FC = () => {
     storageFirebase,
     handleToggleSelectionDelete,
     routeParams.albumId,
-    album.listPhotos,
+    album,
   ]);
 
   const navBackResetRoute = useCallback(() => {

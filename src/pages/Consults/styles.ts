@@ -5,13 +5,6 @@ export const Container = styled.View`
   align-items: center;
 `;
 
-export const HeaderTitle = styled.Text`
-  font-size: 18px;
-  color: white;
-  font-weight: bold;
-  margin-right: -360%;
-`;
-
 export const HeaderContainer = styled.View`
   flex: 1;
   position: absolute;
@@ -22,6 +15,13 @@ export const HeaderContainer = styled.View`
   border-bottom-right-radius: 130px;
 `;
 
+export const HeaderTitle = styled.Text`
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  margin-right: -360%;
+`;
+
 export const UserAvatar = styled.Image`
   position: absolute;
   right: 28%;
@@ -29,7 +29,7 @@ export const UserAvatar = styled.Image`
   width: 170px;
   height: 170px;
   border-radius: 85px;
-  border-width: 2px;
+  border-width: 1.5px;
   border-color: white;
 `;
 

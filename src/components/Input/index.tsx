@@ -10,6 +10,7 @@ interface InputProps extends TextInputProps {
   isPassword?: boolean;
   borderColor?: string;
   textPlaceHolderColor?: string;
+  iconColor?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -19,6 +20,7 @@ const Input: React.FC<InputProps> = ({
   onBlur,
   borderColor,
   textPlaceHolderColor,
+  iconColor,
   ...rest
 }) => {
   const [viewPassword, setViewPassword] = useState(isPassword);
@@ -29,7 +31,7 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <Container borderColor={borderColor}>
-      <Icon name={icon} size={25} color="#F1F1F1" />
+      <Icon name={icon} size={25} color={iconColor || "#f1f1f1"}    />
 
       <TextInput
         onBlur={onBlur}
@@ -42,9 +44,9 @@ const Input: React.FC<InputProps> = ({
       {isPassword && (
         <IconButton onPress={handleViewPasswordChange}>
           {viewPassword ? (
-            <Icon name="eye" size={25} color="#F1F1F1" />
+            <Icon name="eye" size={25} color={iconColor || "#f1f1f1"} />
           ) : (
-            <Icon name="eye-off" size={25} color="#F1F1F1" />
+            <Icon name="eye-off" size={25} color={iconColor || "#f1f1f1"} />
           )}
         </IconButton>
       )}

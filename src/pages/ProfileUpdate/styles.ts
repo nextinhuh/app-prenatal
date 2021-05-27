@@ -3,22 +3,35 @@ import styled from 'styled-components/native';
 export const Container = styled.View`
   flex: 1;
   align-items: center;
-  padding: 40px 30px;
 `;
 
-export const Header = styled.View`
-  display: flex;
+export const HeaderContainer = styled.View`
+  flex: 1;
+  position: absolute;
+  background-color: #fe3855;
   width: 100%;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  height: 40%;
+  border-bottom-left-radius: 130px;
+  border-bottom-right-radius: 130px;
 `;
 
-export const Title = styled.Text`
-  font-size: 36px;
-  color: #503d77;
-  margin-top: 10px;
-  font-family: 'Trocchi_400Regular';
+export const HeaderTitle = styled.Text`
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  margin-right: -400%;
+  font-family: 'Montserrat_400Regular';
+`;
+
+export const UserAvatar = styled.Image`
+  position: absolute;
+  right: 28%;
+  top: 30%;
+  width: 170px;
+  height: 170px;
+  border-radius: 85px;
+  border-width: 1.5px;
+  border-color: white;
 `;
 
 export const ErrorText = styled.Text`
@@ -28,28 +41,21 @@ export const ErrorText = styled.Text`
   align-self: flex-end;
 `;
 
-export const BackButton = styled.TouchableOpacity`
-  width: 35px;
-  height: 35px;
+export const ButtonEditAvatar = styled.TouchableOpacity`
+  position: absolute;
+  top: 30%;
+  left: 57%;
+
+  background-color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  align-items: center;
+  justify-content: center;
 `;
 
-export const LogOffButton = styled.TouchableOpacity``;
-
-export const Image = styled.Image`
-  width: 150px;
-  height: 150px;
-  border-radius: 75px;
-  margin-top: 20px;
-`;
-
-export const ButtonEditAvatar = styled.TouchableOpacity``;
-
-export const ButtonEditAvatarText = styled.Text`
-  font-size: 20px;
-  color: #503d77;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  font-family: 'Trocchi_400Regular';
-  border-bottom-width: 2px;
-  border-color: #503d77;
+export const FormContainer = styled.View`
+  margin-top: 75%;
+  width: 100%;
+  padding: 2% 5% 2% 5%;
 `;

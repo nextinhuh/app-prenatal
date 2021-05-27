@@ -6,15 +6,13 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
-  View,
 } from 'react-native';
-import { Formik, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
 import 'firebase/firestore';
 
 import { useNavigation } from '@react-navigation/native';
-import { green100 } from 'react-native-paper/lib/typescript/src/styles/colors';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 

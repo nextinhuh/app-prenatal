@@ -1,14 +1,18 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable react/destructuring-assignment */
-import React from 'react';
+import React, { useCallback } from 'react';
+import { Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+import firebase from 'firebase';
 
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerContentComponentProps,
+  DrawerItem,
 } from '@react-navigation/drawer';
 
 import { Container, BorderRight } from './styles';
@@ -30,6 +34,10 @@ const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
     }
     return false;
   }); // replace "Login' with your route name
+
+  const handleNavLogOff = useCallback(() => {
+    firebase.auth().signOut();
+  }, []);
   return (
     <Container>
       <BorderRight>
@@ -60,6 +68,13 @@ const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
           color="white"
           style={{ marginTop: '105%' }}
         />
+
+        <Feather
+          name="log-out"
+          size={24}
+          color="white"
+          style={{ marginTop: '100%' }}
+        />
       </BorderRight>
       <DrawerContentScrollView {...props} style={{}}>
         <DrawerItemList
@@ -75,6 +90,21 @@ const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
             width: '100%',
             borderRadius: 0,
           }}
+        />
+        <DrawerItem
+          label={() => (
+            <Text
+              style={{
+                color: '#3D4E57',
+                fontWeight: 'bold',
+                fontFamily: 'Montserrat_400Regular',
+              }}
+            >
+              Sair
+            </Text>
+          )}
+          style={{ marginLeft: 0, marginTop: 30 }}
+          onPress={() => handleNavLogOff()}
         />
       </DrawerContentScrollView>
     </Container>

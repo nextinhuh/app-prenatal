@@ -36,18 +36,26 @@ const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
   const firebaseFirestore = firebase.firestore();
 
   const handleCreateNewAlbum = useCallback(async () => {
-    setLoading(true);
-    await firebaseFirestore
-      .collection('users')
-      .doc(firebaseAuth?.uid)
-      .collection('album')
-      .doc()
-      .set({ albumName })
-      .then(() => {
-        setLoading(false);
-        setVisibleState();
-        updateAlbumList();
-      });
+    if (albumName != '') {
+      setLoading(true);
+      await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth?.uid)
+        .collection('album')
+        .doc()
+        .set({ albumName })
+        .then(() => {
+          setLoading(false);
+          setVisibleState();
+          updateAlbumList();
+        });
+    } else {
+      Alert.alert('O nome do álbum não pode estar vazio!', '', [
+        {
+          text: 'Ok',
+        },
+      ]);
+    }
   }, [
     albumName,
     firebaseAuth,
