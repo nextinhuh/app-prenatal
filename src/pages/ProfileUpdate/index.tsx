@@ -223,6 +223,13 @@ const ProfileUpdate: React.FC = () => {
     }),
   });
 
+  const navBackResetRoute = useCallback(() => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Dashboard' }],
+    });
+  }, [navigation]);
+
   return (
     <Container>
       <ProfileContainer keyboardVisible={keyboard.keyboardShown}>
@@ -244,6 +251,7 @@ const ProfileUpdate: React.FC = () => {
               <Header
                 iconColor="#FFF"
                 borderWhiteColor
+                backFunction={navBackResetRoute}
                 style={{ height: '18%' }}
               >
                 <HeaderTitle>PERFIL</HeaderTitle>
