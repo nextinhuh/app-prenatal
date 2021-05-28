@@ -46,7 +46,7 @@ const SignUp: React.FC = () => {
     validationSchema: Yup.object().shape({
       email: Yup.string()
         .required('Email é obrigatório')
-        .email('Precisa ser um email'),
+        .email('Formato do email incorreto!'),
       password: Yup.string()
         .required('Senha é obrigatória')
         .min(6, 'No minímo 6 caracteres'),
@@ -177,12 +177,12 @@ const SignUp: React.FC = () => {
       {!formik.isSubmitting ? (
         <Button icon="check" onPress={() => formik.handleSubmit()} />
       ) : (
-          <ActivityIndicator
-            style={{ marginTop: 25 }}
-            size={40}
-            color="#fd3954"
-          />
-        )}
+        <ActivityIndicator
+          style={{ marginTop: 25 }}
+          size={40}
+          color="#fd3954"
+        />
+      )}
 
     </Container>
   );

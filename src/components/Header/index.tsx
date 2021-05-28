@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useCallback, useEffect, useState } from 'react';
 import { ViewProps } from 'react-native';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 
 import { Container, BackNavigationButton, TitleText, ChildrenContainer } from './styles';
@@ -41,7 +41,7 @@ const Input: React.FC<HeaderViewProps> = ({ borderWhiteColor, iconColor, backFun
         {backFunctionExist ?
           <Ionicons name="ios-arrow-back" size={40} color="#F54F51" />
           :
-          <FontAwesome5 name="grip-lines" size={36} color={iconColor || "#F54F51"} />}
+          <Feather name="menu" size={36} color={iconColor || "#F54F51"} />}
 
       </BackNavigationButton>
 

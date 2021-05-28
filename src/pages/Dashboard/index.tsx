@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, Feather } from '@expo/vector-icons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import firebase from 'firebase';
 import 'firebase/firestore';
@@ -191,11 +191,7 @@ const Dashboard: React.FC = () => {
 
       <Header>
         <DrawerMenuButton onPress={() => navigate.dispatch(DrawerActions.toggleDrawer())}>
-          <FontAwesome5
-            name="grip-lines"
-            size={36}
-            color="#FE637A"
-          />
+          <Feather name="menu" size={36} color="#F54F51" />
         </DrawerMenuButton>
 
         <WelcomeText>

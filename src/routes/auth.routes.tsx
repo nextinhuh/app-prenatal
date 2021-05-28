@@ -11,6 +11,7 @@ import Album from '../pages/Album';
 import Consults from '../pages/Consults';
 import Tips from '../pages/Tips';
 import AlbumView from '../pages/AlbumView';
+import ConfigurationMenu from '../pages/ConfigurationMenu';
 
 const Auth = createDrawerNavigator();
 
@@ -49,6 +50,14 @@ const AuthRoutes: React.FC = () => (
       component={Notes}
       options={{
         title: 'Notas',
+      }}
+    />
+
+    <Auth.Screen
+      name="ConfigurationMenu"
+      component={ConfigurationMenu}
+      options={{
+        title: 'Configurações',
       }}
     />
     <Auth.Screen name="NoteView" component={NoteView} />

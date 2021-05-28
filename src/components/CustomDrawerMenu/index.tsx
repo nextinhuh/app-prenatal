@@ -2,10 +2,14 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { useCallback } from 'react';
 import { Text } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import {
+  AntDesign,
+  FontAwesome5,
+  MaterialIcons,
+  Feather,
+  Entypo,
+} from '@expo/vector-icons';
+
 import firebase from 'firebase';
 
 import {
@@ -67,6 +71,13 @@ const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
           size={24}
           color="white"
           style={{ marginTop: '105%' }}
+        />
+
+        <Entypo
+          name="tools"
+          size={24}
+          color="white"
+          style={{ marginTop: '100%' }}
         />
 
         <Feather

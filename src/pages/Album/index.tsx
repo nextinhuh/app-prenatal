@@ -3,12 +3,13 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-param-reassign */
 import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, Platform, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { Alert, Platform, TouchableOpacity } from 'react-native';
 import firebase from 'firebase';
 import 'firebase/firestore';
 
