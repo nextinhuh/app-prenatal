@@ -47,17 +47,8 @@ const ProfileUpdate: React.FC = () => {
   const storageFirebase = firebase.storage();
   const [userInfo, setUserInfo] = useState<User>({} as User);
   const [updatingPhoto, setUpdatingPhoto] = useState(false);
-  const [keyboarVisible, setKeyboardVisible] = useState(false);
-
-  /* const setKeyboardVisibleStatus = useCallback(() => {
-    setKeyboardVisible(!keyboarVisible);
-    console.log(keyboarVisible);
-  }, [keyboarVisible]); */
 
   useEffect(() => {
-    /* Keyboard.addListener('keyboardDidShow', setKeyboardVisibleStatus);
-    Keyboard.addListener('keyboardDidHide', setKeyboardVisibleStatus); */
-
     async function loadUser() {
       if (firebaseAuth) {
         const user = {
@@ -69,9 +60,6 @@ const ProfileUpdate: React.FC = () => {
       }
     }
     loadUser();
-
-    /* Keyboard.removeListener('keyboardDidShow', setKeyboardVisibleStatus);
-    Keyboard.removeListener('keyboardDidHide', setKeyboardVisibleStatus); */
   }, [firebaseAuth]);
 
   const handleNavBack = useCallback(() => {
@@ -80,10 +68,6 @@ const ProfileUpdate: React.FC = () => {
       routes: [{ name: 'Dashboard' }],
     });
   }, [navigation]);
-
-  const handleNavLogOff = useCallback(() => {
-    firebase.auth().signOut();
-  }, []);
 
   const handleTakePhoto = useCallback(async () => {
     const result = await ImagePicker.launchCameraAsync({

@@ -20,13 +20,6 @@ import Header from '../../components/Header';
 const ConfigurationMenu: React.FC = () => {
   const navigation = useNavigation();
 
-  const navBackResetRoute = useCallback(() => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Notes' }],
-    });
-  }, [navigation]);
-
   const handleNavToUpdateProfile = useCallback(() => {
     navigation.navigate('ProfileUpdate');
   }, [navigation]);

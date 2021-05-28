@@ -1,16 +1,19 @@
 /* eslint-disable prettier/prettier */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
+  ScrollView,
   Keyboard,
+  TouchableWithoutFeedback
 } from 'react-native';
+import { useKeyboard } from '@react-native-community/hooks';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
 import 'firebase/firestore';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
 import Input from '../../components/Input';
@@ -45,9 +48,9 @@ interface UserData {
 
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
+  const keyboard = useKeyboard();
   const dbFirestore = firebase.firestore();
   const [loading, setLoading] = useState(false);
-  const [handleSubmit, setHandleSubmit] = useState<any>();
 
   const formik = useFormik({
     initialValues: { email: '', password: '' },
@@ -95,90 +98,110 @@ const SignIn: React.FC = () => {
   }
 
   return (
-    <Container>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ContainerSingIn>
-          <Title>Cegonha</Title>
-
-          <InputContainer>
-            <KeyboardAvoidingView
-              style={{ width: '100%', alignItems: 'center' }}
-              behavior="height"
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <Container>
+        <ContainerSingIn keyboardVisible={keyboard.keyboardShown}>
+          <LinearGradient
+            // Background Linear Gradient
+            colors={['#F74462', '#FE3855']}
+            style={{
+              flex: 1,
+              width: '100%',
+              borderBottomLeftRadius: 40,
+              borderBottomRightRadius: 40,
+              alignItems: 'center'
+            }}
+          >
+            <Title>Cegonha</Title>
+            <ScrollView
+              style={{ width: '100%' }}
+              showsVerticalScrollIndicator={false}
             >
-              <Input
-                onBlur={formik.handleBlur('email')}
-                name="email"
-                icon="mail"
-                placeholder="E-mail"
-                autoCapitalize="none"
-                value={formik.values.email}
-                onChangeText={formik.handleChange('email')}
-              />
-              {formik.touched.email && formik.errors.email && (
-                <ErrorText>{formik.errors.email}</ErrorText>
-              )}
-
-              <Input
-                onBlur={formik.handleBlur('password')}
-                name="password"
-                icon="lock"
-                autoCapitalize="none"
-                placeholder="Senha"
-                value={formik.values.password}
-                onChangeText={formik.handleChange('password')}
-                isPassword
-              />
-              {formik.touched.password && formik.errors.password && (
-                <ErrorText>{formik.errors.password}</ErrorText>
-              )}
-            </KeyboardAvoidingView>
-          </InputContainer>
 
 
-          <ForgotPasswordButton
-            onPress={() => navigation.navigate('SignUp')}
-          >
-            <ForgotPasswordButtonText>
-              Esqueceu a senha?
-            </ForgotPasswordButtonText>
-          </ForgotPasswordButton>
+              <InputContainer>
+                <KeyboardAvoidingView
+                  style={{ width: '100%', alignItems: 'center' }}
+                  behavior="height"
+                >
+                  <Input
+                    onBlur={formik.handleBlur('email')}
+                    name="email"
+                    icon="mail"
+                    placeholder="E-mail"
+                    autoCapitalize="none"
+                    value={formik.values.email}
+                    onChangeText={formik.handleChange('email')}
+                  />
+                  {formik.touched.email && formik.errors.email && (
+                    <ErrorText>{formik.errors.email}</ErrorText>
+                  )}
 
-          <CreateAccountButton
-            onPress={() => navigation.navigate('SignUp')}
-          >
-            <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
-          </CreateAccountButton>
+                  <Input
+                    onBlur={formik.handleBlur('password')}
+                    name="password"
+                    icon="lock"
+                    autoCapitalize="none"
+                    placeholder="Senha"
+                    value={formik.values.password}
+                    onChangeText={formik.handleChange('password')}
+                    isPassword
+                  />
+                  {formik.touched.password && formik.errors.password && (
+                    <ErrorText>{formik.errors.password}</ErrorText>
+                  )}
+                </KeyboardAvoidingView>
 
-          <DividerContainer>
-            <Line />
-            <DividerText>OU</DividerText>
-            <Line />
-          </DividerContainer>
+                <ForgotPasswordButton
+                  onPress={() => navigation.navigate('SignUp')}
+                >
+                  <ForgotPasswordButtonText>
+                    Esqueceu a senha?
+                  </ForgotPasswordButtonText>
+                </ForgotPasswordButton>
 
-          <SocialEntryButton>
-            <SocialEntryContainer>
-              <ImageIcon source={logoGoogle} />
-              <SocialEntryButtonText>Entrar com Google</SocialEntryButtonText>
-            </SocialEntryContainer>
-          </SocialEntryButton>
+                <CreateAccountButton
+                  onPress={() => navigation.navigate('SignUp')}
+                >
+                  <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
+                </CreateAccountButton>
 
-          <SocialEntryButton>
-            <SocialEntryContainer>
-              <ImageIcon source={logoFacebook} />
-              <SocialEntryButtonText>
-                Entrar com Facebook
-              </SocialEntryButtonText>
-            </SocialEntryContainer>
-          </SocialEntryButton>
+                <DividerContainer>
+                  <Line />
+                  <DividerText>OU</DividerText>
+                  <Line />
+                </DividerContainer>
+
+                <SocialEntryButton>
+                  <SocialEntryContainer>
+                    <ImageIcon source={logoGoogle} />
+                    <SocialEntryButtonText>Entrar com Google</SocialEntryButtonText>
+                  </SocialEntryContainer>
+                </SocialEntryButton>
+
+                <SocialEntryButton>
+                  <SocialEntryContainer>
+                    <ImageIcon source={logoFacebook} />
+                    <SocialEntryButtonText>
+                      Entrar com Facebook
+                    </SocialEntryButtonText>
+                  </SocialEntryContainer>
+                </SocialEntryButton>
+
+              </InputContainer>
+
+            </ScrollView>
+          </LinearGradient>
         </ContainerSingIn>
-      </TouchableWithoutFeedback>
 
-      {!loading ? (
-        <Button icon="arrowright" onPress={() => formik.handleSubmit()} />
-      ) : (
+        {!loading ? (
+          <Button icon="arrowright" onPress={() => formik.handleSubmit()} style={{ marginTop: 10 }} />
+        ) : (
           <ActivityIndicator style={{ marginTop: 25 }} size={40} color="#fd3954" />
         )}
-    </Container>
+
+      </Container>
+    </TouchableWithoutFeedback>
   );
 };
 

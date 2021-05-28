@@ -1,22 +1,20 @@
 import styled from 'styled-components/native';
 
+interface ContainerSignInProps {
+  keyboardVisible?: boolean;
+}
+
 export const Container = styled.View`
   flex: 1;
   align-items: center;
 `;
 
-export const ContainerSingIn = styled.View`
-  height: 85%;
+export const ContainerSingIn = styled.View<ContainerSignInProps>`
+  height: ${props => (props.keyboardVisible ? '82%' : '85%')};
   width: 100%;
-  background: #fd3954;
-
-  border-bottom-left-radius: 70px;
-  border-bottom-right-radius: 70px;
 
   align-items: center;
   justify-content: flex-end;
-
-  elevation: 30;
 `;
 
 export const Title = styled.Text`
@@ -32,13 +30,15 @@ export const InputContainer = styled.View`
   padding: 20px 30px;
   align-items: center;
 `;
+
 export const ErrorText = styled.Text`
-  color: #4d0820;
+  color: white;
   font-size: 16px;
   font-weight: bold;
   align-self: flex-end;
-  margin-top: -18px;
-  margin-bottom: 8px;
+  margin-top: -20px;
+  margin-bottom: 10px;
+  font-family: 'Montserrat_400Regular';
 `;
 
 export const ForgotPasswordButton = styled.TouchableOpacity``;

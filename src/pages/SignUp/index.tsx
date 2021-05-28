@@ -9,10 +9,12 @@ import {
   Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useKeyboard } from '@react-native-community/hooks';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
 import 'firebase/firestore';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -27,7 +29,6 @@ import {
   InputContainer,
 } from './styles';
 
-import logoImg from '../../assets/logo.png';
 
 interface User {
   name: string;
@@ -38,6 +39,7 @@ interface User {
 
 const SignUp: React.FC = () => {
   const navigation = useNavigation();
+  const keyboard = useKeyboard();
   const dbFirestore = firebase.firestore();
 
   const formik = useFormik({
@@ -100,91 +102,115 @@ const SignUp: React.FC = () => {
     [navigation, dbFirestore],
   );
 
+  const navBackResetRoute = useCallback(() => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'SignIn' }],
+    });
+  }, [navigation]);
+
   return (
-    <Container>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SingUpContainer>
-          <Title>Cegonha</Title>
-
-          <InputContainer>
-            <KeyboardAvoidingView
-              style={{ width: '100%', alignItems: 'center', flex: 1 }}
-              behavior="height"
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <Container>
+        <SingUpContainer keyboardVisible={keyboard.keyboardShown}>
+          <LinearGradient
+            // Background Linear Gradient
+            colors={['#F74462', '#FE3855']}
+            style={{
+              flex: 1,
+              width: '100%',
+              borderBottomLeftRadius: 40,
+              borderBottomRightRadius: 40,
+              alignItems: 'center'
+            }}
+          >
+            <Title>Cegonha</Title>
+            <ScrollView
+              style={{ width: '100%' }}
+              showsVerticalScrollIndicator={false}
             >
-              <Input
-                onBlur={formik.handleBlur('name')}
-                name="name"
-                icon="user"
-                placeholder="Nome"
-                value={formik.values.name}
-                onChangeText={formik.handleChange('name')}
-              />
-              {formik.touched.name && formik.errors.name && (
-                <ErrorText>{formik.errors.name}</ErrorText>
-              )}
 
-              <Input
-                onBlur={formik.handleBlur('email')}
-                name="email"
-                icon="mail"
-                placeholder="E-mail"
-                value={formik.values.email}
-                onChangeText={formik.handleChange('email')}
-              />
-              {formik.touched.email && formik.errors.email && (
-                <ErrorText>{formik.errors.email}</ErrorText>
-              )}
+              <InputContainer>
+                <KeyboardAvoidingView
+                  style={{ width: '100%', alignItems: 'center', flex: 1 }}
+                  behavior="height"
+                >
+                  <Input
+                    onBlur={formik.handleBlur('name')}
+                    name="name"
+                    icon="user"
+                    placeholder="Nome"
+                    value={formik.values.name}
+                    onChangeText={formik.handleChange('name')}
+                  />
+                  {formik.touched.name && formik.errors.name && (
+                    <ErrorText>{formik.errors.name}</ErrorText>
+                  )}
 
-              <Input
-                onBlur={formik.handleBlur('password')}
-                name="password"
-                icon="lock"
-                placeholder="Senha"
-                value={formik.values.password}
-                onChangeText={formik.handleChange('password')}
-                isPassword
-              />
-              {formik.touched.password && formik.errors.password && (
-                <ErrorText>{formik.errors.password}</ErrorText>
-              )}
+                  <Input
+                    onBlur={formik.handleBlur('email')}
+                    name="email"
+                    icon="mail"
+                    placeholder="E-mail"
+                    value={formik.values.email}
+                    onChangeText={formik.handleChange('email')}
+                  />
+                  {formik.touched.email && formik.errors.email && (
+                    <ErrorText>{formik.errors.email}</ErrorText>
+                  )}
 
-              <Input
-                onBlur={formik.handleBlur('confirmPassword')}
-                name="confirmPassword"
-                icon="lock"
-                placeholder="Confirmar senha"
-                value={formik.values.confirmPassword}
-                onChangeText={formik.handleChange('confirmPassword')}
-                isPassword
-              />
-              {formik.touched.confirmPassword &&
-                formik.errors.confirmPassword && (
-                  <ErrorText>{formik.errors.confirmPassword}</ErrorText>
-                )}
+                  <Input
+                    onBlur={formik.handleBlur('password')}
+                    name="password"
+                    icon="lock"
+                    placeholder="Senha"
+                    value={formik.values.password}
+                    onChangeText={formik.handleChange('password')}
+                    isPassword
+                  />
+                  {formik.touched.password && formik.errors.password && (
+                    <ErrorText>{formik.errors.password}</ErrorText>
+                  )}
 
-              <BackToSignIn onPress={() => navigation.goBack()}>
-                <BackToSignInText>
-                  Já possui uma conta? Faça já o login
-                </BackToSignInText>
-              </BackToSignIn>
+                  <Input
+                    onBlur={formik.handleBlur('confirmPassword')}
+                    name="confirmPassword"
+                    icon="lock"
+                    placeholder="Confirmar senha"
+                    value={formik.values.confirmPassword}
+                    onChangeText={formik.handleChange('confirmPassword')}
+                    isPassword
+                  />
+                  {formik.touched.confirmPassword &&
+                    formik.errors.confirmPassword && (
+                      <ErrorText>{formik.errors.confirmPassword}</ErrorText>
+                    )}
 
-            </KeyboardAvoidingView>
+                  <BackToSignIn onPress={navBackResetRoute}>
+                    <BackToSignInText>
+                      Já possui uma conta? Faça seu login!
+                    </BackToSignInText>
+                  </BackToSignIn>
 
-          </InputContainer>
+                </KeyboardAvoidingView>
+
+              </InputContainer>
+            </ScrollView>
+          </LinearGradient>
         </SingUpContainer>
-      </TouchableWithoutFeedback>
 
-      {!formik.isSubmitting ? (
-        <Button icon="check" onPress={() => formik.handleSubmit()} />
-      ) : (
-        <ActivityIndicator
-          style={{ marginTop: 25 }}
-          size={40}
-          color="#fd3954"
-        />
-      )}
+        {!formik.isSubmitting ? (
+          <Button icon="check" onPress={() => formik.handleSubmit()} style={{ marginTop: 10 }} />
+        ) : (
+          <ActivityIndicator
+            style={{ marginTop: 25 }}
+            size={40}
+            color="#fd3954"
+          />
+        )}
 
-    </Container>
+      </Container>
+    </TouchableWithoutFeedback>
   );
 };
 
