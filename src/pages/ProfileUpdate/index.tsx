@@ -43,6 +43,7 @@ interface UserUpdate {
 const ProfileUpdate: React.FC = () => {
   const navigation = useNavigation();
   const keyboard = useKeyboard();
+  const dbFirestore = firebase.firestore();
   const firebaseAuth = firebase.auth().currentUser;
   const storageFirebase = firebase.storage();
   const [userInfo, setUserInfo] = useState<User>({} as User);
@@ -50,14 +51,12 @@ const ProfileUpdate: React.FC = () => {
 
   useEffect(() => {
     async function loadUser() {
-      if (firebaseAuth) {
-        const user = {
-          name: firebaseAuth.displayName ? firebaseAuth.displayName : '',
-          photoUrl: firebaseAuth.photoURL ? firebaseAuth.photoURL : '',
-          email: firebaseAuth.email ? firebaseAuth.email : '',
-        };
-        setUserInfo(user);
-      }
+      const user = {
+        name: firebaseAuth?.displayName || '',
+        photoUrl: firebaseAuth?.photoURL || '',
+        email: firebaseAuth?.email || '',
+      };
+      setUserInfo(user);
     }
     loadUser();
   }, [firebaseAuth]);
@@ -85,7 +84,7 @@ const ProfileUpdate: React.FC = () => {
         .ref()
         .child(`images/${firebaseAuth?.uid}`);
 
-      const uploadImage = await imageRef.put(blobImage);
+      await imageRef.put(blobImage);
       let linkImage = '';
 
       await imageRef.getDownloadURL().then(url => {
@@ -124,7 +123,7 @@ const ProfileUpdate: React.FC = () => {
         .ref()
         .child(`images/${firebaseAuth?.uid}`);
 
-      const uploadImage = await imageRef.put(blobImage);
+      await imageRef.put(blobImage);
       let linkImage = '';
 
       await imageRef.getDownloadURL().then(url => {
@@ -161,21 +160,36 @@ const ProfileUpdate: React.FC = () => {
   }, [handleGaleryPhotoPicker, handleTakePhoto]);
 
   const handleUpdateUser = useCallback(
-    (user: UserUpdate) => {
+    async (user: UserUpdate) => {
       if (user.email !== userInfo.email && user.email !== undefined) {
-        firebaseAuth?.updateEmail(user.email).catch(err => {
+        console.log(userInfo.email);
+        await firebaseAuth?.updateEmail(user.email).catch(err => {
           console.log(err);
         });
       }
 
       if (user.name !== userInfo.name && user.name !== undefined) {
-        firebaseAuth?.updateProfile({
-          displayName: user.name,
-        });
+        await firebaseAuth
+          ?.updateProfile({
+            displayName: user.name,
+          })
+          .then(() => {
+            dbFirestore
+              .collection('users')
+              .doc(firebaseAuth.uid)
+              .update({ name: user.name });
+          });
       }
 
       if (user.confirmPassword !== '') {
-        firebaseAuth?.updatePassword(user.confirmPassword);
+        await firebaseAuth?.updatePassword(user.confirmPassword).then(() => {
+          Alert.alert('Perfil atualizado com sucesso!', '', [
+            {
+              text: 'Ok',
+              onPress: handleNavBack,
+            },
+          ]);
+        });
       }
 
       Alert.alert('Perfil atualizado com sucesso!', '', [
@@ -185,14 +199,14 @@ const ProfileUpdate: React.FC = () => {
         },
       ]);
     },
-    [firebaseAuth, userInfo.email, userInfo.name, handleNavBack],
+    [firebaseAuth, userInfo, handleNavBack, dbFirestore],
   );
 
   const formik = useFormik({
     initialValues: {
-      email: '',
+      email: userInfo.email,
       password: '',
-      name: '',
+      name: userInfo.name,
       confirmPassword: '',
     },
     onSubmit: values => handleUpdateUser(values),
@@ -225,6 +239,7 @@ const ProfileUpdate: React.FC = () => {
             width: '100%',
             borderBottomLeftRadius: 40,
             borderBottomRightRadius: 40,
+            elevation: 30,
           }}
         >
           <ScrollView

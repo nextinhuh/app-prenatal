@@ -1,22 +1,18 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable prettier/prettier */
-import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { FontAwesome5, Ionicons, Feather } from '@expo/vector-icons';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import firebase from 'firebase';
 import 'firebase/firestore';
-import { AdMobBanner } from 'expo-ads-admob';
 import Timeline from 'react-native-timeline-flatlist';
 
 
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Carousel from 'react-native-snap-carousel';
 
 import imgUserIcon from '../../assets/user.png';
-import imgDegrade1 from '../../assets/degrade1.png';
 import imgDegrade2 from '../../assets/degrade2.png';
 
-import TestButton from '../../components/Button';
 
 import {
   Container,
@@ -25,7 +21,6 @@ import {
   WelcomeText,
   DrawerMenuButton,
   CarouselCard,
-  AdMobContainer,
   CarouselContainer,
   ImageBannerCard,
   TitleBannerCard,
@@ -41,8 +36,6 @@ import {
   SelectWeekText,
   ContainerButton,
   BackgroudImage,
-  FilledCircle,
-  LogoutButton,
   UserAvatarButton
 } from './styles';
 
@@ -58,10 +51,12 @@ interface ItemProps {
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigation();
+  const firestore = firebase.firestore();
+  const firebaseAuth = firebase.auth().currentUser;
   const refCarousel = React.createRef<Carousel<ItemProps>>();
   const refCarousel2 = React.createRef<Carousel<ItemProps>>();
-  const dbFirestore = firebase.firestore();
   const [userInfo, setUserInfo] = useState<User>({} as User);
+
   const [indexCarousel, setIndexCarousel] = useState(1);
   const [carouselTeste, setCarouselTeste] = useState({
     activeIndex: 0,
@@ -142,7 +137,7 @@ const Dashboard: React.FC = () => {
       photoUrl: firebase.auth().currentUser?.photoURL,
     };
     setUserInfo(user);
-  }, []);
+  }, [firebaseAuth, firestore]);
 
   const handleChangeCardMovingTimeLine = useCallback((index: number) => {
 
@@ -182,9 +177,6 @@ const Dashboard: React.FC = () => {
     navigate.navigate('ProfileUpdate');
   }, [navigate]);
 
-  const handleNavLogOff = useCallback(() => {
-    firebase.auth().signOut();
-  }, []);
 
   return (
     <Container>

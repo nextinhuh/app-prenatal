@@ -35,7 +35,6 @@ interface User {
 
 const Consults: React.FC = () => {
   const firebaseAuth = firebase.auth().currentUser;
-  const firebaseFirestore = firebase.firestore();
   const [userInfo, setUserInfo] = useState<User>({} as User);
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
@@ -84,11 +83,11 @@ const Consults: React.FC = () => {
 
   useEffect(() => {
     const user = {
-      name: firebase.auth().currentUser?.displayName,
-      photoUrl: firebase.auth().currentUser?.photoURL,
+      name: firebaseAuth?.displayName,
+      photoUrl: firebaseAuth?.photoURL,
     };
     setUserInfo(user);
-  }, [firebaseFirestore, firebaseAuth]);
+  }, [firebaseAuth]);
 
   return (
     <Container>

@@ -55,7 +55,7 @@ const MedicalRecordAndPrescription: React.FC = () => {
     }
 
     async function loadRecords() {
-        await firebaseFirestore
+      await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .collection('consults')
@@ -68,7 +68,7 @@ const MedicalRecordAndPrescription: React.FC = () => {
           }
         });
     }
-    if(consultId){
+    if (consultId) {
       loadRecords();
       loadMedicalRecords();
     }
@@ -76,15 +76,15 @@ const MedicalRecordAndPrescription: React.FC = () => {
   }, [firebaseFirestore, firebaseAuth, consultId]);
 
   return (
-      <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
-        <Container>
+    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+      <Container>
 
-          {loading ? (
-            <TextInformative>Porfavor, selecione uma consulta para visualizar o prontuário/prescrição!</TextInformative>
-          ) : (
-            <>
+        {loading ? (
+          <TextInformative>Porfavor, selecione uma consulta para visualizar o prontuário/prescrição!</TextInformative>
+        ) : (
+          <>
             <MedicalRecordContainer>
-            <Title>Prontuário</Title>
+              <Title>Prontuário</Title>
 
               <CardText>Pressão aterial: {medicalRecords?.bloodPressure}</CardText>
               <CardText>Frequência cardíaca: {medicalRecords?.heartRate}</CardText>
@@ -95,26 +95,26 @@ const MedicalRecordAndPrescription: React.FC = () => {
             </MedicalRecordContainer>
 
             <PrescriptionContainer>
-            <Title>Prescrições</Title>
+              <Title>Prescrições</Title>
 
-            <FlatList
-              data={prescription}
-              keyExtractor={prescriptions => prescriptions.title}
-              showsVerticalScrollIndicator={false}
-              style={{ width: '85%' }}
-              renderItem={({ item: prescriptions }) => (
+              <FlatList
+                data={prescription}
+                keyExtractor={prescriptions => prescriptions.title}
+                showsVerticalScrollIndicator={false}
+                style={{ width: '85%' }}
+                renderItem={({ item: prescriptions }) => (
                   <>
-                  <PrescriptionCardTitle>{prescriptions.title}</PrescriptionCardTitle>
-                  <CardText>- {prescriptions.description}</CardText>
+                    <PrescriptionCardTitle>{prescriptions.title}</PrescriptionCardTitle>
+                    <CardText>- {prescriptions.description}</CardText>
                   </>
-              )}
-            />
+                )}
+              />
             </PrescriptionContainer>
-            </>
-          )}
-        </Container>
+          </>
+        )}
+      </Container>
 
-      </ScrollView>
+    </ScrollView>
   );
 };
 

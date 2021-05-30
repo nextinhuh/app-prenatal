@@ -100,7 +100,7 @@ const Album: React.FC = () => {
     }
 
     getListAlbuns();
-  }, [firebaseAuth, firebaseFirestore, albumList]);
+  }, [firebaseAuth, firebaseFirestore]);
 
   const getListAlbuns = useCallback(async () => {
     await firebaseFirestore

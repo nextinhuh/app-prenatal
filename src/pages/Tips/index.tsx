@@ -16,7 +16,6 @@ const Tips: React.FC = () => {
   const navigation = useNavigation();
   const [visibleMenu, setVisibleMenu] = useState(false);
   const firebaseAuth = firebase.auth().currentUser;
-  const firebaseFirestore = firebase.firestore();
   const [indexCarousel, setIndexCarousel] = useState(0);
   const [carouselItems, setCarouselItems] = useState({
     activeIndex: 0,

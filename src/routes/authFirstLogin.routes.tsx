@@ -12,19 +12,27 @@ import Consults from '../pages/Consults';
 import Tips from '../pages/Tips';
 import AlbumView from '../pages/AlbumView';
 import ConfigurationMenu from '../pages/ConfigurationMenu';
+import Welcome from '../pages/Welcome';
 
 const Auth = createDrawerNavigator();
 
 const AuthRoutes: React.FC = () => {
   return (
     <Auth.Navigator
-      initialRouteName="Dashboard"
+      initialRouteName="Welcome"
       drawerContentOptions={{
         activeBackgroundColor: '#EC6478',
         activeTintColor: 'white',
       }}
       drawerContent={props => <CustomDrawerMenu {...props} />}
     >
+      <Auth.Screen
+        name="Welcome"
+        component={Welcome}
+        options={{
+          title: 'Welcome',
+        }}
+      />
       <Auth.Screen
         name="Dashboard"
         component={Dashboard}

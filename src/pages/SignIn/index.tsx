@@ -18,6 +18,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import { useConsult } from '../../hooks/consults';
 
 import {
   Container,
@@ -49,6 +50,7 @@ interface UserData {
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const keyboard = useKeyboard();
+  const { updateUserStatus } = useConsult();
   const dbFirestore = firebase.firestore();
   const [loading, setLoading] = useState(false);
 
@@ -69,21 +71,7 @@ const SignIn: React.FC = () => {
       .auth()
       .signInWithEmailAndPassword(user.email, user.password)
       .then(async logedUser => {
-        if (logedUser.user?.displayName === null) {
-          let userName: any;
-          await dbFirestore
-            .collection('users')
-            .doc(logedUser.user?.uid)
-            .get()
-            .then(result => {
-              if (result.exists) {
-                userName = result.data();
-              }
-            });
-          await firebase.auth().currentUser?.updateProfile({
-            displayName: userName.name,
-          });
-        }
+
         setLoading(!loading);
       })
       .catch(err => {
@@ -109,7 +97,8 @@ const SignIn: React.FC = () => {
               width: '100%',
               borderBottomLeftRadius: 40,
               borderBottomRightRadius: 40,
-              alignItems: 'center'
+              alignItems: 'center',
+              elevation: 30
             }}
           >
             <Title>Cegonha</Title>

@@ -32,7 +32,8 @@ const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
       item.name !== 'Tips' &&
       item.name !== 'ProfileUpdate' &&
       item.name !== 'BottomTabsMedicalRecords' &&
-      item.name !== 'AlbumView'
+      item.name !== 'AlbumView' &&
+      item.name !== 'Welcome'
     ) {
       return true;
     }

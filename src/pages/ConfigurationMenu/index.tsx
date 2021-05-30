@@ -1,10 +1,8 @@
 import React, { useCallback } from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
-import { Foundation } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, Foundation, MaterialIcons } from '@expo/vector-icons';
 
 import {
   Container,
@@ -27,7 +25,6 @@ const ConfigurationMenu: React.FC = () => {
   return (
     <Container>
       <LinearGradient
-        // Background Linear Gradient
         colors={['#F74462', '#FE3855']}
         style={{
           width: '100%',

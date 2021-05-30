@@ -63,22 +63,26 @@ const SignUp: React.FC = () => {
   });
 
   const handleCreateUser = useCallback(
-    (user: User) => {
-      firebase
+    async (user: User) => {
+      await firebase
         .auth()
         .createUserWithEmailAndPassword(user.email, user.password)
         .then(userCreated => {
           dbFirestore.collection('users').doc(userCreated.user?.uid).set({
             name: user.name,
-          });
-          Alert.alert(
-            `Olá bem vindo(a) ${user.name},`,
-            'Sua conta foi criada com sucesso!',
-            [{ text: 'OK' }],
-          );
-          firebase.auth().signOut();
+            firstLogin: true
+          }).then(() => {
+            firebase.auth().signOut();
 
-          navigation.navigate('SignIn');
+            Alert.alert(
+              `Olá bem vindo(a) ${user.name},`,
+              'Sua conta foi criada com sucesso!',
+              [{ text: 'OK' }],
+            );
+
+
+            navigation.navigate('SignIn');
+          })
         })
         .catch(err => {
           let msgErro = '';
@@ -121,7 +125,8 @@ const SignUp: React.FC = () => {
               width: '100%',
               borderBottomLeftRadius: 40,
               borderBottomRightRadius: 40,
-              alignItems: 'center'
+              alignItems: 'center',
+              elevation: 30
             }}
           >
             <Title>Cegonha</Title>
