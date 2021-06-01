@@ -1,5 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { View, useWindowDimensions, Text, Alert } from 'react-native';
+import {
+  View,
+  useWindowDimensions,
+  Text,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { MaterialIcons, Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import firebase from 'firebase';
@@ -32,6 +38,7 @@ const Welcome: React.FC = () => {
   const dbFirestore = firebase.firestore();
   const navigate = useNavigation();
 
+  const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [selectedDateOnPicker, setSelectedDateOnPicker] = useState('');
   const [selectedDropDown, setSelectedDropDown] = useState(
@@ -176,6 +183,7 @@ const Welcome: React.FC = () => {
 
   const handleSubmit = useCallback(async () => {
     if (selectedDateOnPicker !== '' && selectedDropDown !== '') {
+      setLoading(true);
       await dbFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
@@ -184,6 +192,7 @@ const Welcome: React.FC = () => {
           genderPreference: selectedDropDown,
         })
         .then(() => {
+          setLoading(false);
           navigate.navigate('Dashboard');
         });
     } else {
@@ -193,6 +202,7 @@ const Welcome: React.FC = () => {
         },
       ]);
     }
+    setLoading(false);
   }, [
     dbFirestore,
     firebaseAuth,
@@ -235,17 +245,25 @@ const Welcome: React.FC = () => {
         </WelcomeContainer>
       </LinearGradient>
 
-      <Button
-        icon="check"
-        style={{
-          width: 60,
-          height: 60,
-          borderRadius: 30,
-          marginBottom: 35,
-          marginTop: 10,
-        }}
-        onPress={() => handleSubmit()}
-      />
+      {loading ? (
+        <ActivityIndicator
+          style={{ marginTop: 25 }}
+          size={40}
+          color="#fd3954"
+        />
+      ) : (
+        <Button
+          icon="check"
+          style={{
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            marginBottom: 35,
+            marginTop: 10,
+          }}
+          onPress={() => handleSubmit()}
+        />
+      )}
     </Container>
   );
 };

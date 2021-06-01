@@ -1,22 +1,25 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable radix */
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { SceneRendererProps } from 'react-native-tab-view';
 
 import firebase from 'firebase';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { useConsult } from '../../hooks/consults';
 
-import { Container, ConsultCard, ConsultText } from './styles';
+import { Container, ConsultCard, ConsultText, TextInformative } from './styles';
 
 const ConsultList: React.FC = (props: any) => {
-  const navigate = useNavigation();
   const firebaseAuth = firebase.auth().currentUser;
   const firebaseFirestore = firebase.firestore();
   const [consultsList, setConsultsList] = useState<string[]>();
+  const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true);
   const { updateConsultId } = useConsult();
 
@@ -29,9 +32,16 @@ const ConsultList: React.FC = (props: any) => {
         .get()
         .then(result => {
           const resultList: any = [];
+
           result.forEach(doc => {
             resultList.push(doc.id);
           });
+
+          if (resultList.length === 0) {
+            resultList.push(
+              'Você ainda não tem consultas cadastradas, puxe para baixo para atualizar a lista!',
+            );
+          }
           setConsultsList(resultList);
           setLoading(false);
         });
@@ -56,6 +66,28 @@ const ConsultList: React.FC = (props: any) => {
     [props, updateConsultId],
   );
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await firebaseFirestore
+      .collection('users')
+      .doc(firebaseAuth?.uid)
+      .collection('consults')
+      .get()
+      .then(result => {
+        const resultList: any = [];
+        result.forEach(doc => {
+          resultList.push(doc.id);
+        });
+        if (resultList.length === 0) {
+          resultList.push(
+            'Você ainda não tem consultas cadastradas, puxe para baixo para atualizar a lista!',
+          );
+        }
+        setConsultsList(resultList);
+        setRefreshing(false);
+      });
+  }, [firebaseFirestore, firebaseAuth]);
+
   return (
     <Container>
       {loading ? (
@@ -64,17 +96,33 @@ const ConsultList: React.FC = (props: any) => {
         <FlatList
           data={consultsList}
           keyExtractor={consult => consult}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
           showsVerticalScrollIndicator={false}
           renderItem={({ item: consult }) => (
-            <ConsultCard onPress={() => handleJumpTo(consult)}>
-              <FontAwesome
-                name="circle"
-                size={24}
-                color="#FE3855"
-                style={{ position: 'absolute', left: -12, top: 10 }}
-              />
-              <ConsultText>{getFormatedDate(parseInt(consult))}</ConsultText>
-            </ConsultCard>
+            <>
+              {consultsList &&
+                consultsList[0] ===
+                'Você ainda não tem consultas cadastradas, puxe para baixo para atualizar a lista!' ? (
+                <TextInformative>{consultsList[0]}</TextInformative>
+              ) : (
+                <ConsultCard onPress={() => handleJumpTo(consult)}>
+                  <FontAwesome
+                    name="circle"
+                    size={24}
+                    color="#FE3855"
+                    style={{ position: 'absolute', left: -12, top: 10 }}
+                  />
+                  <ConsultText>
+                    {getFormatedDate(parseInt(consult))}
+                  </ConsultText>
+                </ConsultCard>
+              )}
+            </>
           )}
         />
       )}

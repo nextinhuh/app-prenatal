@@ -40,7 +40,7 @@ const MedicalRecordAndPrescription: React.FC = () => {
 
   useEffect(() => {
     async function loadMedicalRecords() {
-      firebaseFirestore
+      await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .collection('consults')
@@ -72,8 +72,9 @@ const MedicalRecordAndPrescription: React.FC = () => {
       loadRecords();
       loadMedicalRecords();
     }
-
   }, [firebaseFirestore, firebaseAuth, consultId]);
+
+
 
   return (
     <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>

@@ -18,7 +18,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { useConsult } from '../../hooks/consults';
 
 import {
   Container,
@@ -30,17 +29,7 @@ import {
   InputContainer,
   ForgotPasswordButton,
   ForgotPasswordButtonText,
-  DividerContainer,
-  Line,
-  DividerText,
-  SocialEntryButton,
-  SocialEntryButtonText,
-  SocialEntryContainer,
-  ImageIcon,
 } from './styles';
-
-import logoGoogle from '../../assets/google.svg';
-import logoFacebook from '../../assets/facebook.png';
 
 interface UserData {
   email: string;
@@ -50,8 +39,6 @@ interface UserData {
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const keyboard = useKeyboard();
-  const { updateUserStatus } = useConsult();
-  const dbFirestore = firebase.firestore();
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
@@ -61,7 +48,7 @@ const SignIn: React.FC = () => {
       email: Yup.string()
         .required('Email é obrigatório')
         .email('Precisa ser um email'),
-      password: Yup.string().required('Senha é obrigatória'),
+      password: Yup.string().required('Senha é obrigatória').min(6, 'No minímo 6 caracteres'),
     }),
   });
 
@@ -70,13 +57,11 @@ const SignIn: React.FC = () => {
     firebase
       .auth()
       .signInWithEmailAndPassword(user.email, user.password)
-      .then(async logedUser => {
-
+      .then(() => {
         setLoading(!loading);
       })
       .catch(err => {
         setLoading(false);
-
         Alert.alert(
           'Usuário / Senha Incorreto(s)!',
           'Favor verificar e tentar novamente.',
@@ -90,7 +75,6 @@ const SignIn: React.FC = () => {
       <Container>
         <ContainerSingIn keyboardVisible={keyboard.keyboardShown}>
           <LinearGradient
-            // Background Linear Gradient
             colors={['#F74462', '#FE3855']}
             style={{
               flex: 1,
@@ -154,28 +138,6 @@ const SignIn: React.FC = () => {
                 >
                   <CreateAccountButtonText>Cadastre-se</CreateAccountButtonText>
                 </CreateAccountButton>
-
-                <DividerContainer>
-                  <Line />
-                  <DividerText>OU</DividerText>
-                  <Line />
-                </DividerContainer>
-
-                <SocialEntryButton>
-                  <SocialEntryContainer>
-                    <ImageIcon source={logoGoogle} />
-                    <SocialEntryButtonText>Entrar com Google</SocialEntryButtonText>
-                  </SocialEntryContainer>
-                </SocialEntryButton>
-
-                <SocialEntryButton>
-                  <SocialEntryContainer>
-                    <ImageIcon source={logoFacebook} />
-                    <SocialEntryButtonText>
-                      Entrar com Facebook
-                    </SocialEntryButtonText>
-                  </SocialEntryContainer>
-                </SocialEntryButton>
 
               </InputContainer>
 

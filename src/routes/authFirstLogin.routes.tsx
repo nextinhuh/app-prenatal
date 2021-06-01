@@ -27,13 +27,6 @@ const AuthRoutes: React.FC = () => {
       drawerContent={props => <CustomDrawerMenu {...props} />}
     >
       <Auth.Screen
-        name="Welcome"
-        component={Welcome}
-        options={{
-          title: 'Welcome',
-        }}
-      />
-      <Auth.Screen
         name="Dashboard"
         component={Dashboard}
         options={{
@@ -69,6 +62,8 @@ const AuthRoutes: React.FC = () => {
           title: 'Configurações',
         }}
       />
+
+      <Auth.Screen name="Welcome" component={Welcome} />
 
       <Auth.Screen name="NoteView" component={NoteView} />
       <Auth.Screen name="AlbumView" component={AlbumView} />

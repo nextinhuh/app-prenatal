@@ -118,7 +118,6 @@ const SignUp: React.FC = () => {
       <Container>
         <SingUpContainer keyboardVisible={keyboard.keyboardShown}>
           <LinearGradient
-            // Background Linear Gradient
             colors={['#F74462', '#FE3855']}
             style={{
               flex: 1,

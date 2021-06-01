@@ -28,3 +28,13 @@ export const ConsultText = styled.Text`
   width: 70%;
   margin-left: -55px;
 `;
+
+export const TextInformative = styled.Text`
+  font-size: 26px;
+  color: black;
+  font-family: 'OpenSans_400Regular';
+  font-weight: bold;
+  text-align: center;
+  padding: 5%;
+  margin-top: 50px;
+`;
