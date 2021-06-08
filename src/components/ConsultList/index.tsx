@@ -12,6 +12,7 @@ import firebase from 'firebase';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { useConsult } from '../../hooks/consults';
+import { useTheme } from '../../hooks/theme';
 
 import { Container, ConsultCard, ConsultText, TextInformative } from './styles';
 
@@ -22,6 +23,7 @@ const ConsultList: React.FC = (props: any) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true);
   const { updateConsultId } = useConsult();
+  const { color } = useTheme();
 
   useEffect(() => {
     async function listConsults() {
@@ -110,11 +112,11 @@ const ConsultList: React.FC = (props: any) => {
                 'Você ainda não tem consultas cadastradas, puxe para baixo para atualizar a lista!' ? (
                 <TextInformative>{consultsList[0]}</TextInformative>
               ) : (
-                <ConsultCard onPress={() => handleJumpTo(consult)}>
+                <ConsultCard onPress={() => handleJumpTo(consult)} style={{ borderColor: color && color.colorTwo }}>
                   <FontAwesome
                     name="circle"
                     size={24}
-                    color="#FE3855"
+                    color={color ? color.colorTwo : "#FE3855"}
                     style={{ position: 'absolute', left: -12, top: 10 }}
                   />
                   <ConsultText>

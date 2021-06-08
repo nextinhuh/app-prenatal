@@ -9,9 +9,7 @@ import {
   Feather,
   Entypo,
 } from '@expo/vector-icons';
-
 import firebase from 'firebase';
-
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -20,6 +18,7 @@ import {
 } from '@react-navigation/drawer';
 
 import { Container, BorderRight } from './styles';
+import { useTheme } from '../../hooks/theme';
 
 const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
   props: DrawerContentComponentProps,
@@ -43,6 +42,7 @@ const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
   const handleNavLogOff = useCallback(() => {
     firebase.auth().signOut();
   }, []);
+
   return (
     <Container>
       <BorderRight>

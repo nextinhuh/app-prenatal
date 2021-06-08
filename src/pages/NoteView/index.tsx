@@ -18,6 +18,7 @@ import { Container, InputTitle, ContainerTitleInput } from './styles';
 import Input from '../../components/Input';
 import Button2 from '../../components/Button';
 import Header from '../../components/Header';
+import { useTheme } from '../../hooks/theme';
 
 interface RouteParams {
   noteId: string;
@@ -46,6 +47,8 @@ type ListNotes = Array<{
 const NoteView: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const { color } = useTheme();
+
   const routeParams = route.params as RouteParams;
   const [isToCreateNewNote, setIsToCreateNewNote] = useState<boolean>();
 
@@ -80,70 +83,87 @@ const NoteView: React.FC = () => {
 
   const updateNote = useCallback(
     async () => {
-      await firebaseFirestore
-        .collection('users')
-        .doc(firebaseAuth?.uid)
-        .collection('notes')
-        .doc(routeParams.noteId)
-        .update({
-          title: noteTitleText,
-          description: noteDescriptionText,
-        })
-        .then(() => {
-          Alert.alert('A nota foi atualizada com sucesso!', '', [
-            {
-              text: 'Ok',
-            },
-          ]);
-          navBackResetRoute();
-        })
-        .catch(() => {
-          Alert.alert(
-            'Ops! Deu algum erro na criação da nota, favor tentar novamente!',
-            '',
-            [
+      if (noteTitleText === '' || noteDescriptionText === '') {
+        Alert.alert('Favor preencha o título e a descrição da nota!', '', [
+          {
+            text: 'Ok',
+          },
+        ]);
+      } else {
+        await firebaseFirestore
+          .collection('users')
+          .doc(firebaseAuth?.uid)
+          .collection('notes')
+          .doc(routeParams.noteId)
+          .update({
+            title: noteTitleText,
+            description: noteDescriptionText,
+          })
+          .then(() => {
+            Alert.alert('A nota foi atualizada com sucesso!', '', [
               {
                 text: 'Ok',
               },
-            ],
-          );
-        });
+            ]);
+            navBackResetRoute();
+          })
+          .catch(() => {
+            Alert.alert(
+              'Ops! Deu algum erro na criação da nota, favor tentar novamente!',
+              '',
+              [
+                {
+                  text: 'Ok',
+                },
+              ],
+            );
+          });
+      }
     },
     [firebaseAuth, firebaseFirestore, noteDescriptionText, noteTitleText, routeParams.noteId, navBackResetRoute],
   );
 
   const createNewNote = useCallback(
     async () => {
-      const time = new Date().getTime();
-      await firebaseFirestore
-        .collection('users')
-        .doc(firebaseAuth?.uid)
-        .collection('notes')
-        .doc(time.toString())
-        .set({
-          id: time.toString(),
-          title: noteTitleText,
-          description: noteDescriptionText,
-        })
-        .then(() => {
-          Alert.alert('A nota foi criada com sucesso!', '', [
-            {
-              text: 'Ok',
-            },
-          ]);
-          navBackResetRoute();
-        })
-        .catch(() => {
-          Alert.alert(
-            'Ops! Deu algum erro na criação da nota, favor tentar novamente!',
-            '',
-            [
+      if (noteTitleText === '' || noteDescriptionText === '') {
+        Alert.alert('Favor preencha o título e a descrição da nota!', '', [
+          {
+            text: 'Ok',
+          },
+        ]);
+      } else {
+        const time = new Date().getTime();
+        await firebaseFirestore
+          .collection('users')
+          .doc(firebaseAuth?.uid)
+          .collection('notes')
+          .doc(time.toString())
+          .set({
+            id: time.toString(),
+            title: noteTitleText,
+            description: noteDescriptionText,
+          })
+          .then(() => {
+            Alert.alert('A nota foi criada com sucesso!', '', [
               {
                 text: 'Ok',
               },
-            ],
-          );
-        });
+            ]);
+            navBackResetRoute();
+          })
+          .catch(() => {
+            Alert.alert(
+              'Ops! Deu algum erro na criação da nota, favor tentar novamente!',
+              '',
+              [
+                {
+                  text: 'Ok',
+                },
+              ],
+            );
+          });
+      }
+
     },
     [firebaseAuth, firebaseFirestore, navBackResetRoute, noteDescriptionText, noteTitleText],
   );
@@ -154,10 +174,11 @@ const NoteView: React.FC = () => {
       <Header
         title="SUA ANOTAÇÃO"
         backFunction={navBackResetRoute}
+        iconColor={color && color.colorTwo}
       />
 
       <ContainerTitleInput>
-        <Input style={{ color: 'black' }} defaultValue={routeParams.noteTitle} onChangeText={value => setNoteTitleText(value)} />
+        <Input style={{ color: 'black' }} defaultValue={routeParams.noteTitle} onChangeText={value => setNoteTitleText(value)} borderColor={color ? color.colorTwo : "#F54F51"} />
       </ContainerTitleInput>
 
 
@@ -167,11 +188,11 @@ const NoteView: React.FC = () => {
         disabledIconTint="#bfbfbf"
         style={{ marginTop: -15, marginBottom: 5, backgroundColor: '#FFF' }}
       />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false} style={{ padding: 10 }}>
         <RichEditor
           disabled={false}
           ref={richEditorRef}
-          style={{ marginLeft: 10, marginRight: 10, marginBottom: 10 }}
+          style={{ padding: 2, borderWidth: 3, borderColor: color ? color.colorTwo : "#F54F51", borderRadius: 10 }}
           initialContentHTML={noteDescriptionText}
           scrollEnabled
           onChange={(text) => setNoteDescriptionText(text)}
@@ -179,8 +200,8 @@ const NoteView: React.FC = () => {
       </ScrollView>
 
       {isToCreateNewNote ?
-        <Button2 icon="check" onPress={createNewNote} style={{ alignSelf: 'center', marginBottom: 5, width: 60, height: 60, borderRadius: 30 }} /> :
-        <Button2 icon="check" onPress={updateNote} style={{ alignSelf: 'center', marginBottom: 5, width: 60, height: 60, borderRadius: 30 }} />}
+        <Button2 icon="check" onPress={createNewNote} style={{ alignSelf: 'center', marginBottom: 5, width: 60, height: 60, borderRadius: 30, backgroundColor: color && color.colorTwo }} /> :
+        <Button2 icon="check" onPress={updateNote} style={{ alignSelf: 'center', marginBottom: 5, width: 60, height: 60, borderRadius: 30, backgroundColor: color && color.colorTwo }} />}
 
 
 

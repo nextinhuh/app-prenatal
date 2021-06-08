@@ -13,6 +13,7 @@ import {
   NavigationState,
 } from 'react-native-tab-view';
 import 'firebase/firestore';
+import { useTheme } from '../../hooks/theme';
 
 import ConsultList from '../../components/ConsultList';
 import MedicalRecordAndPrescription from '../../components/MedicalRecordAndPrescription';
@@ -35,6 +36,7 @@ interface User {
 
 const Consults: React.FC = () => {
   const firebaseAuth = firebase.auth().currentUser;
+  const { color } = useTheme();
   const [userInfo, setUserInfo] = useState<User>({} as User);
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
@@ -49,7 +51,7 @@ const Consults: React.FC = () => {
     <TabBar
       {...props}
       indicatorStyle={{
-        backgroundColor: '#FE3855',
+        backgroundColor: color ? color.colorTwo : '#FE3855',
         width: '20%',
         height: 4,
         borderTopLeftRadius: 15,
@@ -62,7 +64,7 @@ const Consults: React.FC = () => {
         borderBottomRightRadius: 45,
         elevation: 25,
       }}
-      activeColor="#FE3855"
+      activeColor={color ? color.colorTwo : '#FE3855'}
       inactiveColor="gray"
       renderIcon={({ route, focused, color }) => (
         <>
@@ -91,7 +93,11 @@ const Consults: React.FC = () => {
 
   return (
     <Container>
-      <HeaderContainer>
+      <HeaderContainer
+        style={{
+          backgroundColor: color ? color.colorTwo : '#fe3855',
+        }}
+      >
         <Header iconColor="#FFF" borderWhiteColor style={{ height: '18%' }}>
           <HeaderTitle>CONSULTAS</HeaderTitle>
         </Header>

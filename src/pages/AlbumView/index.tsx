@@ -21,6 +21,7 @@ import 'firebase/firestore';
 import Header from '../../components/Header';
 import Button2 from '../../components/Button';
 import ModalTitleAlbum from '../../components/ModalTitleAlbum';
+import { useTheme } from '../../hooks/theme';
 
 import {
   Container,
@@ -54,6 +55,7 @@ interface RouteParams {
 const AlbumView: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const { color } = useTheme();
 
   const [album, setAlbum] = useState<Album>({} as Album);
 
@@ -99,7 +101,7 @@ const AlbumView: React.FC = () => {
     }
 
     listImagesUrl();
-  }, [firebaseAuth, firebaseFirestore, routeParams]);
+  }, [firebaseAuth, firebaseFirestore, routeParams, color]);
 
   const handleAlbumEdit = useCallback(() => {
     setVisibleModalEditAlbum(!visibleModalEditAlbum);
@@ -387,20 +389,32 @@ const AlbumView: React.FC = () => {
 
   return (
     <Container>
-      <Header title={album.albumName} backFunction={navBackResetRoute} />
+      <Header
+        title={album.albumName}
+        backFunction={navBackResetRoute}
+        iconColor={color && color.colorTwo}
+      />
 
       <TouchableOpacity
         onPress={handleToggleSelectionDelete}
         style={{ position: 'absolute', right: 25, top: 70 }}
       >
-        <AntDesign name="delete" size={25} color="#f54f51" />
+        <AntDesign
+          name="delete"
+          size={25}
+          color={color ? color.colorTwo : '#F54F51'}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
         onPress={handleAlbumEdit}
         style={{ position: 'absolute', right: 70, top: 72 }}
       >
-        <FontAwesome5 name="pencil-alt" size={22} color="#f54f51" />
+        <FontAwesome5
+          name="pencil-alt"
+          size={22}
+          color={color ? color.colorTwo : '#F54F51'}
+        />
       </TouchableOpacity>
 
       {visibleModalEditAlbum && (
@@ -416,13 +430,25 @@ const AlbumView: React.FC = () => {
       {selectionDelete ? (
         <DeleteContainer>
           <ConfirmDeleteButton onPress={confirmImagesDelete}>
-            <DeleteButtonText>Apagar</DeleteButtonText>
-            <FontAwesome5 name="check" size={22} color="#f54f51" />
+            <DeleteButtonText style={{ color: color && color.colorTwo }}>
+              Apagar
+            </DeleteButtonText>
+            <FontAwesome5
+              name="check"
+              size={22}
+              color={color ? color.colorTwo : '#F54F51'}
+            />
           </ConfirmDeleteButton>
 
           <CancelDeleteButton onPress={handleToggleSelectionDelete}>
-            <DeleteButtonText>Cancelar</DeleteButtonText>
-            <FontAwesome5 name="times" size={22} color="#f54f51" />
+            <DeleteButtonText style={{ color: color && color.colorTwo }}>
+              Cancelar
+            </DeleteButtonText>
+            <FontAwesome5
+              name="times"
+              size={22}
+              color={color ? color.colorTwo : '#F54F51'}
+            />
           </CancelDeleteButton>
         </DeleteContainer>
       ) : null}
@@ -459,12 +485,16 @@ const AlbumView: React.FC = () => {
               >
                 {!buttonDeleteActive ? (
                   selectedImages.indexOf(image.id) < 0 ? (
-                    <FontAwesome5 name="square" size={30} color="#f54f51" />
+                    <FontAwesome5
+                      name="square"
+                      size={30}
+                      color={color ? color.colorTwo : '#F54F51'}
+                    />
                   ) : (
                     <FontAwesome5
                       name="check-square"
                       size={30}
-                      color="#f54f51"
+                      color={color ? color.colorTwo : '#F54F51'}
                     />
                   )
                 ) : null}
@@ -504,6 +534,7 @@ const AlbumView: React.FC = () => {
           position: 'absolute',
           bottom: 25,
           right: 15,
+          backgroundColor: color && color.colorTwo,
         }}
       />
     </Container>

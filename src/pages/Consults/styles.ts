@@ -10,7 +10,7 @@ export const HeaderContainer = styled.View`
   position: absolute;
   background-color: #fe3855;
   width: 100%;
-  height: 230px;
+  height: 280px;
   border-bottom-left-radius: 130px;
   border-bottom-right-radius: 130px;
 `;

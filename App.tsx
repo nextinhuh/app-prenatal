@@ -40,11 +40,11 @@ const App: React.FC = () => {
   return (
     <NavigationContainer>
       <StatusBar barStyle="dark-content" translucent />
-      <PaperProvider>
-        <AppContextProvider>
+      <AppContextProvider>
+        <PaperProvider>
           <Routes />
-        </AppContextProvider>
-      </PaperProvider>
+        </PaperProvider>
+      </AppContextProvider>
     </NavigationContainer>
   );
 };

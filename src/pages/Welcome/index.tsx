@@ -22,6 +22,7 @@ import {
 import ModalDropdown from 'react-native-modal-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+import { isFunction } from 'formik';
 import {
   Container,
   WelcomeContainer,
@@ -31,8 +32,15 @@ import {
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import { useTheme } from '../../hooks/theme';
+
+interface ThemeData {
+  colorOne: string | undefined;
+  colorTwo: string | undefined;
+}
 
 const Welcome: React.FC = () => {
+  const { updateThemeColor, updateLogged } = useTheme();
   const layout = useWindowDimensions();
   const firebaseAuth = firebase.auth().currentUser;
   const dbFirestore = firebase.firestore();
@@ -184,12 +192,43 @@ const Welcome: React.FC = () => {
   const handleSubmit = useCallback(async () => {
     if (selectedDateOnPicker !== '' && selectedDropDown !== '') {
       setLoading(true);
+      let colorThemeObject: ThemeData;
+      if (selectedDropDown === 'Menino') {
+        updateThemeColor({
+          colorOne: '#5787FF',
+          colorTwo: '#5831CC',
+        });
+        colorThemeObject = {
+          colorOne: '#5787FF',
+          colorTwo: '#5831CC',
+        };
+      } else if (selectedDropDown === 'Menina') {
+        updateThemeColor({
+          colorOne: '#FAAFEB',
+          colorTwo: '#D68BC7',
+        });
+        colorThemeObject = {
+          colorOne: '#FAAFEB',
+          colorTwo: '#D68BC7',
+        };
+      } else {
+        updateThemeColor({
+          colorOne: undefined,
+          colorTwo: undefined,
+        });
+        colorThemeObject = {
+          colorOne: undefined,
+          colorTwo: undefined,
+        };
+      }
       await dbFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .update({
           menstruationDate: selectedDateOnPicker,
           genderPreference: selectedDropDown,
+          themeColor: colorThemeObject,
+          firstLogin: false,
         })
         .then(() => {
           setLoading(false);
@@ -209,6 +248,7 @@ const Welcome: React.FC = () => {
     selectedDateOnPicker,
     selectedDropDown,
     navigate,
+    updateThemeColor,
   ]);
 
   return (

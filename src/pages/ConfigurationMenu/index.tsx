@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,9 +14,12 @@ import {
 } from './styles';
 
 import Header from '../../components/Header';
+import { useTheme } from '../../hooks/theme';
 
 const ConfigurationMenu: React.FC = () => {
   const navigation = useNavigation();
+  const { color } = useTheme();
+  const [colorTheme, setColorTheme] = useState<string[]>([]);
 
   const handleNavToUpdateProfile = useCallback(() => {
     navigation.navigate('ProfileUpdate');
@@ -25,7 +28,11 @@ const ConfigurationMenu: React.FC = () => {
   return (
     <Container>
       <LinearGradient
-        colors={['#F74462', '#FE3855']}
+        colors={
+          color
+            ? [`${color.colorOne}`, `${color.colorTwo}`]
+            : ['#F74462', '#FE3855']
+        }
         style={{
           width: '100%',
           height: '90%',

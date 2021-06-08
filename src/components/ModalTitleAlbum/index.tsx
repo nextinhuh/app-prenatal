@@ -10,6 +10,7 @@ import { ModalContainer, ModalTitle, ModalCard } from './styles';
 
 import Input from '../Input';
 import Button from '../Button';
+import { useTheme } from '../../hooks/theme';
 
 interface ModalNewAlbumProps extends ModalProps {
   modalVisible?: boolean;
@@ -29,6 +30,7 @@ const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
   updateAlbumTItle,
   ...rest
 }) => {
+  const { color } = useTheme();
   const [visible, setVisible] = useState(modalVisible);
   const [albumName, setAlbumName] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -36,7 +38,7 @@ const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
   const firebaseFirestore = firebase.firestore();
 
   const handleCreateNewAlbum = useCallback(async () => {
-    if (albumName != '') {
+    if (albumName !== '') {
       setLoading(true);
       await firebaseFirestore
         .collection('users')
@@ -102,14 +104,16 @@ const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
           <Entypo
             name="cross"
             size={30}
-            color="#f54f51"
+            color={color ? color.colorTwo : '#F54F51'}
             style={{ position: 'absolute', top: '5%', right: '8%' }}
             onPress={() => setVisibleState()}
           />
-          <ModalTitle>{albumTitle ? 'Editar Nome' : 'Novo Álbum'}</ModalTitle>
+          <ModalTitle style={{ color: color && color.colorTwo }}>
+            {albumTitle ? 'Editar Nome' : 'Novo Álbum'}
+          </ModalTitle>
 
           <Input
-            borderColor="#f54f51"
+            borderColor={color ? color.colorTwo : '#F54F51'}
             style={{ borderColor: '#f54f51', color: 'black' }}
             placeholder="Título do álbum"
             textPlaceHolderColor="black"
@@ -118,7 +122,10 @@ const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
           />
 
           {loading ? (
-            <ActivityIndicator size="large" color="#f54f51" />
+            <ActivityIndicator
+              size="large"
+              color={color ? color.colorTwo : '#F54F51'}
+            />
           ) : (
             <Button
               icon="check"
@@ -129,6 +136,7 @@ const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
                 width: 60,
                 height: 60,
                 borderRadius: 30,
+                backgroundColor: color && color.colorTwo,
               }}
               onPress={albumTitle ? handleEditAlbumName : handleCreateNewAlbum}
             />

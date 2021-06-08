@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import * as SplashScreen from 'expo-splash-screen';
+import { useTheme } from '../hooks/theme';
 
 import AppRoutes from './app.routes';
 import AuthRoutes from './auth.routes';
@@ -11,11 +12,12 @@ const Routes: React.FC = () => {
   const [userStatusLogged, setUserStatusLogged] = useState<React.FC>(AppRoutes);
   const [loading, setLoading] = useState(true);
   const dbFirestore = firebase.firestore();
+  const { updateThemeColor } = useTheme();
 
   useEffect(() => {
     SplashScreen.preventAutoHideAsync();
     firebase.auth().onAuthStateChanged(async status => {
-      if (status) {
+      if (status?.uid) {
         await dbFirestore
           .collection('users')
           .doc(firebase.auth().currentUser?.uid)
@@ -31,17 +33,15 @@ const Routes: React.FC = () => {
               await firebase.auth().currentUser?.updateProfile({
                 displayName: userName.name,
               });
-
-              await dbFirestore
-                .collection('users')
-                .doc(firebase.auth().currentUser?.uid)
-                .update({ firstLogin: false })
-                .then(() => {
-                  setUserStatusLogged(AuthFirstLoginRoutes);
-                  setLoading(false);
-                  SplashScreen.hideAsync();
-                });
+              setUserStatusLogged(AuthFirstLoginRoutes);
+              setLoading(false);
+              SplashScreen.hideAsync();
             } else {
+              updateThemeColor({
+                colorOne: result.data()?.themeColor?.colorOne,
+                colorTwo: result.data()?.themeColor?.colorTwo,
+              });
+
               setUserStatusLogged(AuthRoutes);
               setLoading(false);
               SplashScreen.hideAsync();
@@ -53,7 +53,7 @@ const Routes: React.FC = () => {
         SplashScreen.hideAsync();
       }
     });
-  }, []);
+  }, [dbFirestore, updateThemeColor]);
 
   return <>{loading ? null : userStatusLogged}</>;
 };

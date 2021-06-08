@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, ScrollView } from 'react-native';
 
 import firebase from 'firebase';
@@ -38,7 +38,7 @@ const MedicalRecordAndPrescription: React.FC = () => {
   const [prescription, setPrescription] = useState<Prescription>();
 
 
-  useEffect(() => {
+  useMemo(() => {
     async function loadMedicalRecords() {
       await firebaseFirestore
         .collection('users')

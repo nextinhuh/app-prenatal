@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ScrollView, Alert, ActivityIndicator, Keyboard } from 'react-native';
 import { useKeyboard } from '@react-native-community/hooks';
 import { useNavigation } from '@react-navigation/native';
@@ -15,6 +15,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import imgUserIcon from '../../assets/user.png';
 import Header from '../../components/Header';
+import { useTheme } from '../../hooks/theme';
 
 import {
   Container,
@@ -42,6 +43,7 @@ interface UserUpdate {
 
 const ProfileUpdate: React.FC = () => {
   const navigation = useNavigation();
+  const { color } = useTheme();
   const keyboard = useKeyboard();
   const dbFirestore = firebase.firestore();
   const firebaseAuth = firebase.auth().currentUser;
@@ -233,7 +235,11 @@ const ProfileUpdate: React.FC = () => {
       <ProfileContainer keyboardVisible={keyboard.keyboardShown}>
         <LinearGradient
           // Background Linear Gradient
-          colors={['#F74462', '#FE3855']}
+          colors={
+            color
+              ? [`${color.colorOne}`, `${color.colorTwo}`]
+              : ['#F74462', '#FE3855']
+          }
           style={{
             flex: 1,
             width: '100%',
@@ -273,7 +279,7 @@ const ProfileUpdate: React.FC = () => {
               <MaterialCommunityIcons
                 name="image-edit-outline"
                 size={30}
-                color="#fe3855"
+                color={color ? color.colorTwo : '#fe3855'}
               />
             </ButtonEditAvatar>
 
@@ -343,6 +349,7 @@ const ProfileUpdate: React.FC = () => {
             borderRadius: 30,
             marginBottom: 35,
             marginTop: 10,
+            backgroundColor: color && color.colorTwo,
           }}
           onPress={() => formik.handleSubmit()}
         />

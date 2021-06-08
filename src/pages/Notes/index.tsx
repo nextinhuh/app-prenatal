@@ -23,6 +23,7 @@ import {
 
 import Button2 from '../../components/Button';
 import Header from '../../components/Header';
+import { useTheme } from '../../hooks/theme';
 
 type ListNotes = Array<{
   id: string;
@@ -32,6 +33,7 @@ type ListNotes = Array<{
 
 const Notes: React.FC = () => {
   const navigation = useNavigation();
+  const { color } = useTheme();
   const [selectionDelete, setSelectionDelete] = useState(false);
   const [listNotesToDelete, setListNotesToDelete] = useState<string[]>([]);
   const [noteList, setNoteList] = useState<ListNotes | undefined>();
@@ -167,26 +169,30 @@ const Notes: React.FC = () => {
   return (
     <Container>
 
-      <Header title="SUAS ANOTAÇÕES" borderWhiteColor={false}>
+      <Header
+        title="SUAS ANOTAÇÕES"
+        borderWhiteColor={false}
+        iconColor={color && color.colorTwo}
+      >
         <TouchableOpacity onPress={handleToggleSelectionDelete}>
-          <AntDesign name="delete" size={25} color="#f54f51" />
+          <AntDesign name="delete" size={25} color={color ? color.colorTwo : "#F54F51"} />
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <AntDesign name="sharealt" size={25} color="#f54f51" />
+          <AntDesign name="sharealt" size={25} color={color ? color.colorTwo : "#F54F51"} />
         </TouchableOpacity>
       </Header>
 
       {selectionDelete ? (
         <DeleteContainer>
           <DeleteButton onPress={confirmNoteDelete}>
-            <DeleteButtonText>Apagar</DeleteButtonText>
-            <FontAwesome5 name="check" size={22} color="#f54f51" />
+            <DeleteButtonText style={{ color: color && color.colorTwo }}>Apagar</DeleteButtonText>
+            <FontAwesome5 name="check" size={22} color={color ? color.colorTwo : "#F54F51"} />
           </DeleteButton>
 
           <DeleteButton onPress={handleToggleSelectionDelete}>
-            <DeleteButtonText>Cancelar</DeleteButtonText>
-            <FontAwesome5 name="times" size={22} color="#f54f51" />
+            <DeleteButtonText style={{ color: color && color.colorTwo }}>Cancelar</DeleteButtonText>
+            <FontAwesome5 name="times" size={22} color={color ? color.colorTwo : "#F54F51"} />
           </DeleteButton>
         </DeleteContainer>
       ) : null}
@@ -197,10 +203,10 @@ const Notes: React.FC = () => {
         showsVerticalScrollIndicator={false}
         style={{ marginBottom: '10%' }}
         renderItem={({ item: note }) => (
-          <Card style={{ margin: 20, borderWidth: 1, borderColor: '#F54F51', maxHeight: '100%' }}>
+          <Card style={{ margin: 20, borderWidth: 1, borderColor: color ? color.colorTwo : "#F54F51", maxHeight: '100%' }}>
             <Card.Content>
               <Card.Title
-                title={<TitleCard>{note.title}</TitleCard>}
+                title={<TitleCard style={{ backgroundColor: color && color.colorTwo }}>{note.title}</TitleCard>}
                 style={{ marginTop: '-7%', marginLeft: '-10%' }}
                 right={() => (
                   <>
@@ -210,7 +216,7 @@ const Notes: React.FC = () => {
                           <FontAwesome5
                             name="square"
                             size={30}
-                            color="#f54f51"
+                            color={color ? color.colorTwo : "#F54F51"}
                           />
                         </DeleteButtonSquare>
                       ) : (
@@ -220,7 +226,7 @@ const Notes: React.FC = () => {
                           <FontAwesome5
                             name="check-square"
                             size={30}
-                            color="#f54f51"
+                            color={color ? color.colorTwo : "#F54F51"}
                           />
                         </DeleteButtonSquare>
                       )
@@ -235,7 +241,11 @@ const Notes: React.FC = () => {
             </Card.Content>
             <Card.Actions style={{ justifyContent: 'flex-end', marginRight: 10 }}>
               <TouchableOpacity onPress={() => handleEditNote(note.id, note.description, note.title)}>
-                <FontAwesome5 name="pencil-alt" size={25} color="#f54f51" />
+                <FontAwesome5
+                  name="pencil-alt"
+                  size={25}
+                  color={color ? color.colorTwo : "#F54F51"}
+                />
               </TouchableOpacity>
             </Card.Actions>
 
@@ -243,7 +253,7 @@ const Notes: React.FC = () => {
         )}
       />
 
-      <Button2 onPress={handleToCreateNewNote} icon="plus" style={{ width: 45, height: 45, borderRadius: 23, position: 'absolute', bottom: 25, right: 15 }} />
+      <Button2 onPress={handleToCreateNewNote} icon="plus" style={{ backgroundColor: color && color.colorTwo, width: 45, height: 45, borderRadius: 23, position: 'absolute', bottom: 25, right: 15 }} />
     </Container>
   );
 };

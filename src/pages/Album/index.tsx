@@ -5,7 +5,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Platform, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -15,6 +14,7 @@ import 'firebase/firestore';
 
 import Header from '../../components/Header';
 import ModalTitleAlbum from '../../components/ModalTitleAlbum';
+import { useTheme } from '../../hooks/theme';
 
 import {
   Container,
@@ -38,6 +38,7 @@ type Albuns = Array<{
 
 const Album: React.FC = () => {
   const navigation = useNavigation();
+  const { color } = useTheme();
   const [visibleModalNewAlbum, setVisibleModalNewAlbum] = useState(false);
   const [selectionDelete, setSelectionDelete] = useState(false);
   const [buttonDeleteActive, setButtonDeleteActive] = useState(true);
@@ -245,17 +246,25 @@ const Album: React.FC = () => {
 
   return (
     <Container>
-      <Header title="ÁLBUNS DE FOTOS" borderWhiteColor={false}>
+      <Header
+        title="ÁLBUNS DE FOTOS"
+        borderWhiteColor={false}
+        iconColor={color && color.colorTwo}
+      >
         <TouchableOpacity onPress={handleAlbumAdd}>
           <MaterialCommunityIcons
             name="book-plus-multiple-outline"
             size={25}
-            color="#f54f51"
+            color={color ? color.colorTwo : '#f54f51'}
           />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleToggleSelectionDelete}>
-          <AntDesign name="delete" size={25} color="#f54f51" />
+          <AntDesign
+            name="delete"
+            size={25}
+            color={color ? color.colorTwo : '#f54f51'}
+          />
         </TouchableOpacity>
       </Header>
 
@@ -270,13 +279,25 @@ const Album: React.FC = () => {
       {selectionDelete ? (
         <DeleteContainer>
           <ConfirmDeleteButton onPress={confirmImagesDelete}>
-            <DeleteButtonText>Apagar</DeleteButtonText>
-            <FontAwesome5 name="check" size={22} color="#f54f51" />
+            <DeleteButtonText style={{ color: color && color.colorTwo }}>
+              Apagar
+            </DeleteButtonText>
+            <FontAwesome5
+              name="check"
+              size={22}
+              color={color ? color.colorTwo : '#f54f51'}
+            />
           </ConfirmDeleteButton>
 
           <CancelDeleteButton onPress={handleToggleSelectionDelete}>
-            <DeleteButtonText>Cancelar</DeleteButtonText>
-            <FontAwesome5 name="times" size={22} color="#f54f51" />
+            <DeleteButtonText style={{ color: color && color.colorTwo }}>
+              Cancelar
+            </DeleteButtonText>
+            <FontAwesome5
+              name="times"
+              size={22}
+              color={color ? color.colorTwo : '#f54f51'}
+            />
           </CancelDeleteButton>
         </DeleteContainer>
       ) : null}
@@ -313,17 +334,23 @@ const Album: React.FC = () => {
               >
                 {!buttonDeleteActive ? (
                   selectedAlbuns.indexOf(album.id) < 0 ? (
-                    <FontAwesome5 name="square" size={30} color="#f54f51" />
+                    <FontAwesome5
+                      name="square"
+                      size={30}
+                      color={color ? color.colorTwo : '#f54f51'}
+                    />
                   ) : (
                     <FontAwesome5
                       name="check-square"
                       size={30}
-                      color="#f54f51"
+                      color={color ? color.colorTwo : '#f54f51'}
                     />
                   )
                 ) : null}
               </ImageButtonDelete>
-              <AlbumTitle>{album.albumName}</AlbumTitle>
+              <AlbumTitle style={{ backgroundColor: color && color.colorTwo }}>
+                {album.albumName}
+              </AlbumTitle>
             </ImageButton>
           </ImageContainer>
         )}

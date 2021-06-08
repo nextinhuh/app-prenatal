@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable prettier/prettier */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import firebase from 'firebase';
@@ -12,6 +12,7 @@ import Carousel from 'react-native-snap-carousel';
 
 import imgUserIcon from '../../assets/user.png';
 import imgDegrade2 from '../../assets/degrade2.png';
+import { useTheme } from '../../hooks/theme';
 
 
 import {
@@ -49,8 +50,10 @@ interface ItemProps {
   text: string;
 }
 
+
 const Dashboard: React.FC = () => {
   const navigate = useNavigation();
+  const { color } = useTheme();
   const firestore = firebase.firestore();
   const firebaseAuth = firebase.auth().currentUser;
   const refCarousel = React.createRef<Carousel<ItemProps>>();
@@ -113,7 +116,7 @@ const Dashboard: React.FC = () => {
     return (
       <CarouselCard>
         <ImageBannerCard source={{ uri: 'https://images.pexels.com/photos/3662773/pexels-photo-3662773.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260' }} />
-        <TitleBannerCard>{item.title}</TitleBannerCard>
+        <TitleBannerCard style={{ backgroundColor: color && color.colorTwo }}>{item.title}</TitleBannerCard>
         <DescriptionBannerCard>{item.text}</DescriptionBannerCard>
       </CarouselCard>
     );
@@ -122,11 +125,11 @@ const Dashboard: React.FC = () => {
   const renderCarouselItem2 = ({ item, index }: { item: ItemProps; index: number }) => {
     return (
       <DividerContainer>
-        <Line />
-        <CarouselCard2>
+        <Line style={{ backgroundColor: color && color.colorTwo }} />
+        <CarouselCard2 style={{ backgroundColor: color && color.colorTwo }}>
           <TitleBannerCard2>{item.title}</TitleBannerCard2>
         </CarouselCard2>
-        <Line />
+        <Line style={{ backgroundColor: color && color.colorTwo }} />
       </DividerContainer>
     );
   };
@@ -145,11 +148,13 @@ const Dashboard: React.FC = () => {
     refCarousel2.current?.snapToItem(index);
     setIndexCarousel(index + 1);
   }, [refCarousel, refCarousel2]);
+
   const handleChangeCardMovingTimeLine1 = useCallback((index: number) => {
 
     refCarousel.current?.snapToItem(index);
     setIndexCarousel(index + 1);
   }, [refCarousel]);
+
   const handleChangeCardMovingTimeLine2 = useCallback((index: number) => {
 
     refCarousel2.current?.snapToItem(index);
@@ -183,10 +188,10 @@ const Dashboard: React.FC = () => {
 
       <Header>
         <DrawerMenuButton onPress={() => navigate.dispatch(DrawerActions.toggleDrawer())}>
-          <Feather name="menu" size={36} color="#F54F51" />
+          <Feather name="menu" size={36} color={color ? color.colorTwo : "#F54F51"} />
         </DrawerMenuButton>
 
-        <WelcomeText>
+        <WelcomeText style={{ color: color ? color.colorTwo : '#fe637a' }}>
           Olá, {` ${userInfo?.name}`}
         </WelcomeText>
       </Header>
@@ -229,27 +234,25 @@ const Dashboard: React.FC = () => {
       </CarouselContainer2>
 
       <SelectWeekButtonContainer>
-        <ContainerButton>
-          <BackgroudImage source={imgDegrade2} imageStyle={{ borderRadius: 70 }} resizeMode="cover">
-            <SelectWeekButton onPress={() => handleChangeWeekNumberForMore(indexCarousel)}>
-              <Ionicons
-                name="ios-arrow-up"
-                size={30}
-                color="white"
-              />
-            </SelectWeekButton>
+        <ContainerButton colors={color ? [`${color.colorOne}`, `${color.colorTwo}`] : ['#F74462', '#FE3855']}>
+          <SelectWeekButton onPress={() => handleChangeWeekNumberForMore(indexCarousel)}>
+            <Ionicons
+              name="ios-arrow-up"
+              size={30}
+              color="white"
+            />
+          </SelectWeekButton>
 
-            <SelectWeekCountText style={{ textShadowOffset: { width: 2, height: 3 }, textShadowRadius: 10, textShadowColor: '#223322' }}>{indexCarousel}</SelectWeekCountText>
-            <SelectWeekText style={{ textShadowOffset: { width: 2, height: 3 }, textShadowRadius: 10, textShadowColor: '#223322' }}>Semanas</SelectWeekText>
+          <SelectWeekCountText style={{ textShadowOffset: { width: 2, height: 3 }, textShadowRadius: 10, textShadowColor: '#223322' }}>{indexCarousel}</SelectWeekCountText>
+          <SelectWeekText style={{ textShadowOffset: { width: 2, height: 3 }, textShadowRadius: 10, textShadowColor: '#223322' }}>Semanas</SelectWeekText>
 
-            <SelectWeekButton onPress={() => handleChangeWeekNumberForLess(indexCarousel)}>
-              <Ionicons
-                name="ios-arrow-down"
-                size={30}
-                color="white"
-              />
-            </SelectWeekButton>
-          </BackgroudImage>
+          <SelectWeekButton onPress={() => handleChangeWeekNumberForLess(indexCarousel)}>
+            <Ionicons
+              name="ios-arrow-down"
+              size={30}
+              color="white"
+            />
+          </SelectWeekButton>
         </ContainerButton>
 
       </SelectWeekButtonContainer>

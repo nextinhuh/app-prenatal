@@ -6,7 +6,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Image
 } from 'react-native';
 import { useKeyboard } from '@react-native-community/hooks';
 import { useFormik } from 'formik';
@@ -18,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import iconImg from '../../assets/icon.png';
 
 import {
   Container,
@@ -85,7 +87,11 @@ const SignIn: React.FC = () => {
               elevation: 30
             }}
           >
+
             <Title>Cegonha</Title>
+
+            {!keyboard.keyboardShown && <Image source={iconImg} style={{ width: 150, height: 150, marginBottom: -50, resizeMode: 'contain' }} />}
+
             <ScrollView
               style={{ width: '100%' }}
               showsVerticalScrollIndicator={false}

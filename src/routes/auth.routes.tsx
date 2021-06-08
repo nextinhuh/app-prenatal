@@ -2,6 +2,7 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import CustomDrawerMenu from '../components/CustomDrawerMenu';
+import { useTheme } from '../hooks/theme';
 
 import Dashboard from '../pages/Dashboard';
 import ProfileUpdate from '../pages/ProfileUpdate';
@@ -16,11 +17,13 @@ import ConfigurationMenu from '../pages/ConfigurationMenu';
 const Auth = createDrawerNavigator();
 
 const AuthRoutes: React.FC = () => {
+  const { color } = useTheme();
+
   return (
     <Auth.Navigator
       initialRouteName="Dashboard"
       drawerContentOptions={{
-        activeBackgroundColor: '#EC6478',
+        activeBackgroundColor: color ? color.colorTwo : '#EC6478',
         activeTintColor: 'white',
       }}
       drawerContent={props => <CustomDrawerMenu {...props} />}
