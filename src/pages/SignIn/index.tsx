@@ -12,8 +12,8 @@ import {
 import { useKeyboard } from '@react-native-community/hooks';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
@@ -56,6 +56,7 @@ const SignIn: React.FC = () => {
 
   async function handleLogon(user: UserData) {
     setLoading(!loading);
+    /*
     firebase
       .auth()
       .signInWithEmailAndPassword(user.email, user.password)
@@ -69,7 +70,7 @@ const SignIn: React.FC = () => {
           'Favor verificar e tentar novamente.',
           [{ text: 'OK' }],
         );
-      });
+      });*/
   }
 
   return (

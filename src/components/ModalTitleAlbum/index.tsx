@@ -3,8 +3,8 @@
 import React, { useCallback, useState } from 'react';
 import { Alert, Modal, ModalProps, ActivityIndicator } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 import { ModalContainer, ModalTitle, ModalCard } from './styles';
 
@@ -34,13 +34,13 @@ const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
   const [visible, setVisible] = useState(modalVisible);
   const [albumName, setAlbumName] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const firebaseAuth = firebase.auth().currentUser;
-  const firebaseFirestore = firebase.firestore();
+  const firebaseAuth = getAuth().currentUser;
+  const firebaseFirestore = getFirestore();
 
   const handleCreateNewAlbum = useCallback(async () => {
     if (albumName !== '') {
       setLoading(true);
-      await firebaseFirestore
+      /*await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .collection('album')
@@ -50,7 +50,7 @@ const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
           setLoading(false);
           setVisibleState();
           updateAlbumList();
-        });
+        });*/
     } else {
       Alert.alert('O nome do álbum não pode estar vazio!', '', [
         {
@@ -68,6 +68,7 @@ const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
 
   const handleEditAlbumName = useCallback(async () => {
     setLoading(true);
+    /*
     await firebaseFirestore
       .collection('users')
       .doc(firebaseAuth?.uid)
@@ -78,7 +79,7 @@ const ModalTitleAlbum: React.FC<ModalNewAlbumProps> = ({
         updateAlbumTItle();
         setLoading(false);
         setVisibleState();
-      });
+      });*/
   }, [
     albumId,
     albumName,

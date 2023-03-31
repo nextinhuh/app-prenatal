@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import * as SplashScreen from 'expo-splash-screen';
 import { useTheme } from '../hooks/theme';
 
@@ -11,11 +11,12 @@ import AuthFirstLoginRoutes from './authFirstLogin.routes';
 const Routes: React.FC = () => {
   const [userStatusLogged, setUserStatusLogged] = useState<React.FC>(AppRoutes);
   const [loading, setLoading] = useState(true);
-  const dbFirestore = firebase.firestore();
+  const dbFirestore = getFirestore();
   const { updateThemeColor } = useTheme();
 
   useEffect(() => {
     SplashScreen.preventAutoHideAsync();
+    /*
     firebase.auth().onAuthStateChanged(async status => {
       if (status?.uid) {
         await dbFirestore
@@ -52,10 +53,10 @@ const Routes: React.FC = () => {
         setLoading(false);
         SplashScreen.hideAsync();
       }
-    });
+    });*/
   }, [dbFirestore, updateThemeColor]);
 
-  return <>{loading ? null : userStatusLogged}</>;
+  return <>{loading ? userStatusLogged : userStatusLogged}</>;
 };
 
 export default Routes;

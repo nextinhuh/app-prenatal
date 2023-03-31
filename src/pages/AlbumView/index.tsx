@@ -15,8 +15,9 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 import Header from '../../components/Header';
 import Button2 from '../../components/Button';
@@ -67,15 +68,15 @@ const AlbumView: React.FC = () => {
   const [selectedImages, setSelectedIamges] = useState<string[]>([]);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const firebaseAuth = firebase.auth().currentUser;
-  const storageFirebase = firebase.storage();
-  const firebaseFirestore = firebase.firestore();
+  const firebaseAuth = getAuth().currentUser;
+  const storageFirebase = getStorage();
+  const firebaseFirestore = getFirestore();
 
   const routeParams = route.params as RouteParams;
 
   useEffect(() => {
     async function listImagesUrl() {
-      await firebaseFirestore
+      /*await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .collection('album')
@@ -97,7 +98,7 @@ const AlbumView: React.FC = () => {
             };
             setAlbum(album);
           }
-        });
+        });*/
     }
 
     listImagesUrl();
@@ -113,43 +114,43 @@ const AlbumView: React.FC = () => {
       allowsEditing: true,
       quality: 1,
     });
+    /*
+       if (!result.canceled) {
+         setModalVisible(true);
+         const image = await fetch(result.assets[0].uri);
+         const blobImage = await image.blob();
+         const time = new Date().getTime();
 
-    if (!result.cancelled) {
-      setModalVisible(true);
-      const image = await fetch(result.uri);
-      const blobImage = await image.blob();
-      const time = new Date().getTime();
+         const imageRef = storageFirebase
+           .ref()
+           .child(`album/${firebaseAuth?.uid}/${time}`);
 
-      const imageRef = storageFirebase
-        .ref()
-        .child(`album/${firebaseAuth?.uid}/${time}`);
+         await imageRef.put(blobImage);
 
-      await imageRef.put(blobImage);
+         let linkImage = '';
 
-      let linkImage = '';
+         await imageRef.getDownloadURL().then(url => {
+           if (url) {
+             linkImage = url;
+           }
+         });
+         album?.listPhotos.push({
+           id: time.toString(),
+           uri: linkImage,
+         });
 
-      await imageRef.getDownloadURL().then(url => {
-        if (url) {
-          linkImage = url;
-        }
-      });
-      album?.listPhotos.push({
-        id: time.toString(),
-        uri: linkImage,
-      });
+         const listPhotos = album?.listPhotos;
 
-      const listPhotos = album?.listPhotos;
+         await firebaseFirestore
+           .collection('users')
+           .doc(firebaseAuth?.uid)
+           .collection('album')
+           .doc(routeParams?.albumId)
+           .update({ listPhotos });
 
-      await firebaseFirestore
-        .collection('users')
-        .doc(firebaseAuth?.uid)
-        .collection('album')
-        .doc(routeParams?.albumId)
-        .update({ listPhotos });
-
-      setAlbum(album);
-      setModalVisible(false);
-    }
+         setAlbum(album);
+         setModalVisible(false);
+       }*/
   }, [
     firebaseAuth,
     firebaseFirestore,
@@ -164,44 +165,44 @@ const AlbumView: React.FC = () => {
       allowsEditing: true,
       quality: 1,
     });
+    /*
+        if (!result.canceled) {
+          setModalVisible(true);
+          const image = await fetch(result.assets[0].uri);
+          const blobImage = await image.blob();
+          const time = new Date().getTime();
 
-    if (!result.cancelled) {
-      setModalVisible(true);
-      const image = await fetch(result.uri);
-      const blobImage = await image.blob();
-      const time = new Date().getTime();
+          const imageRef = await storageFirebase
+            .ref()
+            .child(`album/${firebaseAuth?.uid}/${time}`);
 
-      const imageRef = await storageFirebase
-        .ref()
-        .child(`album/${firebaseAuth?.uid}/${time}`);
+          await imageRef.put(blobImage);
 
-      await imageRef.put(blobImage);
+          let linkImage = '';
 
-      let linkImage = '';
+          await imageRef.getDownloadURL().then(url => {
+            if (url) {
+              linkImage = url;
+            }
+          });
 
-      await imageRef.getDownloadURL().then(url => {
-        if (url) {
-          linkImage = url;
-        }
-      });
+          album?.listPhotos.push({
+            id: time.toString(),
+            uri: linkImage,
+          });
 
-      album?.listPhotos.push({
-        id: time.toString(),
-        uri: linkImage,
-      });
+          const listPhotos = album?.listPhotos;
 
-      const listPhotos = album?.listPhotos;
+          await firebaseFirestore
+            .collection('users')
+            .doc(firebaseAuth?.uid)
+            .collection('album')
+            .doc(routeParams?.albumId)
+            .update({ listPhotos });
 
-      await firebaseFirestore
-        .collection('users')
-        .doc(firebaseAuth?.uid)
-        .collection('album')
-        .doc(routeParams?.albumId)
-        .update({ listPhotos });
-
-      setAlbum(album);
-      setModalVisible(false);
-    }
+          setAlbum(album);
+          setModalVisible(false);
+        }*/
   }, [
     firebaseAuth,
     firebaseFirestore,
@@ -224,7 +225,7 @@ const AlbumView: React.FC = () => {
   }, [handleGaleryPhotoPicker, handleTakePhoto]);
 
   const handleToggleImageView = useCallback(
-    index => {
+    (index: any) => {
       setImageIndex(index);
       setIsVisible(!visible);
     },
@@ -272,77 +273,77 @@ const AlbumView: React.FC = () => {
 
     async function deletePhotos() {
       setModalVisible(true);
-
-      await firebaseFirestore
-        .collection('users')
-        .doc(firebaseAuth?.uid)
-        .collection('album')
-        .doc(routeParams?.albumId)
-        .get()
-        .then(result => {
-          result.data()?.listPhotos.map((photo: any) => {
-            selectedImages.map(idImagesToDelete => {
-              if (idImagesToDelete === photo.id) {
-                const imageRef = storageFirebase.refFromURL(photo.uri);
-                imageRef.delete();
-              }
-            });
-          });
-
-          const listPhotos = album?.listPhotos.filter(
-            photo => !selectedImages.includes(photo.id),
-          );
-
-          if (listPhotos.length > 0) {
-            firebaseFirestore
-              .collection('users')
-              .doc(firebaseAuth?.uid)
-              .collection('album')
-              .doc(routeParams?.albumId)
-              .update({ listPhotos });
-
-            Alert.alert('As fotos foram deletadas com sucesso!', '', [
-              {
-                text: 'Ok',
-              },
-            ]);
-
-            firebaseFirestore
+      /*
+            await firebaseFirestore
               .collection('users')
               .doc(firebaseAuth?.uid)
               .collection('album')
               .doc(routeParams?.albumId)
               .get()
               .then(result => {
-                setAlbum(result.data() as Album);
-              });
+                result.data()?.listPhotos.map((photo: any) => {
+                  selectedImages.map(idImagesToDelete => {
+                    if (idImagesToDelete === photo.id) {
+                      const imageRef = storageFirebase.refFromURL(photo.uri);
+                      imageRef.delete();
+                    }
+                  });
+                });
 
-            handleToggleSelectionDelete();
-            setModalVisible(false);
-          } else {
-            const { albumName } = album;
-            setAlbum({
-              id: album.id,
-              albumName,
-              listPhotos,
-            });
-            firebaseFirestore
-              .collection('users')
-              .doc(firebaseAuth?.uid)
-              .collection('album')
-              .doc(routeParams?.albumId)
-              .set({ albumName });
+                const listPhotos = album?.listPhotos.filter(
+                  photo => !selectedImages.includes(photo.id),
+                );
 
-            Alert.alert('As fotos foram deletadas com sucesso!', '', [
-              {
-                text: 'Ok',
-              },
-            ]);
+                if (listPhotos.length > 0) {
+                  firebaseFirestore
+                    .collection('users')
+                    .doc(firebaseAuth?.uid)
+                    .collection('album')
+                    .doc(routeParams?.albumId)
+                    .update({ listPhotos });
 
-            handleToggleSelectionDelete();
-            setModalVisible(false);
-          }
-        });
+                  Alert.alert('As fotos foram deletadas com sucesso!', '', [
+                    {
+                      text: 'Ok',
+                    },
+                  ]);
+
+                  firebaseFirestore
+                    .collection('users')
+                    .doc(firebaseAuth?.uid)
+                    .collection('album')
+                    .doc(routeParams?.albumId)
+                    .get()
+                    .then(result => {
+                      setAlbum(result.data() as Album);
+                    });
+
+                  handleToggleSelectionDelete();
+                  setModalVisible(false);
+                } else {
+                  const { albumName } = album;
+                  setAlbum({
+                    id: album.id,
+                    albumName,
+                    listPhotos,
+                  });
+                  firebaseFirestore
+                    .collection('users')
+                    .doc(firebaseAuth?.uid)
+                    .collection('album')
+                    .doc(routeParams?.albumId)
+                    .set({ albumName });
+
+                  Alert.alert('As fotos foram deletadas com sucesso!', '', [
+                    {
+                      text: 'Ok',
+                    },
+                  ]);
+
+                  handleToggleSelectionDelete();
+                  setModalVisible(false);
+                }
+              });*/
     }
   }, [
     firebaseAuth,
@@ -362,6 +363,7 @@ const AlbumView: React.FC = () => {
   }, [navigation]);
 
   const updateAlbumTitle = useCallback(async () => {
+    /*
     await firebaseFirestore
       .collection('users')
       .doc(firebaseAuth?.uid)
@@ -384,7 +386,7 @@ const AlbumView: React.FC = () => {
           };
           setAlbum(album);
         }
-      });
+      });*/
   }, [firebaseAuth, firebaseFirestore, routeParams]);
 
   return (
@@ -458,8 +460,8 @@ const AlbumView: React.FC = () => {
         showsVerticalScrollIndicator={false}
         numColumns={3}
         extraData={selectedImages}
-        keyExtractor={image => image.id}
-        renderItem={({ item: image, index }) => (
+        keyExtractor={(image: { id: any; }) => image.id}
+        renderItem={({ item: image, index }: any) => (
           <ImageContainer>
             <ImageButton
               disabled={selectionDelete}

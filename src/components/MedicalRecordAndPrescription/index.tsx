@@ -3,7 +3,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, ScrollView } from 'react-native';
 
-import firebase from 'firebase';
+import { getAuth } from 'firebase/auth';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import { useConsult } from '../../hooks/consults';
 
 import {
@@ -31,8 +32,8 @@ type Prescription = Array<{
 
 const MedicalRecordAndPrescription: React.FC = () => {
   const { consultId } = useConsult();
-  const firebaseAuth = firebase.auth().currentUser;
-  const firebaseFirestore = firebase.firestore();
+  const firebaseAuth = getAuth().currentUser;
+  const firebaseFirestore = getFirestore();
   const [loading, setLoading] = useState(true);
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecords>();
   const [prescription, setPrescription] = useState<Prescription>();
@@ -40,7 +41,16 @@ const MedicalRecordAndPrescription: React.FC = () => {
 
   useMemo(() => {
     async function loadMedicalRecords() {
-      await firebaseFirestore
+      const userRef = collection(firebaseFirestore, 'users.consults', String(firebaseAuth?.uid));
+
+      getDocs(userRef).then((result) => {
+        if (!result.empty) {
+          //setMedicalRecords(result. data()?.medicalRecords);
+          setLoading(false);
+        }
+      });
+
+      /*await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .collection('consults')
@@ -51,10 +61,10 @@ const MedicalRecordAndPrescription: React.FC = () => {
             setMedicalRecords(result.data()?.medicalRecords);
             setLoading(false);
           }
-        });
+        });*/
     }
 
-    async function loadRecords() {
+    /*async function loadRecords() {
       await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
@@ -67,9 +77,9 @@ const MedicalRecordAndPrescription: React.FC = () => {
             setPrescription(records);
           }
         });
-    }
+    }*/
     if (consultId) {
-      loadRecords();
+      //loadRecords();
       loadMedicalRecords();
     }
   }, [firebaseFirestore, firebaseAuth, consultId]);

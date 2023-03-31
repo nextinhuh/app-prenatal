@@ -9,8 +9,8 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 import Header from '../../components/Header';
 import ModalTitleAlbum from '../../components/ModalTitleAlbum';
@@ -44,8 +44,8 @@ const Album: React.FC = () => {
   const [buttonDeleteActive, setButtonDeleteActive] = useState(true);
   const [selectedAlbuns, setSelectedAlbuns] = useState<string[]>([]);
   const [albumList, setAlbumList] = useState<Albuns>([]);
-  const firebaseAuth = firebase.auth().currentUser;
-  const firebaseFirestore = firebase.firestore();
+  const firebaseAuth = getAuth().currentUser;
+  const firebaseFirestore = getFirestore();
 
   useEffect(() => {
     (async () => {
@@ -73,7 +73,7 @@ const Album: React.FC = () => {
     })();
 
     async function getListAlbuns() {
-      await firebaseFirestore
+      /*await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .collection('album')
@@ -97,14 +97,14 @@ const Album: React.FC = () => {
             }
           });
           setAlbumList(resultList);
-        });
+        });*/
     }
 
     getListAlbuns();
   }, [firebaseAuth, firebaseFirestore]);
 
   const getListAlbuns = useCallback(async () => {
-    await firebaseFirestore
+    /*await firebaseFirestore
       .collection('users')
       .doc(firebaseAuth?.uid)
       .collection('album')
@@ -128,7 +128,7 @@ const Album: React.FC = () => {
           }
         });
         setAlbumList(resultList);
-      });
+      });*/
   }, [firebaseAuth, firebaseFirestore]);
 
   const handleAlbumAdd = useCallback(() => {
@@ -185,6 +185,7 @@ const Album: React.FC = () => {
     );
 
     async function deleteAlbuns() {
+      /*
       await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
@@ -235,7 +236,7 @@ const Album: React.FC = () => {
           handleToggleSelectionDelete();
 
           return batch.commit();
-        });
+        });*/
     }
   }, [
     firebaseAuth,
@@ -307,17 +308,17 @@ const Album: React.FC = () => {
         showsVerticalScrollIndicator={false}
         numColumns={1}
         extraData={selectedAlbuns}
-        keyExtractor={album => album.id}
-        renderItem={({ item: album }) => (
+        keyExtractor={(album: { id: any; }) => album.id}
+        renderItem={({ item }: any) => (
           <ImageContainer>
             <ImageButton
               disabled={selectionDelete}
-              onPress={() => showAlbumView(album.id)}
+              onPress={() => showAlbumView(item.id)}
             >
-              {album.uri ? (
+              {item.uri ? (
                 <Image
-                  isSelected={selectedAlbuns.indexOf(album.id) > -1}
-                  source={{ uri: album.uri }}
+                  isSelected={selectedAlbuns.indexOf(item.id) > -1}
+                  source={{ uri: item.uri }}
                 />
               ) : (
                 <MaterialCommunityIcons
@@ -330,10 +331,10 @@ const Album: React.FC = () => {
 
               <ImageButtonDelete
                 disabled={buttonDeleteActive}
-                onPress={() => handleSelectAlbumToDelete(album.id)}
+                onPress={() => handleSelectAlbumToDelete(item.id)}
               >
                 {!buttonDeleteActive ? (
-                  selectedAlbuns.indexOf(album.id) < 0 ? (
+                  selectedAlbuns.indexOf(item.id) < 0 ? (
                     <FontAwesome5
                       name="square"
                       size={30}
@@ -349,7 +350,7 @@ const Album: React.FC = () => {
                 ) : null}
               </ImageButtonDelete>
               <AlbumTitle style={{ backgroundColor: color && color.colorTwo }}>
-                {album.albumName}
+                {item.albumName}
               </AlbumTitle>
             </ImageButton>
           </ImageContainer>

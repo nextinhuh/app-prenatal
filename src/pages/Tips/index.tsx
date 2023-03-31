@@ -4,8 +4,8 @@ import { Button, Card, Menu, Divider } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 import { Container, Header, BackButton, Title, OptionButton } from './styles';
 
@@ -15,7 +15,7 @@ import Button2 from '../../components/Button';
 const Tips: React.FC = () => {
   const navigation = useNavigation();
   const [visibleMenu, setVisibleMenu] = useState(false);
-  const firebaseAuth = firebase.auth().currentUser;
+  const firebaseAuth = getAuth().currentUser;
   const [indexCarousel, setIndexCarousel] = useState(0);
   const [carouselItems, setCarouselItems] = useState({
     activeIndex: 0,
@@ -43,31 +43,7 @@ const Tips: React.FC = () => {
     ],
   });
 
-  const test = ({ item, index }) => {
-    return (
-      <Pagination
-        dotsLength={carouselItems.carouselItems.length}
-        activeDotIndex={indexCarousel}
-        containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
-        dotStyle={{
-          width: 10,
-          height: 10,
-          borderRadius: 5,
-          marginHorizontal: 8,
-          backgroundColor: 'rgba(255, 255, 255, 0.92)',
-        }}
-        inactiveDotStyle={
-          {
-            // Define styles for inactive dots here
-          }
-        }
-        inactiveDotOpacity={0.4}
-        inactiveDotScale={0.6}
-      />
-    );
-  };
-
-  useEffect(() => { }, [firebaseFirestore, firebaseAuth]);
+  useEffect(() => { }, [firebaseAuth]);
 
   const handleNavBack = useCallback(() => {
     navigation.goBack();
@@ -101,14 +77,6 @@ const Tips: React.FC = () => {
         </Menu>
       </Header>
 
-      <Carousel
-        ref={ref => indexCarousel}
-        data={carouselItems.carouselItems}
-        sliderWidth={300}
-        itemWidth={300}
-        renderItem={test}
-        onSnapToItem={index => setIndexCarousel(index)}
-      />
     </Container>
   );
 };

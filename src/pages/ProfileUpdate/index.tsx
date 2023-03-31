@@ -5,8 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { Formik, useFormik } from 'formik';
 import * as Yup from 'yup';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -45,9 +46,9 @@ const ProfileUpdate: React.FC = () => {
   const navigation = useNavigation();
   const { color } = useTheme();
   const keyboard = useKeyboard();
-  const dbFirestore = firebase.firestore();
-  const firebaseAuth = firebase.auth().currentUser;
-  const storageFirebase = firebase.storage();
+  const dbFirestore = getFirestore();
+  const firebaseAuth = getAuth().currentUser;
+  const storageFirebase = getStorage();
   const [userInfo, setUserInfo] = useState<User>({} as User);
   const [updatingPhoto, setUpdatingPhoto] = useState(false);
 
@@ -77,9 +78,10 @@ const ProfileUpdate: React.FC = () => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    /*
+    if (!result.canceled) {
       setUpdatingPhoto(true);
-      const image = await fetch(result.uri);
+      const image = await fetch(result.assets[0].uri);
       const blobImage = await image.blob();
 
       const imageRef = await storageFirebase
@@ -106,7 +108,7 @@ const ProfileUpdate: React.FC = () => {
       };
       setUserInfo(user);
       setUpdatingPhoto(false);
-    }
+    }*/
   }, [storageFirebase, firebaseAuth, userInfo.name, userInfo.email]);
 
   const handleGaleryPhotoPicker = useCallback(async () => {
@@ -116,9 +118,10 @@ const ProfileUpdate: React.FC = () => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    /*
+    if (!result.canceled) {
       setUpdatingPhoto(true);
-      const image = await fetch(result.uri);
+      const image = await fetch(result.assets[0].uri);
       const blobImage = await image.blob();
 
       const imageRef = await storageFirebase
@@ -145,7 +148,7 @@ const ProfileUpdate: React.FC = () => {
       };
       setUserInfo(user);
       setUpdatingPhoto(false);
-    }
+    }*/
   }, [storageFirebase, firebaseAuth, userInfo.name, userInfo.email]);
 
   const handleAddPhoto = useCallback(() => {
@@ -163,6 +166,7 @@ const ProfileUpdate: React.FC = () => {
 
   const handleUpdateUser = useCallback(
     async (user: UserUpdate) => {
+      /*
       if (user.email !== userInfo.email && user.email !== undefined) {
         console.log(userInfo.email);
         await firebaseAuth?.updateEmail(user.email).catch(err => {
@@ -199,7 +203,7 @@ const ProfileUpdate: React.FC = () => {
           text: 'Ok',
           onPress: handleNavBack,
         },
-      ]);
+      ]);*/
     },
     [firebaseAuth, userInfo, handleNavBack, dbFirestore],
   );

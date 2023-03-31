@@ -12,8 +12,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useKeyboard } from '@react-native-community/hooks';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import Input from '../../components/Input';
@@ -40,7 +40,7 @@ interface User {
 const SignUp: React.FC = () => {
   const navigation = useNavigation();
   const keyboard = useKeyboard();
-  const dbFirestore = firebase.firestore();
+  const dbFirestore = getFirestore();
 
   const formik = useFormik({
     initialValues: { email: '', password: '', name: '', confirmPassword: '' },
@@ -64,6 +64,7 @@ const SignUp: React.FC = () => {
 
   const handleCreateUser = useCallback(
     async (user: User) => {
+      /*
       await firebase
         .auth()
         .createUserWithEmailAndPassword(user.email, user.password)
@@ -101,7 +102,7 @@ const SignUp: React.FC = () => {
             index: 0,
             routes: [{ name: 'SignUp' }],
           });
-        });
+        });*/
     },
     [navigation, dbFirestore],
   );

@@ -8,8 +8,8 @@ import { FlatList, Alert, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-paper';
 import { FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import HTML from "react-native-render-html";
 
 import {
@@ -37,12 +37,12 @@ const Notes: React.FC = () => {
   const [selectionDelete, setSelectionDelete] = useState(false);
   const [listNotesToDelete, setListNotesToDelete] = useState<string[]>([]);
   const [noteList, setNoteList] = useState<ListNotes | undefined>();
-  const firebaseAuth = firebase.auth().currentUser;
-  const firebaseFirestore = firebase.firestore();
+  const firebaseAuth = getAuth().currentUser;
+  const firebaseFirestore = getFirestore();
 
   useEffect(() => {
     async function listNotes() {
-      await firebaseFirestore
+      /*await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .collection('notes')
@@ -53,7 +53,7 @@ const Notes: React.FC = () => {
             resultList.push(doc.data());
           });
           setNoteList(resultList);
-        });
+        });*/
     }
 
     listNotes();
@@ -106,6 +106,7 @@ const Notes: React.FC = () => {
     );
 
     async function deleteNotes() {
+      /*
       await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
@@ -155,7 +156,7 @@ const Notes: React.FC = () => {
               },
             ],
           );
-        });
+        });*/
     }
   }, [firebaseAuth, firebaseFirestore, listNotesToDelete]);
 

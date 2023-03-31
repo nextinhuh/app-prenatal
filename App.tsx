@@ -10,18 +10,17 @@ import { OpenSans_400Regular } from '@expo-google-fonts/open-sans';
 import { Underdog_400Regular } from '@expo-google-fonts/underdog';
 import { Montserrat_400Regular } from '@expo-google-fonts/montserrat';
 import * as SplashScreen from 'expo-splash-screen';
+import { initializeApp } from 'firebase/app';
 
 import { Provider as PaperProvider } from 'react-native-paper';
 
-import firebase from 'firebase';
 import { NavigationContainer } from '@react-navigation/native';
 
-import firebaseConfig from './src/config/FirebaseConfig';
 import Routes from './src/routes';
 
 import AppContextProvider from './src/hooks';
+import firebaseConfig from './src/config/FirebaseConfig';
 
-firebase.initializeApp(firebaseConfig);
 
 const App: React.FC = () => {
   const [fontsLoaded] = useFonts({
@@ -36,6 +35,7 @@ const App: React.FC = () => {
   });
   if (!fontsLoaded) SplashScreen.preventAutoHideAsync();
   else SplashScreen.hideAsync();
+  const app = initializeApp(firebaseConfig);
 
   return (
     <NavigationContainer>

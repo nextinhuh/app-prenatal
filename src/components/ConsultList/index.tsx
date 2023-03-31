@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
-import firebase from 'firebase';
+import { getAuth } from 'firebase/auth';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { useConsult } from '../../hooks/consults';
@@ -17,8 +18,8 @@ import { useTheme } from '../../hooks/theme';
 import { Container, ConsultCard, ConsultText, TextInformative } from './styles';
 
 const ConsultList: React.FC = (props: any) => {
-  const firebaseAuth = firebase.auth().currentUser;
-  const firebaseFirestore = firebase.firestore();
+  const firebaseAuth = getAuth().currentUser;
+  const firebaseFirestore = getFirestore();
   const [consultsList, setConsultsList] = useState<string[]>();
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,25 @@ const ConsultList: React.FC = (props: any) => {
 
   useEffect(() => {
     async function listConsults() {
-      await firebaseFirestore
+      const userRef = collection(firebaseFirestore, 'users.consults', String(firebaseAuth?.uid));
+
+      getDocs(userRef).then((result) => {
+        const resultList: any = [];
+
+        result.forEach(doc => {
+          resultList.push(doc.id);
+        });
+
+        if (resultList.length === 0) {
+          resultList.push(
+            'Você ainda não tem consultas cadastradas, puxe para baixo para atualizar a lista!',
+          );
+        }
+        setConsultsList(resultList);
+        setLoading(false);
+      });
+
+      /*await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .collection('consults')
@@ -46,7 +65,7 @@ const ConsultList: React.FC = (props: any) => {
           }
           setConsultsList(resultList);
           setLoading(false);
-        });
+        });*/
     }
 
     listConsults();
@@ -70,7 +89,24 @@ const ConsultList: React.FC = (props: any) => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await firebaseFirestore
+
+    const userRef = collection(firebaseFirestore, 'users.consults', String(firebaseAuth?.uid));
+
+    getDocs(userRef).then((result) => {
+      const resultList: any = [];
+      result.forEach(doc => {
+        resultList.push(doc.id);
+      });
+      if (resultList.length === 0) {
+        resultList.push(
+          'Você ainda não tem consultas cadastradas, puxe para baixo para atualizar a lista!',
+        );
+      }
+      setConsultsList(resultList);
+      setRefreshing(false);
+    });
+
+    /*await firebaseFirestore
       .collection('users')
       .doc(firebaseAuth?.uid)
       .collection('consults')
@@ -87,7 +123,7 @@ const ConsultList: React.FC = (props: any) => {
         }
         setConsultsList(resultList);
         setRefreshing(false);
-      });
+      });*/
   }, [firebaseFirestore, firebaseAuth]);
 
   return (

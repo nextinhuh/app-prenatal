@@ -10,8 +10,8 @@ import { actions, getContentCSS, RichEditor, RichToolbar } from 'react-native-pe
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 import { Container, InputTitle, ContainerTitleInput } from './styles';
 
@@ -59,8 +59,8 @@ const NoteView: React.FC = () => {
   const [noteTitleText, setNoteTitleText] = useState<string>();
 
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const firebaseAuth = firebase.auth().currentUser;
-  const firebaseFirestore = firebase.firestore();
+  const firebaseAuth = getAuth().currentUser;
+  const firebaseFirestore = getFirestore();
 
 
   useEffect(() => {
@@ -90,6 +90,7 @@ const NoteView: React.FC = () => {
           },
         ]);
       } else {
+        /*
         await firebaseFirestore
           .collection('users')
           .doc(firebaseAuth?.uid)
@@ -117,7 +118,7 @@ const NoteView: React.FC = () => {
                 },
               ],
             );
-          });
+          });*/
       }
     },
     [firebaseAuth, firebaseFirestore, noteDescriptionText, noteTitleText, routeParams.noteId, navBackResetRoute],
@@ -133,6 +134,7 @@ const NoteView: React.FC = () => {
         ]);
       } else {
         const time = new Date().getTime();
+        /*
         await firebaseFirestore
           .collection('users')
           .doc(firebaseAuth?.uid)
@@ -161,7 +163,7 @@ const NoteView: React.FC = () => {
                 },
               ],
             );
-          });
+          });*/
       }
 
     },

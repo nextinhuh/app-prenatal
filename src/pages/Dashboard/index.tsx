@@ -3,8 +3,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import Timeline from 'react-native-timeline-flatlist';
 
 
@@ -54,8 +54,8 @@ interface ItemProps {
 const Dashboard: React.FC = () => {
   const navigate = useNavigation();
   const { color } = useTheme();
-  const firestore = firebase.firestore();
-  const firebaseAuth = firebase.auth().currentUser;
+  const firestore = getFirestore();
+  const firebaseAuth = getAuth().currentUser;
   const refCarousel = React.createRef<Carousel<ItemProps>>();
   const refCarousel2 = React.createRef<Carousel<ItemProps>>();
   const [userInfo, setUserInfo] = useState<User>({} as User);
@@ -136,8 +136,8 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const user = {
-      name: firebase.auth().currentUser?.displayName,
-      photoUrl: firebase.auth().currentUser?.photoURL,
+      name: firebaseAuth?.displayName,
+      photoUrl: firebaseAuth?.photoURL,
     };
     setUserInfo(user);
   }, [firebaseAuth, firestore]);
@@ -197,15 +197,7 @@ const Dashboard: React.FC = () => {
       </Header>
 
       <CarouselContainer>
-        <Carousel
-          layout="default"
-          data={carouselTeste.carouselItems}
-          sliderWidth={100}
-          itemWidth={400}
-          renderItem={renderCarouselItem}
-          ref={refCarousel}
-          onSnapToItem={(index: number) => handleChangeCardMovingTimeLine2(index)}
-        />
+
       </CarouselContainer>
 
       <UserAvatarButton onPress={handleNavProfileUpdate}>
@@ -222,15 +214,7 @@ const Dashboard: React.FC = () => {
 
 
       <CarouselContainer2>
-        <Carousel
-          layout="default"
-          data={carouselTeste2.carouselItems}
-          sliderWidth={350}
-          itemWidth={80}
-          renderItem={renderCarouselItem2}
-          ref={refCarousel2}
-          onSnapToItem={(index: number) => handleChangeCardMovingTimeLine1(index)}
-        />
+
       </CarouselContainer2>
 
       <SelectWeekButtonContainer>

@@ -9,7 +9,7 @@ import {
   Feather,
   Entypo,
 } from '@expo/vector-icons';
-import firebase from 'firebase';
+import { getAuth } from 'firebase/auth';
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -40,7 +40,7 @@ const CustomDrawerMenu: React.FC<DrawerContentComponentProps> = (
   }); // replace "Login' with your route name
 
   const handleNavLogOff = useCallback(() => {
-    firebase.auth().signOut();
+    getAuth().signOut();
   }, []);
 
   return (

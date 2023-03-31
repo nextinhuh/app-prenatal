@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 import { MaterialIcons, Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import firebase from 'firebase';
-import 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, collection, updateDoc, doc } from 'firebase/firestore';
 
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -19,10 +19,8 @@ import {
   SceneRendererProps,
   NavigationState,
 } from 'react-native-tab-view';
-import ModalDropdown from 'react-native-modal-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import { isFunction } from 'formik';
 import {
   Container,
   WelcomeContainer,
@@ -42,8 +40,8 @@ interface ThemeData {
 const Welcome: React.FC = () => {
   const { updateThemeColor, updateLogged } = useTheme();
   const layout = useWindowDimensions();
-  const firebaseAuth = firebase.auth().currentUser;
-  const dbFirestore = firebase.firestore();
+  const firebaseAuth = getAuth().currentUser;
+  const dbFirestore = getFirestore();
   const navigate = useNavigation();
 
   const [loading, setLoading] = useState(false);
@@ -121,35 +119,6 @@ const Welcome: React.FC = () => {
       >
         Qual é o desejo dos pais quanto ao sexo da criança ?
       </Text>
-      <ModalDropdown
-        defaultValue={selectedDropDown}
-        textStyle={{
-          color: '#f1f1f1',
-          fontSize: 16,
-          fontFamily: 'Montserrat_400Regular',
-          width: '100%',
-          textAlign: 'center',
-        }}
-        style={{
-          width: '80%',
-          height: 60,
-          borderWidth: 3,
-          borderColor: '#FFF',
-          borderRadius: 10,
-          paddingLeft: 16,
-          paddingRight: 16,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        dropdownStyle={{
-          width: '50%',
-          height: 90,
-          marginTop: -8,
-        }}
-        options={['Não sei ainda', 'Menino', 'Menina']}
-        animated
-        onSelect={(index, value) => setSelectedDropDown(value)}
-      />
     </View>
   );
 
@@ -221,7 +190,20 @@ const Welcome: React.FC = () => {
           colorTwo: undefined,
         };
       }
-      await dbFirestore
+
+      const usersCollection = doc(dbFirestore, 'users', String(firebaseAuth?.uid));
+
+      await updateDoc(usersCollection, {
+        menstruationDate: selectedDateOnPicker,
+        genderPreference: selectedDropDown,
+        themeColor: colorThemeObject,
+        firstLogin: false,
+      }).then(() => {
+        setLoading(false);
+        navigate.navigate('Dashboard');
+      });
+
+      /*await dbFirestore
         .collection('users')
         .doc(firebaseAuth?.uid)
         .update({
@@ -233,7 +215,7 @@ const Welcome: React.FC = () => {
         .then(() => {
           setLoading(false);
           navigate.navigate('Dashboard');
-        });
+        });*/
     } else {
       Alert.alert('Porfavor, preencha as informações!', '', [
         {

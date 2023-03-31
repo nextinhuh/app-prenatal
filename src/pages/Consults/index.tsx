@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import firebase from 'firebase';
+import { getAuth } from 'firebase/auth';
 import {
   TabView,
   SceneMap,
@@ -35,7 +35,7 @@ interface User {
 }
 
 const Consults: React.FC = () => {
-  const firebaseAuth = firebase.auth().currentUser;
+  const firebaseAuth = getAuth().currentUser;
   const { color } = useTheme();
   const [userInfo, setUserInfo] = useState<User>({} as User);
   const layout = useWindowDimensions();
